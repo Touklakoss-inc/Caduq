@@ -8,4 +8,5 @@ bin-int/
 **.sln
 **.vcxproj
 **.vcxproj.filters
-**.vcxproj.user
+**.vcxproj.filters.xml
+**.user
