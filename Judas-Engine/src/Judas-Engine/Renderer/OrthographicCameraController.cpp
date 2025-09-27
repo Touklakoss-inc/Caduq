@@ -16,7 +16,7 @@ namespace Judas_Engine
 
     void OrthographicCameraController::OnUpdate(Timestep ts)
     {
-        JE_PROFILE_FUNC
+        JE_PROFILE_FUNC()
 
         if (Input::IsKeyPressed(JE_KEY_W))
             m_CameraPosition.y -= m_CameraTranslationSpeed * ts;

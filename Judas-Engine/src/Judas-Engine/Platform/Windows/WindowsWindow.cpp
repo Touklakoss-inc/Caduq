@@ -19,7 +19,7 @@ namespace Judas_Engine
 
     Window* Window::Create(const WindowProps& props)
     {
-        JE_PROFILE_FUNC
+        JE_PROFILE_FUNC()
 
         return new WindowsWindow(props);
     }
@@ -37,7 +37,7 @@ namespace Judas_Engine
 
     void WindowsWindow::Init(const WindowProps& props)
     {
-        JE_PROFILE_FUNC
+        JE_PROFILE_FUNC()
 
         m_Data.Title = props.Title;
         m_Data.Width = props.Width;
@@ -165,13 +165,13 @@ namespace Judas_Engine
 
     void WindowsWindow::Shutdown()
     {
-        JE_PROFILE_FUNC
+        JE_PROFILE_FUNC()
         glfwDestroyWindow(m_Window);
     }
 
     void WindowsWindow::OnUpdate()
     {
-        JE_PROFILE_FUNC
+        JE_PROFILE_FUNC()
 
         m_Context->SwapBuffers();
         glfwPollEvents();

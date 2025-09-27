@@ -19,7 +19,7 @@ namespace Judas_Engine
 
 	Application::Application()
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC();
 		JE_CORE_ASSERT(!s_Instance, "Another application has already be created !")
 		s_Instance = this;
 
@@ -35,7 +35,7 @@ namespace Judas_Engine
 
 	void Application::OnEvent(Event& e)
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowClosedEvent>(BIND_EVENT_FN(Application::OnWindowClose));
@@ -58,7 +58,7 @@ namespace Judas_Engine
 
 	bool Application::OnWindowResize(WindowResizedEvent& e)
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		if (e.GetWidth() == 0 || e.GetHeight() == 0)
 		{
@@ -74,21 +74,21 @@ namespace Judas_Engine
 
 	void Application::PushOverlay(Layer* overlay)
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		m_LayerStack.PushOverlay(overlay);
 	}
 
 	void Application::PushLayer(Layer* layer)
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		m_LayerStack.PushLayer(layer);
 	}
 
 	void Application::Run()
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		while (m_Running)
 		{

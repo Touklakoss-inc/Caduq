@@ -9,7 +9,7 @@ namespace Judas_Engine
 {
 	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		m_Width = width;
 		m_Height = height;
@@ -30,7 +30,7 @@ namespace Judas_Engine
 	OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
 		: m_Path(path)
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		int width, height, channels;
 
@@ -81,14 +81,14 @@ namespace Judas_Engine
 
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		glDeleteTextures(1, &m_RendererID);
 	}
 
 	void OpenGLTexture2D::SetData(void* data, uint32_t size)
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		uint32_t bpp = (m_DataFormat == GL_RGBA) ? 4 : 3;
 		JE_CORE_ASSERT(size == m_Width * m_Height * bpp, "Data must cover all the texture");
@@ -98,7 +98,7 @@ namespace Judas_Engine
 
 	void OpenGLTexture2D::Bind(uint32_t slot) const
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		glBindTextureUnit(slot, m_RendererID);
 	}

@@ -25,7 +25,7 @@ namespace Judas_Engine
 
 	OpenGLShader::OpenGLShader(const std::string& filepath)
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		std::string source = ReadFile(filepath);
 		auto shaderSources = PreProcess(source);
@@ -42,7 +42,7 @@ namespace Judas_Engine
 	OpenGLShader::OpenGLShader(const std::string name, const std::string& vertexSrc, const std::string& fragmentSrc)
 		: m_Name(name)
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		std::unordered_map<GLenum, std::string> sources;
 		sources[GL_VERTEX_SHADER] = vertexSrc;
@@ -52,7 +52,7 @@ namespace Judas_Engine
 
 	OpenGLShader::~OpenGLShader()
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		glDeleteProgram(m_RendererID);
 	}
@@ -80,7 +80,7 @@ namespace Judas_Engine
 
 	std::unordered_map<GLenum, std::string> OpenGLShader::PreProcess(const std::string& source)
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		std::unordered_map<GLenum, std::string> shaderSources;
 
@@ -107,7 +107,7 @@ namespace Judas_Engine
 
 	void OpenGLShader::Compile(std::unordered_map<GLenum, std::string>& shaderSources)
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		// Get a program object.
 		uint32_t program = glCreateProgram();
@@ -194,49 +194,49 @@ namespace Judas_Engine
 
 	void OpenGLShader::Bind() const
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		glUseProgram(m_RendererID);
 	}
 
 	void OpenGLShader::Unbind() const
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		glUseProgram(0);
 	}
 
 	void OpenGLShader::SetInt(const char* name, int value)
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		UploadUniformInt(name, value);
 	}
 
 	void OpenGLShader::SetFloat(const char* name, float value)
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 			UploadUniformFloat(name, value);
 	}
 
 	void OpenGLShader::SetFloat3(const char* name, const glm::vec3& value)
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		UploadUniformFloat3(name, value);
 	}
 
 	void OpenGLShader::SetFloat4(const char* name, const glm::vec4& value)
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		UploadUniformFloat4(name, value);
 	}
 
 	void OpenGLShader::SetMat4(const char* name, const glm::mat4& mat)
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		UploadUniformMat4(name, mat);
 	}

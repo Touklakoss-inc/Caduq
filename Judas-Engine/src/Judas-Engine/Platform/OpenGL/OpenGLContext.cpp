@@ -38,7 +38,7 @@ namespace Judas_Engine
 
 	void OpenGLContext::SwapBuffers()
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 		glfwSwapBuffers(m_WindowHandle);
 	}
 }

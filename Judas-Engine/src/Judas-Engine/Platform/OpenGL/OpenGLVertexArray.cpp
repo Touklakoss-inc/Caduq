@@ -31,13 +31,13 @@ namespace Judas_Engine
 
 	OpenGLVertexArray::OpenGLVertexArray()
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		glCreateVertexArrays(1, &m_RendererID);
 	}
 	void OpenGLVertexArray::Bind() const
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		glBindVertexArray(m_RendererID);
 	}
@@ -49,7 +49,7 @@ namespace Judas_Engine
 
 	void OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer)
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		JE_CORE_ASSERT(vertexBuffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout!");
 		glBindVertexArray(m_RendererID);
@@ -68,7 +68,7 @@ namespace Judas_Engine
 
 	void OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer)
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		glBindVertexArray(m_RendererID);
 		indexBuffer->Bind();

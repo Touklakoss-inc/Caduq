@@ -63,6 +63,7 @@
 
 #ifdef JE_DEBUG
 	#define JE_ENABLE_ASSERTS
+#else
 #endif
 
 #ifdef JE_ENABLE_ASSERTS

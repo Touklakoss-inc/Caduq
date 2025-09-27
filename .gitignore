@@ -10,3 +10,5 @@ bin-int/
 **.vcxproj.filters
 **.vcxproj.filters.xml
 **.user
+
+**.json

@@ -10,7 +10,7 @@ namespace Judas_Engine
 
 	LayerStack::~LayerStack()
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC();
 
 		for (auto layer : m_Layers)
 		{
@@ -21,7 +21,7 @@ namespace Judas_Engine
 
 	void LayerStack::PushLayer(Layer* layer)
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		m_Layers.emplace(m_Layers.begin() + m_LayerInsertIndex, layer);
 		layer->OnAttach();
@@ -31,7 +31,7 @@ namespace Judas_Engine
 
 	void LayerStack::PushOverlay(Layer* overlay)
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		m_Layers.emplace_back(overlay);
 		overlay->OnAttach();
@@ -39,7 +39,7 @@ namespace Judas_Engine
 
 	void LayerStack::PopLayer(Layer* layer)
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		auto it = std::find(begin(), end(), layer);
 		if (it != end())
@@ -51,7 +51,7 @@ namespace Judas_Engine
 	}
 	void LayerStack::PopOverlay(Layer* overlay)
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		auto it = std::find(begin(), end(), overlay);
 		if (it != end())

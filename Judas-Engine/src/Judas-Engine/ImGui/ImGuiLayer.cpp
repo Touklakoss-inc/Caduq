@@ -21,7 +21,7 @@ namespace Judas_Engine
 
 	void ImGuiLayer::OnAttach()
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
@@ -55,7 +55,7 @@ namespace Judas_Engine
 	}
 	void ImGuiLayer::OnDetach()
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
@@ -68,7 +68,7 @@ namespace Judas_Engine
 
 	void ImGuiLayer::Begin()
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
@@ -77,7 +77,7 @@ namespace Judas_Engine
 
 	void ImGuiLayer::End()
 	{
-		JE_PROFILE_FUNC
+		JE_PROFILE_FUNC()
 
 		ImGuiIO& io = ImGui::GetIO();
 
