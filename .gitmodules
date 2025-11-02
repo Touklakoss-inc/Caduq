@@ -4,7 +4,7 @@
 	branch = v1.x
 [submodule "Judas-Engine/vendor/GLFW"]
 	path = Judas-Engine/vendor/GLFW
-	url = https://github.com/arthur-wuhrlin/GLFW
+	url = https://github.com/Touklakoss-inc/GLFW
 	branch = main
 [submodule "Judas-Engine/vendor/spdlog"]
 	path = Judas-Engine/vendor/spdlog
@@ -12,7 +12,7 @@
 	branch = master
 [submodule "Judas-Engine/vendor/imgui"]
 	path = Judas-Engine/vendor/imgui
-	url = https://github.com/arthur-wuhrlin/imgui
+	url = https://github.com/Touklakoss-inc/imgui
 	branch = main
 [submodule "Judas-Engine/vendor/glm"]
 	path = Judas-Engine/vendor/glm
