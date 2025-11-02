@@ -6,7 +6,7 @@
 
 #include "Sandbox2D.h"
 
-#include "ImGui/imgui.h"
+#include "imgui/imgui.h"
 
 #ifdef GLM_ENABLE_EXPERIMENTAL
 #else

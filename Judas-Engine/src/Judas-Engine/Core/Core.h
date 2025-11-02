@@ -38,8 +38,9 @@
 	#define JE_PLATFORM_ANDROID
 	#error "Android is not supported!"
 #elif defined(__linux__)
-	#define JE_PLATFORM_LINUX
-	#error "Linux is not supported!"
+    #ifndef JE_PLATFORM_LINUX
+        #define JE_PLATFORM_LINUX
+    #endif 
 #else
 	/* Unknown compiler/platform */
 	#error "Unknown platform!"
@@ -57,8 +58,18 @@
 	#else
 		#define JE_API
 	#endif
+#elif defined(JE_PLATFORM_LINUX)
+	#if JE_DYNAMIC_LINK
+		#ifdef JE_BUILD_DLL
+			#define JE_API __attribute__((visibility("default")))
+		#else
+			#define JE_API 
+		#endif
 	#else
-	#error Judas Engine only supports Windows!
+		#define JE_API
+	#endif
+#else
+	#error Judas Engine only supports Windows and Linux!
 #endif // End of DLL support
 
 #ifdef JE_DEBUG
@@ -67,8 +78,16 @@
 #endif
 
 #ifdef JE_ENABLE_ASSERTS
-	#define JE_ASSERT(x, ...) { if(!(x)) { JE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
-	#define JE_CORE_ASSERT(x, ...) { if(!(x)) { JE_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
+    #ifdef JE_PLATFORM_WINDOWS
+        #define JE_ASSERT(x, ...) { if(!(x)) { JE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
+        #define JE_CORE_ASSERT(x, ...) { if(!(x)) { JE_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
+    #elif defined(JE_PLATFORM_LINUX)
+        #include <signal.h>
+        #define JE_ASSERT(x, ...) { if(!(x)) { JE_ERROR("Assertion Failed: {0}", __VA_ARGS__); raise(SIGTRAP); } }
+        #define JE_CORE_ASSERT(x, ...) { if(!(x)) { JE_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); raise(SIGTRAP); } }
+    #else
+        #error Platform not regognize
+    #endif
 #else
 	#define JE_ASSERT(x, ...)
 	#define JE_CORE_ASSERT(x, ...)

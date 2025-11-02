@@ -11,5 +11,11 @@ bin-int/
 **.vcxproj.filters.xml
 **.user
 
+# Neovim on linux files and folders
+*.make
+**/Makefile
+obj/
+dev-app.sh
+
 **.json
 **.ini

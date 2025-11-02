@@ -3,7 +3,7 @@
 #include "Application.h"
 #include "Judas-Engine/Debug/Instrumentor.h"
 
-#ifdef JE_PLATFORM_WINDOWS
+#if defined(JE_PLATFORM_WINDOWS) || defined(JE_PLATFORM_LINUX)
 
 extern Judas_Engine::Application* Judas_Engine::CreateApplication();
 

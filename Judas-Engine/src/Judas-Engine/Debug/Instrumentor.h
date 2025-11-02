@@ -141,10 +141,14 @@ namespace Judas_Engine
 
 #define JE_PROFILE 1
 #if JE_PROFILE
-  #define JE_PROFILE_SESSION_BEGIN(name, filepath) ::Judas_Engine::Instrumentor::Get().BeginSession(name, filepath)
-  #define JE_PROFILE_SESSION_END() ::Judas_Engine::Instrumentor::Get().EndSession()
-#define JE_PROFILE_SCOPE(name) ::Judas_Engine::InstrumentationTimer timer##__LINE__(name);
-#define JE_PROFILE_FUNC() JE_PROFILE_SCOPE(__FUNCSIG__)
+    #define JE_PROFILE_SESSION_BEGIN(name, filepath) ::Judas_Engine::Instrumentor::Get().BeginSession(name, filepath)
+    #define JE_PROFILE_SESSION_END() ::Judas_Engine::Instrumentor::Get().EndSession()
+    #define JE_PROFILE_SCOPE(name) ::Judas_Engine::InstrumentationTimer timer##__LINE__(name);
+    #ifdef JE_PLATFORM_WINDOWS
+        #define JE_PROFILE_FUNC() JE_PROFILE_SCOPE(__FUNCSIG__)
+    #elif defined(JE_PLATFORM_LINUX)
+        #define JE_PROFILE_FUNC() JE_PROFILE_SCOPE(__PRETTY_FUNCTION__)
+    #endif
 #else
   #define JE_PROFILE_BEGIN_SESSION(name, filepath)
   #define JE_PROFILE_END_SESSION()

@@ -13,14 +13,14 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 -- Include directories relative to root folder (solution directory)
 IncludeDir = {}
 IncludeDir["GLFW"] = "Judas-Engine/vendor/GLFW/include"
-IncludeDir["Glad"] = "Judas-Engine/vendor/Glad/include"
+IncludeDir["glad"] = "Judas-Engine/vendor/glad/include"
 IncludeDir["ImGui"] = "Judas-Engine/vendor/imgui"
 IncludeDir["glm"] = "Judas-Engine/vendor/glm"
 IncludeDir["stb_image"] = "Judas-Engine/vendor/stb_image"
 
 group "Dependencies"
 	include "Judas-Engine/vendor/GLFW"
-	include "Judas-Engine/vendor/Glad"
+	include "Judas-Engine/vendor/glad"
 	include "Judas-Engine/vendor/imgui"
 
 group ""
@@ -59,18 +59,14 @@ project "Judas-Engine"
         "%{prj.name}/src/Judas-Engine",
 	    "%{prj.name}/vendor/spdlog/include",
         "%{IncludeDir.GLFW}",
-	    "%{IncludeDir.Glad}",
+	    "%{IncludeDir.glad}",
         "%{IncludeDir.ImGui}",
 	    "%{IncludeDir.glm}",
 	    "%{IncludeDir.stb_image}"
     }
-
     links 
     { 
-	    "GLFW",
-	    "Glad",
-        "ImGui",
-	    "opengl32.lib"
+        "opengl32.lib"
     }
 
     filter "system:windows"
@@ -79,6 +75,25 @@ project "Judas-Engine"
         defines
         {
             "JE_PLATFORM_WINDOWS",
+            "JE_BUILD_DLL",
+            "GLFW_INCLUDE_NONE",
+            "JE_ENABLE_ASSERT",
+        }
+        links 
+        { 
+            "GLFW",
+            "glad",
+            "ImGui",
+        }
+
+    filter { "system:linux", "action:gmake" }
+        buildoptions { "-fpermissive"}
+        -- buildoptions { "-pedantic-errors"}
+        --"-Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion"}
+        -- -Werror to treat warning as error
+        defines
+        {
+            "JE_PLATFORM_LINUX",
             "JE_BUILD_DLL",
             "GLFW_INCLUDE_NONE",
             "JE_ENABLE_ASSERT",
@@ -127,7 +142,7 @@ project "Game"
 
     links
     {
-        "Judas-Engine"
+        "Judas-Engine",
     }
 
     filter "system:windows"
@@ -136,6 +151,23 @@ project "Game"
         defines
         {
             "JE_PLATFORM_WINDOWS",
+        }
+
+    filter { "system:linux", "action:gmake" }
+        buildoptions { "-fpermissive"}
+        -- buildoptions { "-pedantic-errors"}
+        --"-Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion"}
+        -- -Werror to treat warning as error
+        defines
+        {
+            "JE_PLATFORM_LINUX",
+        }
+
+        links 
+        { 
+            "GLFW",
+            "glad",
+            "ImGui",
         }
     
     filter "configurations:Debug"
