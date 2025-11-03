@@ -17,5 +17,6 @@ bin-int/
 obj/
 dev-app.sh
 
+# Data 
 **.json
-**.ini
+**/**.ini
