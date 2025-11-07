@@ -8,8 +8,6 @@ namespace Geometry::Tools
     std::string RJust(std::string str, int chr_nb)
     {
         int strLength{ static_cast<int>(str.length()) };
-        std::cout << str.length();
-        std::cout << strLength << '\n';
         if (strLength < chr_nb)
         {
             for (int i = 0; i < chr_nb-strLength; i++) 

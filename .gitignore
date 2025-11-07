@@ -21,3 +21,8 @@ dev-app.sh
 # Data 
 **.json
 **/**.ini
+
+# LS-PrePost files
+**.k
+**.cfile
+**.msg

@@ -5,6 +5,7 @@
 #include "Judas-Engine/Renderer/Shader.h"
 
 #include "Sandbox2D.h"
+#include "SandboxGeo.h"
 
 #include "imgui/imgui.h"
 
@@ -18,8 +19,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "glm/ext.hpp" // TEMP
 
-#include <Eigen/Dense>
-#include "Geometry/Point.h"
 
 
 class ExampleLayer : public Judas_Engine::Layer
@@ -28,9 +27,6 @@ public:
 	ExampleLayer()
 		: Layer("MyLayer"), m_CameraController(1280.0f / 720.0f, true)
 	{
-        Geometry::Point p0{ 0.0, 1.0 };
-
-
 		m_VertexArray = Judas_Engine::VertexArray::Create();
 
 		float vertices[3 * 7] = {
@@ -235,7 +231,7 @@ class GameApplication : public Judas_Engine::Application
 public:
 	GameApplication()
 	{
-		PushLayer(new ExampleLayer());
+		PushLayer(new SandboxGeo());
 
 		/*m_CameraLayer = new CameraLayer(&m_Camera);
 		PushLayer(m_CameraLayer);*/
