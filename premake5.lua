@@ -17,6 +17,7 @@ IncludeDir["glad"] = "Judas-Engine/vendor/glad/include"
 IncludeDir["ImGui"] = "Judas-Engine/vendor/imgui"
 IncludeDir["glm"] = "Judas-Engine/vendor/glm"
 IncludeDir["stb_image"] = "Judas-Engine/vendor/stb_image"
+IncludeDir["Eigen"] = "Judas-Engine/vendor/Eigen"
 
 group "Dependencies"
 	include "Judas-Engine/vendor/GLFW"
@@ -45,7 +46,8 @@ project "Judas-Engine"
 	    "%{prj.name}/vendor/stb_image/**.h",
         "%{prj.name}/vendor/stb_image/**.cpp",
 	    "%{prj.name}/vendor/glm/glm/**.hpp",
-	    "%{prj.name}/vendor/glm/glm/**.inl"
+	    "%{prj.name}/vendor/glm/glm/**.inl",
+	    "%{prj.name}/vendor/Eigne/Eigen/**"
     }
 
     defines
@@ -62,6 +64,7 @@ project "Judas-Engine"
 	    "%{IncludeDir.glad}",
         "%{IncludeDir.ImGui}",
 	    "%{IncludeDir.glm}",
+	    "%{IncludeDir.Eigen}",
 	    "%{IncludeDir.stb_image}"
     }
     links 
@@ -136,7 +139,8 @@ project "Game"
 	    "Judas-Engine/vendor/spdlog/include",
         "Judas-Engine/src",
 	    "Judas-Engine/vendor",
-	    "%{IncludeDir.glm}"
+	    "%{IncludeDir.glm}",
+	    "%{IncludeDir.Eigen}"
 
     }
 
