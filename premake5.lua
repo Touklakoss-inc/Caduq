@@ -47,7 +47,6 @@ project "Judas-Engine"
         "%{prj.name}/vendor/stb_image/**.cpp",
 	    "%{prj.name}/vendor/glm/glm/**.hpp",
 	    "%{prj.name}/vendor/glm/glm/**.inl",
-	    "%{prj.name}/vendor/Eigne/Eigen/**"
     }
 
     defines
@@ -117,6 +116,73 @@ project "Judas-Engine"
 		runtime "Release"
 		optimize "on"
 
+project "Geotrup"
+    location "Geotrup"
+    kind "StaticLib"
+    language "C++"
+    cppdialect "C++17"
+    staticruntime "on"
+
+    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+    files
+    {
+        "%{prj.name}/src/**.h",
+        "%{prj.name}/src/**.cpp",
+	    "%{prj.name}/vendor/Eigne/Eigen/**"
+    }
+
+    defines
+    {
+        "_CRT_SECURE_NO_WARNINGS"
+    }
+
+    includedirs
+    {
+	    "%{prj.name}/src",
+	    "%{IncludeDir.Eigen}",
+    }
+
+    filter "system:windows"
+        systemversion "latest"
+
+        defines
+        {
+            -- "JE_PLATFORM_WINDOWS",
+            -- "JE_BUILD_DLL",
+            -- "GLFW_INCLUDE_NONE",
+            -- "JE_ENABLE_ASSERT",
+        }
+
+    filter { "system:linux", "action:gmake" }
+        buildoptions { "-fpermissive"}
+        -- buildoptions { "-pedantic-errors"}
+        --"-Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion"}
+        -- -Werror to treat warning as error
+        defines
+        {
+            -- "JE_PLATFORM_LINUX",
+            -- "JE_BUILD_DLL",
+            -- "GLFW_INCLUDE_NONE",
+            -- "JE_ENABLE_ASSERT",
+        }
+    
+    filter "configurations:Debug"
+		defines "JE_DEBUG"
+		runtime "Debug"
+		symbols "on"
+
+	filter "configurations:Release"
+		defines "JE_RELEASE"
+		runtime "Release"
+		optimize "on"
+
+	filter "configurations:Dist"
+		defines "JE_DIST"
+		runtime "Release"
+		optimize "on"
+
 project "Game"
     location "Game"
     kind "ConsoleApp"
@@ -139,14 +205,15 @@ project "Game"
 	    "Judas-Engine/vendor/spdlog/include",
         "Judas-Engine/src",
 	    "Judas-Engine/vendor",
+        "Geotrup/src",
 	    "%{IncludeDir.glm}",
 	    "%{IncludeDir.Eigen}"
-
     }
 
     links
     {
         "Judas-Engine",
+        "Geotrup"
     }
 
     filter "system:windows"
