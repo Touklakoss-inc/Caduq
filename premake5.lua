@@ -1,6 +1,6 @@
-workspace "Judas-Engine"
+workspace "Caduq"
     architecture "x64"
-    startproject "Game"
+    startproject "Caduq"
     configurations
     {
         "Debug",
@@ -12,22 +12,22 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 -- Include directories relative to root folder (solution directory)
 IncludeDir = {}
-IncludeDir["GLFW"] = "Judas-Engine/vendor/GLFW/include"
-IncludeDir["glad"] = "Judas-Engine/vendor/glad/include"
-IncludeDir["ImGui"] = "Judas-Engine/vendor/imgui"
-IncludeDir["glm"] = "Judas-Engine/vendor/glm"
-IncludeDir["stb_image"] = "Judas-Engine/vendor/stb_image"
-IncludeDir["Eigen"] = "Judas-Engine/vendor/Eigen"
+IncludeDir["GLFW"] = "Vizir/vendor/GLFW/include"
+IncludeDir["glad"] = "Vizir/vendor/glad/include"
+IncludeDir["ImGui"] = "Vizir/vendor/imgui"
+IncludeDir["glm"] = "Vizir/vendor/glm"
+IncludeDir["stb_image"] = "Vizir/vendor/stb_image"
+IncludeDir["Eigen"] = "Vizir/vendor/Eigen"
 
 group "Dependencies"
-	include "Judas-Engine/vendor/GLFW"
-	include "Judas-Engine/vendor/glad"
-	include "Judas-Engine/vendor/imgui"
+	include "Vizir/vendor/GLFW"
+	include "Vizir/vendor/glad"
+	include "Vizir/vendor/imgui"
 
 group ""
 
-project "Judas-Engine"
-    location "Judas-Engine"
+project "Vizir"
+    location "Vizir"
     kind "StaticLib"
     language "C++"
     cppdialect "C++17"
@@ -36,8 +36,8 @@ project "Judas-Engine"
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
-	pchheader "jepch.h"
-	pchsource "Judas-Engine/src/jepch.cpp"
+	pchheader "vzpch.h"
+	pchsource "Vizir/src/vzpch.cpp"
 
     files
     {
@@ -57,7 +57,7 @@ project "Judas-Engine"
     includedirs
     {
 	    "%{prj.name}/src",
-        "%{prj.name}/src/Judas-Engine",
+        "%{prj.name}/src/Vizir",
 	    "%{prj.name}/vendor/spdlog/include",
         "%{IncludeDir.GLFW}",
 	    "%{IncludeDir.glad}",
@@ -76,10 +76,10 @@ project "Judas-Engine"
 
         defines
         {
-            "JE_PLATFORM_WINDOWS",
-            "JE_BUILD_DLL",
+            "VZ_PLATFORM_WINDOWS",
+            "VZ_BUILD_DLL",
             "GLFW_INCLUDE_NONE",
-            "JE_ENABLE_ASSERT",
+            "VZ_ENABLE_ASSERT",
         }
         links 
         { 
@@ -95,24 +95,24 @@ project "Judas-Engine"
         -- -Werror to treat warning as error
         defines
         {
-            "JE_PLATFORM_LINUX",
-            "JE_BUILD_DLL",
+            "VZ_PLATFORM_LINUX",
+            "VZ_BUILD_DLL",
             "GLFW_INCLUDE_NONE",
-            "JE_ENABLE_ASSERT",
+            "VZ_ENABLE_ASSERT",
         }
     
     filter "configurations:Debug"
-		defines "JE_DEBUG"
+		defines "VZ_DEBUG"
 		runtime "Debug"
 		symbols "on"
 
 	filter "configurations:Release"
-		defines "JE_RELEASE"
+		defines "VZ_RELEASE"
 		runtime "Release"
 		optimize "on"
 
 	filter "configurations:Dist"
-		defines "JE_DIST"
+		defines "VZ_DIST"
 		runtime "Release"
 		optimize "on"
 
@@ -149,10 +149,10 @@ project "Geotrup"
 
         defines
         {
-            -- "JE_PLATFORM_WINDOWS",
-            -- "JE_BUILD_DLL",
+            -- "VZ_PLATFORM_WINDOWS",
+            -- "VZ_BUILD_DLL",
             -- "GLFW_INCLUDE_NONE",
-            -- "JE_ENABLE_ASSERT",
+            -- "VZ_ENABLE_ASSERT",
         }
 
     filter { "system:linux", "action:gmake" }
@@ -162,29 +162,29 @@ project "Geotrup"
         -- -Werror to treat warning as error
         defines
         {
-            -- "JE_PLATFORM_LINUX",
-            -- "JE_BUILD_DLL",
+            -- "VZ_PLATFORM_LINUX",
+            -- "VZ_BUILD_DLL",
             -- "GLFW_INCLUDE_NONE",
-            -- "JE_ENABLE_ASSERT",
+            -- "VZ_ENABLE_ASSERT",
         }
     
     filter "configurations:Debug"
-		defines "JE_DEBUG"
+		defines "VZ_DEBUG"
 		runtime "Debug"
 		symbols "on"
 
 	filter "configurations:Release"
-		defines "JE_RELEASE"
+		defines "VZ_RELEASE"
 		runtime "Release"
 		optimize "on"
 
 	filter "configurations:Dist"
-		defines "JE_DIST"
+		defines "VZ_DIST"
 		runtime "Release"
 		optimize "on"
 
-project "Game"
-    location "Game"
+project "Caduq"
+    location "Caduq"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++17"
@@ -202,9 +202,9 @@ project "Game"
 
     includedirs
     {
-	    "Judas-Engine/vendor/spdlog/include",
-        "Judas-Engine/src",
-	    "Judas-Engine/vendor",
+	    "Vizir/vendor/spdlog/include",
+        "Vizir/src",
+	    "Vizir/vendor",
         "Geotrup/src",
 	    "%{IncludeDir.glm}",
 	    "%{IncludeDir.Eigen}"
@@ -212,7 +212,7 @@ project "Game"
 
     links
     {
-        "Judas-Engine",
+        "Vizir",
         "Geotrup"
     }
 
@@ -221,7 +221,7 @@ project "Game"
 
         defines
         {
-            "JE_PLATFORM_WINDOWS",
+            "VZ_PLATFORM_WINDOWS",
         }
 
     filter { "system:linux", "action:gmake" }
@@ -231,7 +231,7 @@ project "Game"
         -- -Werror to treat warning as error
         defines
         {
-            "JE_PLATFORM_LINUX",
+            "VZ_PLATFORM_LINUX",
         }
 
         links 
@@ -242,16 +242,16 @@ project "Game"
         }
     
     filter "configurations:Debug"
-        defines "JE_DEBUG"
+        defines "VZ_DEBUG"
 	    runtime "Debug"
         symbols "on"
 
     filter "configurations:Release"
-        defines "JE_RELEASE"
+        defines "VZ_RELEASE"
 	    runtime "Release"
         optimize "on"
 
     filter "configurations:Dist"
-        defines "JE_DIST"
+        defines "VZ_DIST"
 	    runtime "Release"
         optimize "on"
