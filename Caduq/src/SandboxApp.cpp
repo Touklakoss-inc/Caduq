@@ -19,6 +19,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "glm/ext.hpp" // TEMP
 
+#include "SandboxSplines.h"
 
 
 class ExampleLayer : public Vizir::Layer
@@ -231,7 +232,7 @@ class GameApplication : public Vizir::Application
 public:
 	GameApplication()
 	{
-		PushLayer(new SandboxGeo());
+		PushLayer(new SandboxSplines());
 
 		/*m_CameraLayer = new CameraLayer(&m_Camera);
 		PushLayer(m_CameraLayer);*/

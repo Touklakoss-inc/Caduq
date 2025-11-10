@@ -12,9 +12,13 @@ namespace Vizir
 {
 	struct Renderer2DStorage
 	{
+		// Demo Scene
 		Ref<Shader> TextureShader;
 		Ref<VertexArray> VertexArray;
 		Ref<Texture2D> WhiteTexture;
+
+		// Point Attributes
+		Ref<Shader> FlatColorShader;
 	};
 
 	static Scope<Renderer2DStorage> s_Data = CreateScope<Renderer2DStorage>();
@@ -32,41 +36,41 @@ namespace Vizir
 
 		RenderCommand::Init();
 
-		s_Data->VertexArray = VertexArray::Create();
+		//s_Data->VertexArray = VertexArray::Create();
 
-		float vertices[4 * 5] = {
-			-0.75f, -0.75f, 0.0f, 0.0f, 0.0f,
-			 0.75f, -0.75f, 0.0f, 1.0f, 0.0f,
-			 0.75f,  0.75f, 0.0f, 1.0f, 1.0f,
-			-0.75f,  0.75f, 0.0f, 0.0f, 1.0f
-		};
-		Ref<VertexBuffer> m_VertexBuffer;
-		m_VertexBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
+		//float vertices[4 * 5] = {
+		//	-0.75f, -0.75f, 0.0f, 0.0f, 0.0f,
+		//	 0.75f, -0.75f, 0.0f, 1.0f, 0.0f,
+		//	 0.75f,  0.75f, 0.0f, 1.0f, 1.0f,
+		//	-0.75f,  0.75f, 0.0f, 0.0f, 1.0f
+		//};
+		//Ref<VertexBuffer> m_VertexBuffer;
+		//m_VertexBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
 
-		BufferLayout layout = {
-			{ ShaderDataType::Float3, "a_Position"},
-			{ ShaderDataType::Float2, "a_TexCoords"},
-		};
-		m_VertexBuffer->SetLayout(layout);
+		//BufferLayout layout = {
+		//	{ ShaderDataType::Float3, "a_Position"},
+		//	{ ShaderDataType::Float2, "a_TexCoords"},
+		//};
+		//m_VertexBuffer->SetLayout(layout);
 
-		s_Data->VertexArray->AddVertexBuffer(m_VertexBuffer);
+		//s_Data->VertexArray->AddVertexBuffer(m_VertexBuffer);
 
-		unsigned int indices[6] = {
-			0, 1, 2,
-			0, 2, 3
-		};
+		//unsigned int indices[6] = {
+		//	0, 1, 2,
+		//	0, 2, 3
+		//};
 
-		Ref<IndexBuffer> m_IndexBuffer;
-		m_IndexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
-		s_Data->VertexArray->SetIndexBuffer(m_IndexBuffer);
+		//Ref<IndexBuffer> m_IndexBuffer;
+		//m_IndexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+		//s_Data->VertexArray->SetIndexBuffer(m_IndexBuffer);
 
-		s_Data->WhiteTexture = Texture2D::Create(1, 1);
-		uint32_t data = 0xffffffff;
-		s_Data->WhiteTexture->SetData(&data, sizeof(uint32_t));
+		//s_Data->WhiteTexture = Texture2D::Create(1, 1);
+		//uint32_t data = 0xffffffff;
+		//s_Data->WhiteTexture->SetData(&data, sizeof(uint32_t));
 
-		s_Data->TextureShader = Shader::Create("src/Assets/shaders/texture.glsl");
-		s_Data->TextureShader->Bind();
-		s_Data->TextureShader->SetInt("u_Texture", 0);
+		//s_Data->TextureShader = Shader::Create("src/Assets/shaders/texture.glsl");
+		//s_Data->TextureShader->Bind();
+		//s_Data->TextureShader->SetInt("u_Texture", 0);
 	}
 
 	void Renderer2D::OnWindowResize(uint32_t width, uint32_t height)
