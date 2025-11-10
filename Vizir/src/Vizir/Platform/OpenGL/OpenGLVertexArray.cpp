@@ -29,6 +29,24 @@ namespace Vizir
 		return GL_NONE;
 	}
 
+	GLenum PrimitiveTypeToOpenGLBaseType(PrimitiveType type)
+	{
+		switch (type)
+		{
+		case PrimitiveType::NONE:							return GL_NONE;
+		case PrimitiveType::POINTS:						return GL_POINTS;
+		case PrimitiveType::LINES:						return GL_LINES;
+		case PrimitiveType::LINE_STRIP:				return GL_LINE_STRIP;
+		case PrimitiveType::LINE_LOOP:				return GL_LINE_LOOP;
+		case PrimitiveType::TRIANGLES:				return GL_TRIANGLES;
+		case PrimitiveType::TRIANGLE_STRIP:		return GL_TRIANGLE_STRIP;
+		case PrimitiveType::TRIANGLE_FAN:			return GL_TRIANGLE_FAN;
+		}
+
+		VZ_CORE_ASSERT(false, "Unknown PrimitiveType !");
+		return GL_NONE;
+	}
+
 	OpenGLVertexArray::OpenGLVertexArray()
 	{
 		VZ_PROFILE_FUNC()
@@ -47,7 +65,7 @@ namespace Vizir
 		glBindVertexArray(0);
 	}
 
-	void OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer)
+	void OpenGLVertexArray::SetVertexBuffer(const Ref<VertexBuffer>& vertexBuffer)
 	{
 		VZ_PROFILE_FUNC()
 
@@ -63,7 +81,7 @@ namespace Vizir
 			index++;
 		}
 
-		m_VertexBuffers.push_back(vertexBuffer);
+		m_VertexBuffer = vertexBuffer;
 	}
 
 	void OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer)
@@ -74,5 +92,11 @@ namespace Vizir
 		indexBuffer->Bind();
 
 		m_IndexBuffer = indexBuffer;
+	}
+	void OpenGLVertexArray::SetPrimitiveType(PrimitiveType primitiveType)
+	{
+		VZ_PROFILE_FUNC()
+
+		m_PrimitiveType = PrimitiveTypeToOpenGLBaseType(primitiveType);
 	}
 }

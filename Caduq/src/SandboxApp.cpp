@@ -44,7 +44,7 @@ public:
 		};
 		m_VertexBuffer->SetLayout(layout);
 
-		m_VertexArray->AddVertexBuffer(m_VertexBuffer);
+		m_VertexArray->SetVertexBuffer(m_VertexBuffer);
 		position = glm::mat4x4(1.0f); // Set identity
 		//position = glm::translate(position, glm::vec3(0.0f, 0.0f, 0.0f));
 
@@ -55,6 +55,7 @@ public:
 		Vizir::Ref<Vizir::IndexBuffer> m_IndexBuffer;
 		m_IndexBuffer.reset(Vizir::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
+		m_VertexArray->SetPrimitiveType(Vizir::PrimitiveType::TRIANGLES);
 
 		m_BlueShaderVertexArray = Vizir::VertexArray::Create();
 
@@ -73,7 +74,7 @@ public:
 			{ Vizir::ShaderDataType::Float2, "a_TexCoords"}
 		};
 		vb->SetLayout(layout2);
-		m_BlueShaderVertexArray->AddVertexBuffer(vb);
+		m_BlueShaderVertexArray->SetVertexBuffer(vb);
 
 		unsigned int indices2[6] = {
 			0, 1, 2,
@@ -84,6 +85,8 @@ public:
 		ib.reset(Vizir::IndexBuffer::Create(indices2, sizeof(indices2) / sizeof(uint32_t)));
 
 		m_BlueShaderVertexArray->SetIndexBuffer(ib);
+		m_BlueShaderVertexArray->SetPrimitiveType(Vizir::PrimitiveType::TRIANGLES);
+
 		bluePosition = glm::mat4x4(1.0f); // Set identity
 		//bluePosition = glm::translate(position, glm::vec3(0.0f, 0.0f, 0.0f));
 
@@ -232,7 +235,7 @@ class GameApplication : public Vizir::Application
 public:
 	GameApplication()
 	{
-		PushLayer(new SandboxSplines());
+		PushLayer(new ExampleLayer());
 
 		/*m_CameraLayer = new CameraLayer(&m_Camera);
 		PushLayer(m_CameraLayer);*/
