@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Spline.h"
 
+#include "Eigen/Core"
 namespace Geometry
 {
     Spline::Spline(SplinePoint startPoint, SplinePoint endPoint)
@@ -21,12 +22,18 @@ namespace Geometry
         m_equationConsts.row(0) = startPoint.point.GetPosition();
     }
 
-    Eigen::MatrixXd Spline::Mesh(Eigen::MatrixXd U)
+    Eigen::MatrixXd Spline::Mesh(Eigen::ArrayXd u, const int MESH_SIZE)
     {
-        Eigen::MatrixXd X{ m_equationConsts.transpose() * U };
+        Eigen::MatrixXd U{ 4, MESH_SIZE };
+        u = Eigen::ArrayXd::LinSpaced(MESH_SIZE, 0.0, 1.0);
+
+        U.row(0) = Eigen::VectorXd::Ones(MESH_SIZE);
+        U.row(1) = u;
+        U.row(2) = u*u;
+        U.row(3) = u*u*u;
 
         std::cout << "meshing...\n";
 
-        return X;
+        return m_equationConsts.transpose() * U;
     }
 }

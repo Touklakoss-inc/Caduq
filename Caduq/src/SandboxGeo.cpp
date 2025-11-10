@@ -27,16 +27,9 @@ void SandboxGeo::OnAttach()
     Geometry::Spline s0{ sp0, sp1 };
 
     const int MESH_SIZE{ 100 };
-
-    Eigen::MatrixXd U{ 4, MESH_SIZE };
     Eigen::ArrayXd u{ Eigen::ArrayXd::LinSpaced(MESH_SIZE, 0.0, 1.0) };
 
-    U.row(0) = Eigen::VectorXd::Ones(MESH_SIZE);
-    U.row(1) = u;
-    U.row(2) = u*u;
-    U.row(3) = u*u*u;
-
-    Geometry::Tools::WriteMesh("mesh.k", s0.Mesh(U));
+    Geometry::Tools::WriteMesh("mesh.k", s0.Mesh(u, MESH_SIZE));
 }
 
 void SandboxGeo::OnDetach()

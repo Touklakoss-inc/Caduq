@@ -24,7 +24,7 @@ namespace Geometry
 
         public:
         Spline(SplinePoint startPoint, SplinePoint endPoint);
-        Eigen::MatrixXd Mesh(Eigen::MatrixXd U);
+        Eigen::MatrixXd Mesh(Eigen::ArrayXd u, const int MESH_SIZE);
     };
 }
 
