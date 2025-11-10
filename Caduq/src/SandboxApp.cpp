@@ -235,7 +235,7 @@ class GameApplication : public Vizir::Application
 public:
 	GameApplication()
 	{
-		PushLayer(new ExampleLayer());
+		PushLayer(new SandboxSplines());
 
 		/*m_CameraLayer = new CameraLayer(&m_Camera);
 		PushLayer(m_CameraLayer);*/

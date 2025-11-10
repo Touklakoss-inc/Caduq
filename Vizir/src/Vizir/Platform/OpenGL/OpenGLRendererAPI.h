@@ -13,5 +13,9 @@ namespace Vizir
 		virtual void Clear() override;
 
 		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray) override;
+
+		virtual void SetPointSize(float pointSize) override;
+		virtual void SetLineWidth(float lineWidth) override;
+
 	};
 }

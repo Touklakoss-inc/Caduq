@@ -19,6 +19,9 @@ namespace Vizir
 
 		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray) = 0;
 
+		virtual void SetPointSize(float pointSize) = 0;
+		virtual void SetLineWidth(float lineWidth) = 0;
+
 		inline static RendererAPI::API GetAPI() { return s_API; }
 
 	private:

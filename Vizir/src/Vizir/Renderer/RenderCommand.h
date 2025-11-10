@@ -27,6 +27,14 @@ namespace Vizir
 		{
 			s_RendererAPI->DrawIndexed(vertexArray);
 		}
+		inline static void SetPointSize(float pointSize)
+		{
+			s_RendererAPI->SetPointSize(pointSize);
+		}
+		inline static void SetLineWidth(float lineWidth)
+		{
+			s_RendererAPI->SetLineWidth(lineWidth);
+		}
 	private:
 		static Scope<RendererAPI> s_RendererAPI;
 	};

@@ -30,4 +30,14 @@ namespace Vizir
 	{
 		glDrawElements((GLenum)vertexArray->GetNativePrimitiveType(), vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 	}
+
+	void OpenGLRendererAPI::SetPointSize(float pointSize)
+	{
+		glPointSize(pointSize);
+	}
+
+	void OpenGLRendererAPI::SetLineWidth(float lineWidth)
+	{
+		glLineWidth(lineWidth);
+	}
 }

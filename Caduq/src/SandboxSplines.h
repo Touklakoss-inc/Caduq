@@ -15,6 +15,16 @@ public:
 private:
 	Vizir::OrthographicCameraController m_CameraController;
 
-	std::vector<float> m_Points;
+	Vizir::Ref<Vizir::Shader> m_Shader;
+	Vizir::Ref<Vizir::VertexArray> m_PointVertexArray;
+	Vizir::Ref<Vizir::VertexArray> m_LineVertexArray;
+
+	glm::vec3 m_PointColor = { 1.0f, 0.0f, 0.0f };
+	float m_PointSize = 5.0f;
+
+	glm::vec3 m_LineColor = { 1.0f, 1.0f, 1.0f };
+	float m_LineWidth = 1.0f;
+
+	glm::mat4 m_Transform;
 };
 
