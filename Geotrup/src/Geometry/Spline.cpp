@@ -25,15 +25,30 @@ namespace Geometry
     Eigen::MatrixXd Spline::Mesh(Eigen::ArrayXd u, const int MESH_SIZE)
     {
         Eigen::MatrixXd U{ 4, MESH_SIZE };
-        u = Eigen::ArrayXd::LinSpaced(MESH_SIZE, 0.0, 1.0);
+        // u = Eigen::ArrayXd::LinSpaced(MESH_SIZE, 0.0, 1.0);
 
         U.row(0) = Eigen::VectorXd::Ones(MESH_SIZE);
         U.row(1) = u;
         U.row(2) = u*u;
         U.row(3) = u*u*u;
 
-        std::cout << "meshing...\n";
+        std::cout << "spline meshing...\n";
+        m_mesh = m_equationConsts.transpose() * U;
 
         return m_equationConsts.transpose() * U;
     }
+
+    std::tuple<Eigen::MatrixXd, Eigen::VectorXi> Spline::GetFemMesh()
+    {
+        Eigen::MatrixXd nodes{ m_mesh };
+        Eigen::VectorXi elts{ nodes.cols()*2+1 };
+
+        for (int i = 0; i < nodes.cols(); i++) 
+        {
+            elts(i*2) = i;
+            elts(i*2+1) = i+1;
+        }
+
+        return { nodes, elts };
+    };
 }
