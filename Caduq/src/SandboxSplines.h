@@ -1,6 +1,9 @@
 #pragma once
 #include <Vizir.h>
 
+#include "Geometry/Point.h"
+#include "Geometry/Spline.h"
+
 class SandboxSplines : public Vizir::Layer
 {
 public:
@@ -13,11 +16,24 @@ public:
 	virtual void OnImGuiRender() override;
 	virtual void OnEvent(Vizir::Event& e) override;
 private:
+
+	// Geometry
+	Geometry::Point p0{ 0.0, 0.0 };
+	Geometry::Point p1{ 1.1, 1.1 };
+
+	Geometry::SplinePoint sp0{ p0, { 1.0, 0.0, 0.0 }, 1.0 };
+	Geometry::SplinePoint sp1{ p1, { 1.0, 1.0, 0.0 }, 1.0 };
+
+	Geometry::Spline s0{ sp0, sp1 };
+
+	// Rendering 
 	Vizir::OrthographicCameraController m_CameraController;
 
 	Vizir::Ref<Vizir::Shader> m_Shader;
 	Vizir::Ref<Vizir::VertexArray> m_PointVertexArray;
 	Vizir::Ref<Vizir::VertexArray> m_LineVertexArray;
+
+	// 'Uniforms'
 
 	glm::vec3 m_PointColor = { 1.0f, 0.0f, 0.0f };
 	float m_PointSize = 5.0f;

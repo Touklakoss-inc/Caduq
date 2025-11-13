@@ -2,22 +2,39 @@
 
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
 
-
 #include "imgui/imgui.h"
 #include <glm/gtc/type_ptr.hpp>
 
-
 void SandboxSplines::OnAttach()
 {
+	// Geometry 
+	const int MESH_SIZE{ 100 };
+
+	Eigen::MatrixXd U{ 4, MESH_SIZE };
+	Eigen::ArrayXd u{ Eigen::ArrayXd::LinSpaced(MESH_SIZE, 0.0, 1.0) };
+
+	U.row(0) = Eigen::VectorXd::Ones(MESH_SIZE);
+	U.row(1) = u;
+	U.row(2) = u * u;
+	U.row(3) = u * u * u;
+	
+	// Get data and extract buffer
+
+	// points
+	Eigen::MatrixXf points = s0.Mesh(U).cast<float>();
+
+	// points indices
+	Eigen::ArrayX<uint32_t> indices{ Eigen::ArrayX<uint32_t>::LinSpaced(MESH_SIZE, 0, MESH_SIZE - 1) };
+
 	// Vertex buffer
-	float vertices[3 * 3] /*[3 * 7]*/ = {
-			-0.5f, -0.5f, 0.0f, // 1.0f, 0.0f, 0.0f, 1.0f,
-			 0.5f, -0.5f, 0.0f, // 0.0f, 1.0f, 0.0f, 1.0,
-			 0.0f,  0.5f, 0.0f, // 0.0f, 0.0f, 1.0f, 1.0f
-	};
+	//float vertices[3 * 3] /*[3 * 7]*/ = {
+	//		-0.5f, -0.5f, 0.0f, // 1.0f, 0.0f, 0.0f, 1.0f,
+	//		 0.5f, -0.5f, 0.0f, // 0.0f, 1.0f, 0.0f, 1.0,
+	//		 0.0f,  0.5f, 0.0f, // 0.0f, 0.0f, 1.0f, 1.0f
+	//};
 
 	Vizir::Ref<Vizir::VertexBuffer> vertexBuffer;
-	vertexBuffer.reset(Vizir::VertexBuffer::Create(vertices, 9 * sizeof(float)));
+	vertexBuffer.reset(Vizir::VertexBuffer::Create(points.data(), points.size() * sizeof(float)));
 
 	Vizir::BufferLayout layout = {
 		{ Vizir::ShaderDataType::Float3, "v_position"},
@@ -26,12 +43,8 @@ void SandboxSplines::OnAttach()
 
 	// ---- Points ----
 	// Point Index buffer
-	unsigned int pointIndices[3] = {
-		0, 1, 2
-	};
-
 	Vizir::Ref<Vizir::IndexBuffer> pointIndexBuffer;
-	pointIndexBuffer.reset(Vizir::IndexBuffer::Create(pointIndices, sizeof(pointIndices) / sizeof(uint32_t)));
+	pointIndexBuffer.reset(Vizir::IndexBuffer::Create(indices.data(), indices.size()));
 
 	// Point Vertex array
 	m_PointVertexArray = Vizir::VertexArray::Create();
@@ -42,18 +55,15 @@ void SandboxSplines::OnAttach()
 
 	// ---- Lines ----
 	// Line Index buffer
-	unsigned int lineIndices[6] = {
-		0, 1, 1, 2, 2, 0
-	};
 
 	Vizir::Ref<Vizir::IndexBuffer> lineIndexBuffer;
-	lineIndexBuffer.reset(Vizir::IndexBuffer::Create(lineIndices, sizeof(lineIndices) / sizeof(uint32_t)));
+	lineIndexBuffer.reset(Vizir::IndexBuffer::Create(indices.data(), indices.size()));
 
 	// Line Vertex array
 	m_LineVertexArray = Vizir::VertexArray::Create();
 	m_LineVertexArray->SetVertexBuffer(vertexBuffer);
 	m_LineVertexArray->SetIndexBuffer(lineIndexBuffer);
-	m_LineVertexArray->SetPrimitiveType(Vizir::LINES);
+	m_LineVertexArray->SetPrimitiveType(Vizir::LINE_STRIP);
 	m_LineVertexArray->Unbind();
 
 	// Shader 
