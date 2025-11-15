@@ -28,6 +28,7 @@ namespace Geometry
         Spline(SplinePoint startPoint, SplinePoint endPoint);
         Eigen::MatrixXd Mesh(Eigen::ArrayXd u, const int MESH_SIZE);
         std::tuple<Eigen::MatrixXd, Eigen::VectorXi> GetFemMesh();
+        double GetLength();
     };
 }
 

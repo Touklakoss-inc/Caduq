@@ -15,8 +15,9 @@ namespace Geometry
 
         Eigen::Matrix3d Y{};
         Y.row(0) = endPoint.point.GetPosition()  - startPoint.point.GetPosition();
-        Y.row(1) = startPoint.tangent;
-        Y.row(2) = endPoint.tangent;
+        // Tangent vector are normalized and will be linked with the distance bitween the start and the end point
+        Y.row(1) = startPoint.tangent.normalized() * startPoint.tension * GetLength();
+        Y.row(2) = endPoint.tangent.normalized() * endPoint.tension * GetLength();
 
         m_equationConsts.block<3, 3>(1, 0) = H * Y;
         m_equationConsts.row(0) = startPoint.point.GetPosition();
@@ -25,7 +26,6 @@ namespace Geometry
     Eigen::MatrixXd Spline::Mesh(Eigen::ArrayXd u, const int MESH_SIZE)
     {
         Eigen::MatrixXd U{ 4, MESH_SIZE };
-        // u = Eigen::ArrayXd::LinSpaced(MESH_SIZE, 0.0, 1.0);
 
         U.row(0) = Eigen::VectorXd::Ones(MESH_SIZE);
         U.row(1) = u;
@@ -51,4 +51,12 @@ namespace Geometry
 
         return { nodes, elts };
     };
+
+
+    double Spline::GetLength()
+    {
+        Eigen::Vector3d l{ m_endPoint.point.GetPosition() - m_startPoint.point.GetPosition() };
+
+        return l.norm();
+    }
 }
