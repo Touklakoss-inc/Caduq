@@ -30,7 +30,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y build-essential
-          sudo apt-get install -y xorg openbox libx11-dev
+          sudo apt-get install -y xorg openbox libx11-dev libxcursor-dev
        
       # --- WINDOWS ---
       - name: Install C/C++ Build Tools (Windows)
