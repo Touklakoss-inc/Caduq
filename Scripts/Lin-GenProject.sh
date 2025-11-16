@@ -1,4 +1,3 @@
 #!/bin/bash
-cd ../vendor/bin/linux/premake
-premake5 gmake
-cd ../../../../Scripts
+chmod +x ./vendor/bin/linux/premake/premake5
+./vendor/bin/linux/premake/premake5 gmake

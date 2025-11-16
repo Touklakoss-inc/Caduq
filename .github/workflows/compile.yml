@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - dev
+      - workflows
 
 jobs:
   build:
@@ -12,11 +13,14 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v4
-
+      
       # --- Initialize Submodules ---
-      - name: Initialize Submodules
-        run: git submodule update --init --recursive
+
+      - name: Checkout Repository and Initialize Submodules
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          submodules: true        
 
       # --- Setup C++ Build Tools ---
 
@@ -26,6 +30,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y build-essential
+          sudo apt-get install -y xorg openbox libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev xinput libxi-dev
        
       # --- WINDOWS ---
       - name: Install C/C++ Build Tools (Windows)
@@ -34,13 +39,12 @@ jobs:
 
       # --- Generate Project Files ---
 
-      # --- LINUX ---
+      # # --- LINUX ---
       - name: Generate Project Files (Linux)
         if: matrix.os == 'ubuntu-latest'
         run: |
-          cd ./Scripts
-          sh ./Lin-GenProject.sh
-          cd ..
+          ./Scripts/Lin-GenProject.sh
+          ls
 
       # --- WINDOWS ---
       - name: Generate Project Files (Windows)
@@ -56,7 +60,10 @@ jobs:
       # --- LINUX ---
       - name: Build (Linux)
         if: matrix.os == 'ubuntu-latest'
-        run: make -j$(nproc)
+        run: |
+          pwd # Debug
+          ls
+          make
 
       # --- WINDOWS ---  
       - name: Build (Windows)
