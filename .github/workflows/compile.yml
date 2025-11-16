@@ -12,11 +12,13 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v4
-
+      
       # --- Initialize Submodules ---
-      - name: Initialize Submodules
-        run: git submodule update --init --recursive
+
+      - name: Checkout Repository and Initialize Submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: true        
 
       # --- Setup C++ Build Tools ---
 
