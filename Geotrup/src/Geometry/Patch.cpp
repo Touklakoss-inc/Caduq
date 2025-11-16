@@ -8,13 +8,23 @@ namespace Geometry
         : m_s0{ s0 }, m_s1{ s1 }, m_s2{ s2 }, m_s3{ s3 }
     {
     };
+    // Interpolation functions
+    // Curvature continuity between multiple patches
     Eigen::VectorXd Patch::F1(Eigen::VectorXd t)
     {
         return (10*t.array().pow(3) - 15*t.array().pow(4) + 6*t.array().pow(5)).matrix();
     }; 
+    double Patch::F1(double t)
+    {
+        return 10*t*t*t - 15*t*t*t*t + 6*t*t*t*t*t;
+    };
     Eigen::VectorXd Patch::F0(Eigen::VectorXd t)
     {
         return (1 - F1(t).array()).matrix();
+    };
+    double Patch::F0(double t)
+    {
+        return 1 - F1(t);
     };
 
     Eigen::MatrixXd Patch::Mesh(Eigen::VectorXd u, Eigen::VectorXd w, const int MESH_SIZE)
@@ -48,18 +58,38 @@ namespace Geometry
 
         // Third interpolation, point interpolation
         Eigen::MatrixXd b{ MESH_SIZE*3, MESH_SIZE };
-        Eigen::MatrixXd oo{ m_s0.Mesh(Eigen::ArrayXXd::Zero(MESH_SIZE), MESH_SIZE).reshaped(MESH_SIZE*3, 1) };
-        Eigen::MatrixXd oi{ m_s0.Mesh(Eigen::ArrayXXd::Ones(MESH_SIZE), MESH_SIZE).reshaped(MESH_SIZE*3, 1) };
-        Eigen::MatrixXd io{ m_s1.Mesh(Eigen::ArrayXXd::Zero(MESH_SIZE), MESH_SIZE).reshaped(MESH_SIZE*3, 1) };
-        Eigen::MatrixXd ii{ m_s1.Mesh(Eigen::ArrayXXd::Ones(MESH_SIZE), MESH_SIZE).reshaped(MESH_SIZE*3, 1) };
+        Eigen::MatrixXd oo{ m_s0.Mesh(Eigen::ArrayXd::Zero(MESH_SIZE), MESH_SIZE).reshaped(MESH_SIZE*3, 1) };
+        Eigen::MatrixXd oi{ m_s0.Mesh(Eigen::ArrayXd::Ones(MESH_SIZE), MESH_SIZE).reshaped(MESH_SIZE*3, 1) };
+        Eigen::MatrixXd io{ m_s1.Mesh(Eigen::ArrayXd::Zero(MESH_SIZE), MESH_SIZE).reshaped(MESH_SIZE*3, 1) };
+        Eigen::MatrixXd ii{ m_s1.Mesh(Eigen::ArrayXd::Ones(MESH_SIZE), MESH_SIZE).reshaped(MESH_SIZE*3, 1) };
 
-        b =   F0(u).transpose() * oo * F0(w)
-            + F0(u).transpose() * oi * F1(w)
-            + F1(u).transpose() * io * F0(w)
-            + F1(u).transpose() * ii * F1(w);
+        // b = F0(u).transpose() * oo * F0(w)
+            // + F0(u).transpose() * oi * F1(w)
+            // + F1(u).transpose() * io * F0(w)
+            // + F1(u).transpose() * ii * F1(w);
 
+        for (int r = 0; r < MESH_SIZE*3; r+=3) 
+        {
+            for (int c = 0; c < MESH_SIZE; c++)
+            {
+                b(r, c) = F0(u(c)) * oo(0) * F0(w(r/3))
+                        + F0(u(c)) * oi(0) * F1(w(r/3))
+                        + F1(u(c)) * io(0) * F0(w(r/3))
+                        + F1(u(c)) * ii(0) * F1(w(r/3));
+                b(r+1, c) = F0(u(c)) * oo(1) * F0(w(r/3))
+                        + F0(u(c)) * oi(1) * F1(w(r/3))
+                        + F1(u(c)) * io(1) * F0(w(r/3))
+                        + F1(u(c)) * ii(1) * F1(w(r/3));
+                b(r+2, c) = F0(u(c)) * oo(2) * F0(w(r/3))
+                        + F0(u(c)) * oi(2) * F1(w(r/3))
+                        + F1(u(c)) * io(2) * F0(w(r/3))
+                        + F1(u(c)) * ii(2) * F1(w(r/3));
+            }
+        }
+
+        std::cout << b.rows() << ", " <<  b.cols() << '\n';
         // Assembly
-        m_mesh = Lc + Ld.reshaped<Eigen::RowMajor>(MESH_SIZE*3, MESH_SIZE) + b;
+        m_mesh = Lc + Ld.reshaped<Eigen::RowMajor>(MESH_SIZE*3, MESH_SIZE) - b;
 
         return m_mesh;
     }; 

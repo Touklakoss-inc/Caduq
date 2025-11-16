@@ -18,7 +18,6 @@ namespace Geometry
         // Tangent vector are normalized and will be linked with the distance bitween the start and the end point
         Y.row(1) = startPoint.tangent.normalized() * startPoint.tension * GetLength();
         Y.row(2) = endPoint.tangent.normalized() * endPoint.tension * GetLength();
-
         m_equationConsts.block<3, 3>(1, 0) = H * Y;
         m_equationConsts.row(0) = startPoint.point.GetPosition();
     }
