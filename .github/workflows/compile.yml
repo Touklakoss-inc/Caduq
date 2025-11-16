@@ -19,6 +19,7 @@ jobs:
       - name: Checkout Repository and Initialize Submodules
         uses: actions/checkout@v4
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           submodules: true        
 
       # --- Setup C++ Build Tools ---
