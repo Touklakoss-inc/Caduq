@@ -54,13 +54,16 @@ jobs:
           cd .\Scripts\
           .\Win-GenProject.bat
           cd ..
+          pwd
 
       # --- Build Project ---
 
       # --- LINUX ---
       - name: Build (Linux)
         if: matrix.os == 'ubuntu-latest'
-        run: make -j$(nproc)
+        run: |
+          pwd # Debug
+          make
 
       # --- WINDOWS ---  
       - name: Build (Windows)
