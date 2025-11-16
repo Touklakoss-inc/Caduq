@@ -1,0 +1,62 @@
+name: "check-compilation"
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # --- Setup C++ Build Tools ---
+
+      # --- LINUX ---
+      - name: Install C/C++ Build Tools (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential
+       
+      # --- WINDOWS ---
+      - name: Install C/C++ Build Tools (Windows)
+        if: matrix.os == 'windows-latest'
+        uses: microsoft/setup-msbuild@v2 
+
+      # --- Generate Project Files ---
+
+      # --- LINUX ---
+      - name: Generate Project Files (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          cd ./Scripts
+          sh ./Lin-GenProject.sh
+          cd ..
+
+      # --- WINDOWS ---
+      - name: Generate Project Files (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          cd .\Scripts\
+          .\Win-GenProject.bat
+          cd ..
+
+      # --- Build Project ---
+
+      # --- LINUX ---
+      - name: Build (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: make -j$(nproc)
+
+      # --- WINDOWS ---  
+      - name: Build (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          msbuild Caduq.sln /p:Configuration=Release /p:Platform=x64
