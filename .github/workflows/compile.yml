@@ -24,12 +24,13 @@ jobs:
 
       # --- Setup C++ Build Tools ---
 
-      # # --- LINUX ---
-      # - name: Install C/C++ Build Tools (Linux)
-      #   if: matrix.os == 'ubuntu-latest'
-      #   run: |
-      #     sudo apt update
-      #     sudo apt install -y build-essential
+      # --- LINUX ---
+      - name: Install C/C++ Build Tools (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential
+          sudo apt-get install -y xorg openbox
        
       # --- WINDOWS ---
       - name: Install C/C++ Build Tools (Windows)
@@ -39,11 +40,11 @@ jobs:
       # --- Generate Project Files ---
 
       # # --- LINUX ---
-      # - name: Generate Project Files (Linux)
-      #   if: matrix.os == 'ubuntu-latest'
-      #   run: |
-      #     ./Scripts/Lin-GenProject.sh
-      #     ls
+      - name: Generate Project Files (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          ./Scripts/Lin-GenProject.sh
+          ls
 
       # --- WINDOWS ---
       - name: Generate Project Files (Windows)
@@ -56,13 +57,13 @@ jobs:
 
       # --- Build Project ---
 
-      # # --- LINUX ---
-      # - name: Build (Linux)
-      #   if: matrix.os == 'ubuntu-latest'
-      #   run: |
-      #     pwd # Debug
-      #     ls
-      #     make
+      # --- LINUX ---
+      - name: Build (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          pwd # Debug
+          ls
+          make
 
       # --- WINDOWS ---  
       - name: Build (Windows)
