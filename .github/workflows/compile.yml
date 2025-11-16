@@ -42,7 +42,7 @@ jobs:
       - name: Generate Project Files (Linux)
         if: matrix.os == 'ubuntu-latest'
         run: |
-          sh ./Scripts/Lin-GenProject.sh
+          ./Scripts/Lin-GenProject.sh
           ls
 
       # --- WINDOWS ---
