@@ -19,11 +19,11 @@ namespace Vizir
 		VZ_CORE_ASSERT(false, "Unknown Render API");
 		return nullptr;
 	}
-	IndexBuffer* IndexBuffer::Create(uint32_t* indices, uint32_t size)
+	IndexBuffer* IndexBuffer::Create(uint32_t* indices, uint32_t count)
 	{
 		switch (Renderer::GetAPI())
 		{
-			case RendererAPI::API::OpenGL:	return new OpenGLIndexBuffer(indices, size);
+			case RendererAPI::API::OpenGL:	return new OpenGLIndexBuffer(indices, count);
 			case RendererAPI::API::None:		VZ_CORE_ASSERT(false, "RendererAPI::None is not currently supported"); return nullptr;
 		}
 
