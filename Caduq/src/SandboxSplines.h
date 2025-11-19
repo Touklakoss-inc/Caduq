@@ -3,6 +3,7 @@
 
 #include "Geometry/Point.h"
 #include "Geometry/Spline.h"
+#include "Geometry/Patch.h"
 
 class SandboxSplines : public Vizir::Layer
 {
@@ -31,10 +32,10 @@ private:
 
 	Vizir::Ref<Vizir::Shader> m_Shader;
 	Vizir::Ref<Vizir::VertexArray> m_PointVertexArray;
-	Vizir::Ref<Vizir::VertexArray> m_LineVertexArray;
+	Vizir::Ref<Vizir::VertexArray> m_SplineVertexArray;
+	Vizir::Ref<Vizir::VertexArray> m_PatchVertexArray;
 
 	// 'Uniforms'
-
 	glm::vec3 m_PointColor = { 1.0f, 0.0f, 0.0f };
 	float m_PointSize = 5.0f;
 
