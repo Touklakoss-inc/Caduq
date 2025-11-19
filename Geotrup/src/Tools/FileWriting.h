@@ -12,6 +12,7 @@ namespace Geometry::Tools
     void WriteMesh(std::string filename, std::vector<Geometry::Spline> nodes);
     void WriteNodes(std::string filename, Eigen::MatrixXd nodes);
     void WriteSurface(std::string filename, Geometry::Patch patch);
+    void WriteGfxSurface(std::string filename, Geometry::Patch patch);
 }
 
 #endif

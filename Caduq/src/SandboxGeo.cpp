@@ -55,6 +55,7 @@ void SandboxGeo::OnAttach()
     // std::cout << c0.GetGfxMesh().elts << '\n';
     Geometry::Tools::WriteNodes("nodes.k", m);
     Geometry::Tools::WriteSurface("surf.k", c0);
+    Geometry::Tools::WriteGfxSurface("surfGfx.k", c0);
 }
 
 void SandboxGeo::OnDetach()

@@ -1,5 +1,6 @@
 #include "FileWriting.h"
 
+#include "Geometry/Patch.h"
 #include <fstream>
 #include <iostream>
 
@@ -116,6 +117,41 @@ namespace Geometry::Tools
             outfile << RJust(std::to_string(elts(i*4+1)+1), 8);
             outfile << RJust(std::to_string(elts(i*4+2)+1), 8);
             outfile << RJust(std::to_string(elts(i*4+3)+1), 8);
+            outfile << '\n';
+        }
+
+        outfile << "*END\n";
+        outfile.close();
+    }
+    void WriteGfxSurface(std::string filename, Geometry::Patch patch)
+    {
+        std::ofstream outfile{ filename };
+
+        Geometry::Mesh m = patch.GetGfxMesh();
+
+        outfile << "*NODE\n";
+
+        for (int j = 0; j < m.nodes.cols(); j+=1)
+        {
+            for (int i = 0; i < m.nodes.rows(); i+=3)
+            {
+                outfile << RJust(std::to_string(j+1 + i/3*m.nodes.cols()), 8); 
+                outfile << RJust(std::to_string(m.nodes(i, j)), 16);
+                outfile << RJust(std::to_string(m.nodes(i+1, j)), 16);
+                outfile << RJust(std::to_string(m.nodes(i+2, j)), 16);
+                outfile << '\n';
+            }
+        }
+
+        outfile << "*ELEMENT_SHELL\n";
+
+        for (int i = 0; i < m.elts.rows()/3; i++)
+        {
+            outfile << RJust(std::to_string(i+1), 8);
+            outfile << RJust(std::to_string(1), 8);
+            outfile << RJust(std::to_string(m.elts(i*3)+1), 8);
+            outfile << RJust(std::to_string(m.elts(i*3+1)+1), 8);
+            outfile << RJust(std::to_string(m.elts(i*3+2)+1), 8);
             outfile << '\n';
         }
 
