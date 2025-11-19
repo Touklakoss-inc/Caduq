@@ -94,9 +94,9 @@ namespace Geometry::Tools
 
         outfile << "*NODE\n";
 
-        for (int i = 0; i < nodes.rows(); i+=3)
+        for (int j = 0; j < nodes.cols(); j+=1)
         {
-            for (int j = 0; j < nodes.cols(); j++)
+            for (int i = 0; i < nodes.rows(); i+=3)
             {
                 outfile << RJust(std::to_string(j+1 + i/3*nodes.cols()), 8); 
                 outfile << RJust(std::to_string(nodes(i, j)), 16);

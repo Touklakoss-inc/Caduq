@@ -58,15 +58,26 @@ namespace Geometry
 
         // Third interpolation, point interpolation
         Eigen::MatrixXd b{ MESH_SIZE*3, MESH_SIZE };
+        Eigen::MatrixXd cc{ MESH_SIZE*3, MESH_SIZE };
         Eigen::MatrixXd oo{ m_s0.Mesh(Eigen::ArrayXd::Zero(MESH_SIZE), MESH_SIZE).reshaped(MESH_SIZE*3, 1) };
         Eigen::MatrixXd oi{ m_s0.Mesh(Eigen::ArrayXd::Ones(MESH_SIZE), MESH_SIZE).reshaped(MESH_SIZE*3, 1) };
         Eigen::MatrixXd io{ m_s1.Mesh(Eigen::ArrayXd::Zero(MESH_SIZE), MESH_SIZE).reshaped(MESH_SIZE*3, 1) };
         Eigen::MatrixXd ii{ m_s1.Mesh(Eigen::ArrayXd::Ones(MESH_SIZE), MESH_SIZE).reshaped(MESH_SIZE*3, 1) };
 
-        // b = F0(u).transpose() * oo * F0(w)
-            // + F0(u).transpose() * oi * F1(w)
-            // + F1(u).transpose() * io * F0(w)
-            // + F1(u).transpose() * ii * F1(w);
+        Eigen::MatrixXd F0w{ 3, MESH_SIZE };
+        F0w.row(0) = F0(w);
+        F0w.row(1) = F0(w);
+        F0w.row(2) = F0(w);
+
+        Eigen::MatrixXd F1w{ 3, MESH_SIZE };
+        F1w.row(0) = F1(w);
+        F1w.row(1) = F1(w);
+        F1w.row(2) = F1(w);
+
+        // cc = (F0w.reshaped(MESH_SIZE*3, 1).array() * oo.array()).matrix() * F0(u).transpose()
+        //   + (F1w.reshaped(MESH_SIZE*3, 1).array() * oi.array()).matrix() * F0(u).transpose()
+        //   + (F0w.reshaped(MESH_SIZE*3, 1).array() * io.array()).matrix() * F1(u).transpose()
+        //   + (F1w.reshaped(MESH_SIZE*3, 1).array() * ii.array()).matrix() * F1(u).transpose();
 
         for (int r = 0; r < MESH_SIZE*3; r+=3) 
         {
@@ -77,17 +88,16 @@ namespace Geometry
                         + F1(u(c)) * io(0) * F0(w(r/3))
                         + F1(u(c)) * ii(0) * F1(w(r/3));
                 b(r+1, c) = F0(u(c)) * oo(1) * F0(w(r/3))
-                        + F0(u(c)) * oi(1) * F1(w(r/3))
-                        + F1(u(c)) * io(1) * F0(w(r/3))
-                        + F1(u(c)) * ii(1) * F1(w(r/3));
+                          + F0(u(c)) * oi(1) * F1(w(r/3))
+                          + F1(u(c)) * io(1) * F0(w(r/3))
+                          + F1(u(c)) * ii(1) * F1(w(r/3));
                 b(r+2, c) = F0(u(c)) * oo(2) * F0(w(r/3))
-                        + F0(u(c)) * oi(2) * F1(w(r/3))
-                        + F1(u(c)) * io(2) * F0(w(r/3))
-                        + F1(u(c)) * ii(2) * F1(w(r/3));
+                          + F0(u(c)) * oi(2) * F1(w(r/3))
+                          + F1(u(c)) * io(2) * F0(w(r/3))
+                          + F1(u(c)) * ii(2) * F1(w(r/3));
             }
         }
 
-        std::cout << b.rows() << ", " <<  b.cols() << '\n';
         // Assembly
         m_mesh = Lc + Ld.reshaped<Eigen::RowMajor>(MESH_SIZE*3, MESH_SIZE) - b;
 
@@ -102,9 +112,27 @@ namespace Geometry
         Eigen::VectorXi elts{ size };
 
 
-        for (int i = 0; i < (nodes.rows()/3)-1; i++)
+        // this writes nodes in column dominated order, or in raw array, the data is stored in row dominated order
+        // for (int i = 0; i < (nodes.rows()/3)-1; i++)
+        // {
+        //     for (int j = 0; j < nodes.cols()-1; j++)
+        //     {
+        //         int n{};
+        //         int m{};
+        //         n =  i*nodes.cols() + j;
+        //         m = i*(nodes.cols()-1) + j;
+        //         elts(m*4) = n;
+        //         elts(m*4+1) = n+1;
+        //         elts(m*4+2) = n+1+nodes.cols();
+        //         elts(m*4+3) = n+nodes.cols();
+        //         std::cout << n << ", " << nodes(i, j) << '\n';
+        //     }
+        // }
+
+        // row dominated order
+        for (int j = 0; j < nodes.cols()-1; j++)
         {
-            for (int j = 0; j < nodes.cols()-1; j++)
+            for (int i = 0; i < (nodes.rows()/3)-1; i++)
             {
                 int n{};
                 int m{};
@@ -112,12 +140,40 @@ namespace Geometry
                 m = i*(nodes.cols()-1) + j;
                 elts(m*4) = n;
                 elts(m*4+1) = n+1;
-                elts(m*4+2) = n+1+nodes.cols();
-                elts(m*4+3) = n+nodes.cols();
+                elts(m*4+2) = n+1+nodes.rows()/3;
+                elts(m*4+3) = n+nodes.rows()/3;
             }
         }
 
         return { m_mesh, elts };
 
+    };
+
+    Geometry::Mesh Patch::GetGfxMesh()
+    {
+        int size{};
+        Eigen::MatrixXd nodes{ m_mesh };
+        size = (nodes.cols()-1)*6*(nodes.rows()/3-1);  
+        Eigen::VectorXi elts{ size };
+
+
+        for (int j = 0; j < nodes.cols()-1; j++)
+        {
+            for (int i = 0; i < (nodes.rows()/3)-1; i++)
+            {
+                int n{};
+                int m{};
+                n =  i*nodes.cols() + j;
+                m = i*(nodes.cols()-1) + j;
+                elts(m*6) = n;
+                elts(m*6+1) = n+1;
+                elts(m*6+2) = n+1+nodes.rows()/3;
+                elts(m*6+3) = n;
+                elts(m*6+4) = n+1+nodes.rows()/3;
+                elts(m*6+5) = n+nodes.rows()/3;
+            }
+        }
+
+        return { m_mesh, elts };
     };
 }

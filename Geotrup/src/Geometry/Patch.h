@@ -6,6 +6,12 @@
 
 namespace Geometry
 {
+    struct Mesh
+    {
+        Eigen::MatrixXd nodes;
+        Eigen::VectorXi elts;
+    };
+
     class Patch
     {
         private:
@@ -25,6 +31,7 @@ namespace Geometry
 
         Eigen::MatrixXd Mesh(Eigen::VectorXd u, Eigen::VectorXd w, int MESH_SIZE); 
         std::tuple<Eigen::MatrixXd, Eigen::VectorXi> GetFemMesh();
+        Geometry::Mesh GetGfxMesh();
     };
 }
 

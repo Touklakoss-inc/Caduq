@@ -40,7 +40,7 @@ void SandboxGeo::OnAttach()
     Geometry::SplinePoint sp7{ p0, { 0.0, -1.0, 0.0 }, 1.0 };
     Geometry::Spline s3{ sp6, sp7 };
 
-    const int MESH_SIZE{ 100 };
+    const int MESH_SIZE{ 10 };
     Eigen::ArrayXd u{ Eigen::ArrayXd::LinSpaced(MESH_SIZE, 0.0, 1.0) };
     s0.Mesh(u, MESH_SIZE);
     s1.Mesh(u, MESH_SIZE);
@@ -51,7 +51,8 @@ void SandboxGeo::OnAttach()
 
     Geometry::Patch c0{ s2, s0, s3, s1 };
     Eigen::MatrixXd m = c0.Mesh(u, u, MESH_SIZE);
-    std::cout << m;
+    // std::cout << m;
+    // std::cout << c0.GetGfxMesh().elts << '\n';
     Geometry::Tools::WriteNodes("nodes.k", m);
     Geometry::Tools::WriteSurface("surf.k", c0);
 }
