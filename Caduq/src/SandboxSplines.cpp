@@ -7,6 +7,8 @@
 
 void SandboxSplines::OnAttach()
 {
+	Vizir::RenderCommand::EnablePrimitiveRestart();
+
 	// Geometry 
 	Geometry::Point p0{ 0.0, 0.0, 0.0 };
 	Geometry::Point p1{ 3.0, 0.0, 1.0 };
@@ -29,7 +31,7 @@ void SandboxSplines::OnAttach()
 	Geometry::SplinePoint sp7{ p0, { 0.0, -1.0, 0.0 }, 1.0 };
 	Geometry::Spline s3{ sp6, sp7 };
 
-	const int MESH_SIZE{ 100 };
+	const int MESH_SIZE{ 10 };
 	Eigen::ArrayXd u{ Eigen::ArrayXd::LinSpaced(MESH_SIZE, 0.0, 1.0) };
 	Eigen::MatrixXd U0 = s0.Mesh(u, MESH_SIZE);
 	Eigen::MatrixXd U1 = s1.Mesh(u, MESH_SIZE);
@@ -119,7 +121,22 @@ void SandboxSplines::OnAttach()
 	// Index buffer
 	// vertex n * MESH_SIZE - 1 (n = 0, .., 3) is duplicated
 	// needs to be addressed !
-	Eigen::ArrayX<uint32_t> splinesIndices{ Eigen::ArrayX<uint32_t>::LinSpaced(4 * MESH_SIZE, 0, 4 * MESH_SIZE - 1) };
+	std::vector<uint32_t> splinesIndices(4 * (MESH_SIZE + 1));
+	{
+			Eigen::ArrayX<uint32_t> spline0 = Eigen::ArrayX<uint32_t>::LinSpaced(MESH_SIZE + 1, 0 * MESH_SIZE, MESH_SIZE);
+			spline0[MESH_SIZE] = UINT32_MAX;
+			Eigen::ArrayX<uint32_t> spline1 = Eigen::ArrayX<uint32_t>::LinSpaced(MESH_SIZE + 1, 1 * MESH_SIZE, 2 * MESH_SIZE);
+			spline1[MESH_SIZE] = UINT32_MAX;
+			Eigen::ArrayX<uint32_t> spline2 = Eigen::ArrayX<uint32_t>::LinSpaced(MESH_SIZE + 1, 2 * MESH_SIZE, 3 * MESH_SIZE);
+			spline2[MESH_SIZE] = UINT32_MAX;
+			Eigen::ArrayX<uint32_t> spline3 = Eigen::ArrayX<uint32_t>::LinSpaced(MESH_SIZE + 1, 3 * MESH_SIZE, 4 * MESH_SIZE);
+			spline3[MESH_SIZE] = UINT32_MAX;
+
+			memcpy(splinesIndices.data() + 0 * (MESH_SIZE + 1), spline0.data(), (MESH_SIZE + 1) * sizeof(uint32_t));
+			memcpy(splinesIndices.data() + 1 * (MESH_SIZE + 1), spline1.data(), (MESH_SIZE + 1) * sizeof(uint32_t));
+			memcpy(splinesIndices.data() + 2 * (MESH_SIZE + 1), spline2.data(), (MESH_SIZE + 1) * sizeof(uint32_t));
+			memcpy(splinesIndices.data() + 3 * (MESH_SIZE + 1), spline3.data(), (MESH_SIZE + 1) * sizeof(uint32_t));
+	}
 
 	Vizir::Ref<Vizir::IndexBuffer> splinesIndexBuffer;
 	splinesIndexBuffer.reset(Vizir::IndexBuffer::Create(splinesIndices.data(), splinesIndices.size()));
@@ -206,7 +223,7 @@ void SandboxSplines::OnUpdate(Vizir::Timestep ts)
 	std::dynamic_pointer_cast<Vizir::OpenGLShader>(m_Shader)->Bind();
 
 	// Render patch
-	std::dynamic_pointer_cast<Vizir::OpenGLShader>(m_Shader)->UploadUniformFloat3("u_Color", m_PointColor);
+	std::dynamic_pointer_cast<Vizir::OpenGLShader>(m_Shader)->UploadUniformFloat3("u_Color", m_TriangleColor);
 	Vizir::Renderer::Submit(m_Shader, m_PatchVertexArray, m_Transform);
 
 	// Render lines
@@ -230,8 +247,10 @@ void SandboxSplines::OnImGuiRender()
 	ImGui::ColorEdit3("Point Color", glm::value_ptr(m_PointColor));
 	ImGui::DragFloat("Point Size", &pointSize, 1.0f, 1.0f, 25.0f);
 
-	ImGui::ColorEdit3("Lines Color", glm::value_ptr(m_LineColor));
-	ImGui::DragFloat("Lines Size", &lineSize, 1.0f, 1.0f, 10.0f);
+	ImGui::ColorEdit3("Line Color", glm::value_ptr(m_LineColor));
+	ImGui::DragFloat("Line Size", &lineSize, 1.0f, 1.0f, 10.0f);
+
+	ImGui::ColorEdit3("Triangle Color", glm::value_ptr(m_TriangleColor));
 
 	ImGui::End();
 
