@@ -1,0 +1,73 @@
+name: "check-compilation"
+on:
+  push:
+    branches:
+      - dev
+      - workflows
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      
+      # --- Initialize Submodules ---
+
+      - name: Checkout Repository and Initialize Submodules
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          submodules: true        
+
+      # --- Setup C++ Build Tools ---
+
+      # --- LINUX ---
+      - name: Install C/C++ Build Tools (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential
+          sudo apt-get install -y xorg openbox libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev xinput libxi-dev
+       
+      # --- WINDOWS ---
+      - name: Install C/C++ Build Tools (Windows)
+        if: matrix.os == 'windows-latest'
+        uses: microsoft/setup-msbuild@v2 
+
+      # --- Generate Project Files ---
+
+      # # --- LINUX ---
+      - name: Generate Project Files (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          ./Scripts/Lin-GenProject.sh
+          ls
+
+      # --- WINDOWS ---
+      - name: Generate Project Files (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          cd .\Scripts\
+          .\Win-GenProject.bat
+          cd ..
+
+      # --- Build Project ---
+
+      # --- LINUX ---
+      - name: Build (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          pwd # Debug
+          ls
+          make
+
+      # --- WINDOWS ---  
+      - name: Build (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          msbuild Caduq.sln /p:Configuration=Release /p:Platform=x64

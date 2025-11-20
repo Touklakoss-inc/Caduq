@@ -1,0 +1,20 @@
+[submodule "Thats-the-one/src/vendor/TThats-the-one/src/vendor/spdlog"]
+	path = Thats-the-one/src/vendor/TThats-the-one/src/vendor/spdlog
+	url = https://github.com/gabime/spdlog
+	branch = v1.x
+[submodule "Vizir/vendor/GLFW"]
+	path = Vizir/vendor/GLFW
+	url = https://github.com/Touklakoss-inc/GLFW
+	branch = main
+[submodule "Vizir/vendor/spdlog"]
+	path = Vizir/vendor/spdlog
+	url = https://github.com/gabime/spdlog
+	branch = master
+[submodule "Vizir/vendor/imgui"]
+	path = Vizir/vendor/imgui
+	url = https://github.com/Touklakoss-inc/imgui
+	branch = main
+[submodule "Vizir/vendor/glm"]
+	path = Vizir/vendor/glm
+	url = https://github.com/g-truc/glm
+	branch = master
