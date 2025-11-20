@@ -16,6 +16,7 @@ namespace Vizir
 
 		virtual void SetPointSize(float pointSize) override;
 		virtual void SetLineWidth(float lineWidth) override;
+		virtual void EnablePrimitiveRestart() override;
 
 	};
 }

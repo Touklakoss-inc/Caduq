@@ -40,4 +40,10 @@ namespace Vizir
 	{
 		glLineWidth(lineWidth);
 	}
+
+	void OpenGLRendererAPI::EnablePrimitiveRestart()
+	{
+		glEnable(GL_PRIMITIVE_RESTART);
+		glPrimitiveRestartIndex(UINT32_MAX);
+	}
 }

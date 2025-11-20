@@ -35,6 +35,10 @@ namespace Vizir
 		{
 			s_RendererAPI->SetLineWidth(lineWidth);
 		}
+		inline static void EnablePrimitiveRestart()
+		{
+			s_RendererAPI->EnablePrimitiveRestart();
+		}
 	private:
 		static Scope<RendererAPI> s_RendererAPI;
 	};

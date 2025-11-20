@@ -21,6 +21,7 @@ namespace Vizir
 
 		virtual void SetPointSize(float pointSize) = 0;
 		virtual void SetLineWidth(float lineWidth) = 0;
+		virtual void EnablePrimitiveRestart() = 0;
 
 		inline static RendererAPI::API GetAPI() { return s_API; }
 
