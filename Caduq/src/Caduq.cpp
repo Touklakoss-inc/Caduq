@@ -2,6 +2,7 @@
 #include "Vizir/Core/EntryPoint.h"
 
 // ---- Layers ----
+#include "BaseParameters.h"
 #include "SandboxSplines.h"
 
 class GameApplication : public Vizir::Application
@@ -9,6 +10,7 @@ class GameApplication : public Vizir::Application
 public:
 	GameApplication()
 	{
+		PushOverlay(new BaseParameters());
 		PushLayer(new SandboxSplines());
 	}
 	~GameApplication()
