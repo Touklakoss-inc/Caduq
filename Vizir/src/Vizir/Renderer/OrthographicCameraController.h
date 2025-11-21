@@ -21,7 +21,11 @@ namespace Vizir
 	private:
 		bool OnMouseScrolled(MouseScrolledEvent& e);
 		bool OnWindowResized(WindowResizedEvent& e);
+		void RecomputeSpeed();
 	private:
+		const float m_MinZoomLevel = 0.01f;
+		const float m_BaseCameraTranslationSpeed = 1.0f;
+
 		float m_AspectRatio;
 		float m_ZoomLevel = 1.0f;
 		OrthographicCamera m_Camera;
@@ -29,7 +33,7 @@ namespace Vizir
 		bool m_Rotation;
 		glm::vec3 m_CameraPosition = { 0.0f, 0.0f, 0.0f };
 		float m_CameraRotation = 0.0f;
-		float m_CameraTranslationSpeed = 1.0f, m_CameraRotationSpeed = 1.0f;
+		float m_CameraTranslationSpeed = m_BaseCameraTranslationSpeed, m_CameraRotationSpeed = 1.0f;
 	};
 }
 
