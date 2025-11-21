@@ -30,5 +30,7 @@ private:
     // 'Uniforms'
     glm::vec3 m_PointColor = { 1.0f, 0.0f, 0.0f };
     float m_PointSize = 5.0f;
+
+    glm::mat4 m_Transform;
 };
 

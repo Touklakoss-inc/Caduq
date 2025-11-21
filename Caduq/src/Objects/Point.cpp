@@ -50,13 +50,9 @@ namespace Caduq
         m_PointVertexArray->SetIndexBuffer(pointIndexBuffer);
         m_PointVertexArray->SetPrimitiveType(Vizir::POINTS);
         m_PointVertexArray->Unbind();
-
-        // Transform
-        m_Transform = glm::mat4(1.0f);
-
     }
 
-    void Point::Visualize(Vizir::Ref<Vizir::Shader> m_Shader)
+    void Point::Visualize(Vizir::Ref<Vizir::Shader> m_Shader, glm::mat4 m_Transform)
     {
         Vizir::Renderer::Submit(m_Shader, m_PointVertexArray, m_Transform);
 

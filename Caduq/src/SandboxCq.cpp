@@ -47,6 +47,9 @@ void SandboxCq::OnAttach()
     cp1.Init();
 
     Vizir::RenderCommand::SetPointSize(m_PointSize);
+
+    // Transform
+    m_Transform = glm::mat4(1.0f);
 }
 
 void SandboxCq::OnUpdate(Vizir::Timestep ts)
@@ -62,8 +65,8 @@ void SandboxCq::OnUpdate(Vizir::Timestep ts)
     // Render points
     std::dynamic_pointer_cast<Vizir::OpenGLShader>(m_Shader)->UploadUniformFloat3("u_Color", m_PointColor);
 
-    cp0.Visualize(m_Shader);
-    cp1.Visualize(m_Shader);
+    cp0.Visualize(m_Shader, m_Transform);
+    cp1.Visualize(m_Shader, m_Transform);
 
     std::dynamic_pointer_cast<Vizir::OpenGLShader>(m_Shader)->Unbind();
 
