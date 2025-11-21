@@ -1,0 +1,34 @@
+#pragma once
+#include <Vizir.h>
+
+#include "Geometry/Point.h"
+#include "Objects/Point.h"
+#include "Geometry/Spline.h"
+#include "Geometry/Patch.h"
+
+class SandboxCq : public Vizir::Layer
+{
+public:
+	SandboxCq() : Layer("Sandbox - Splines"), m_CameraController(1280.0f / 720.0f, true)
+	{ }
+
+	virtual void OnAttach() override;
+	virtual void OnDetach() override {}
+	virtual void OnUpdate(Vizir::Timestep ts) override;
+	virtual void OnImGuiRender() override;
+	virtual void OnEvent(Vizir::Event& e) override;
+private:
+
+	// Geometry
+    Caduq::Point cp0{ 0.0, 0.0, 0.0 };
+    Caduq::Point cp1{ 1.0, 1.0, 0.0 };
+
+	// Rendering 
+	Vizir::OrthographicCameraController m_CameraController;
+    Vizir::Ref<Vizir::Shader> m_Shader;
+
+    // 'Uniforms'
+    glm::vec3 m_PointColor = { 1.0f, 0.0f, 0.0f };
+    float m_PointSize = 5.0f;
+};
+

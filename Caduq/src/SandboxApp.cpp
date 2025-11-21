@@ -19,6 +19,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "glm/ext.hpp" // TEMP
 
+// #include "SandboxCq.h"
 #include "SandboxSplines.h"
 
 
@@ -230,24 +231,24 @@ private:
 	glm::vec3 m_SquareColor = { 0.2f, 0.1f, 0.8f };
 };
 
-//class GameApplication : public Vizir::Application
-//{
-//public:
-//	GameApplication()
-//	{
-//		PushLayer(new SandboxSplines());
+// class GameApplication : public Vizir::Application
+// {
+// public:
+// 	GameApplication()
+// 	{
+// 		PushLayer(new SandboxSplines());
 //
-//		/*m_CameraLayer = new CameraLayer(&m_Camera);
-//		PushLayer(m_CameraLayer);*/
-//	}
-//	~GameApplication()
-//	{
+// 		/*m_CameraLayer = new CameraLayer(&m_Camera);
+// 		PushLayer(m_CameraLayer);*/
+// 	}
+// 	~GameApplication()
+// 	{
 //
-//	}
-//	private:
-//};
+// 	}
+// 	private:
+// };
 //
-//Vizir::Application* Vizir::CreateApplication()
-//{
-//	return new GameApplication();
-//}
+// Vizir::Application* Vizir::CreateApplication()
+// {
+// 	return new GameApplication();
+// }

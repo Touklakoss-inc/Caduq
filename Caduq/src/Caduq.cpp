@@ -4,6 +4,7 @@
 // ---- Layers ----
 #include "BaseParameters.h"
 #include "SandboxSplines.h"
+#include "SandboxCq.h"
 
 class GameApplication : public Vizir::Application
 {
@@ -11,7 +12,8 @@ public:
 	GameApplication()
 	{
 		PushOverlay(new BaseParameters());
-		PushLayer(new SandboxSplines());
+		// PushLayer(new SandboxSplines());
+		PushLayer(new SandboxCq());
 	}
 	~GameApplication()
 	{
