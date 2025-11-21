@@ -5,6 +5,19 @@
 
 namespace Vizir
 {
+	static unsigned int GetNativePolygonMode(RendererAPI::PolygonMode polygonMode)
+	{
+		switch (polygonMode)
+		{
+		case RendererAPI::PolygonMode::POINT:
+			return GL_POINT;
+		case RendererAPI::PolygonMode::LINE:
+			return GL_LINE;
+		case RendererAPI::PolygonMode::FILL:
+			return GL_FILL;
+		}
+	}
+
 	void OpenGLRendererAPI::Init()
 	{
 		glEnable(GL_BLEND);
@@ -29,6 +42,11 @@ namespace Vizir
 	void OpenGLRendererAPI::DrawIndexed(const Ref<VertexArray>& vertexArray)
 	{
 		glDrawElements((GLenum)vertexArray->GetNativePrimitiveType(), vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+	}
+
+	void OpenGLRendererAPI::SetPolygonMode(PolygonMode polygonMode)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GetNativePolygonMode(polygonMode));
 	}
 
 	void OpenGLRendererAPI::SetPointSize(float pointSize)
