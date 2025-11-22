@@ -24,8 +24,10 @@ private:
     Caduq::Point cp0{ 0.0, 0.0, 0.0 };
     Caduq::Point cp1{ 1.0, 1.0, 0.0 };
 
-    Caduq::Spline cs0{ cp0, Caduq::PointTangency{ { 1.0, 0.0, 0.0 }, 1.0 }, 
-                       cp1, Caduq::PointTangency{ { 1.0, 0.0, 0.0 }, 1.0 } };
+    const int MESH_SIZE{ 100 };
+    Caduq::Spline cs0{ cp0, Caduq::PointTangency{ { 1.0, 1.0, 0.0 }, 1.0 }, 
+                       cp1, Caduq::PointTangency{ { 1.0, 0.0, 0.0 }, 1.0 },
+                       MESH_SIZE };
 
 	// Rendering 
 	Vizir::OrthographicCameraController m_CameraController;

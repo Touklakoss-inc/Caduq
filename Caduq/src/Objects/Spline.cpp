@@ -9,9 +9,12 @@
 
 namespace Caduq
 {
-
-    Spline::Spline(Caduq::Point startPoint, PointTangency startTangency, Caduq::Point endPoint, PointTangency endTangency)
-        :m_start{ startPoint }, m_startTangency{ startTangency }, m_end{ endPoint }, m_endTangency{ endTangency }
+    Spline::Spline(Caduq::Point startPoint, PointTangency startTangency, 
+                   Caduq::Point endPoint, PointTangency endTangency,
+                   int mesh_size)
+        :m_start{ startPoint }, m_startTangency{ startTangency }, 
+         m_end{ endPoint }, m_endTangency{ endTangency },
+         m_mesh_size{ mesh_size }
     {
     }
 
@@ -25,8 +28,8 @@ namespace Caduq
                                         m_endTangency.tension };
         Geometry::Spline s0{ startPoint, endPoint };
 
-        // Create spline mesh, todo : move meshsize outside of this object
-        const int MESH_SIZE{ 10 };
+        // Create spline mesh, todo: replace MESH_SIZE by m_mesh_size
+        const int MESH_SIZE{ m_mesh_size };
         Eigen::ArrayXd u{ Eigen::ArrayXd::LinSpaced(MESH_SIZE, 0.0, 1.0) };
         Eigen::MatrixXd U0 = s0.Mesh(u, MESH_SIZE);
 
