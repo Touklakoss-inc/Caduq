@@ -2,12 +2,16 @@
 #define PATCH_H
 
 #include <Eigen/Dense>
-
 #include "Spline.h"
-#include "Geo.h"
 
 namespace Geometry
 {
+    struct Mesh
+    {
+        Eigen::MatrixXd nodes;
+        Eigen::VectorXi elts;
+    };
+
     class Patch
     {
         private:

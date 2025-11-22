@@ -27,10 +27,6 @@ namespace Vizir
 		{
 			s_RendererAPI->DrawIndexed(vertexArray);
 		}
-		inline static void SetPolygonMode(RendererAPI::PolygonMode polygonMode)
-		{
-			s_RendererAPI->SetPolygonMode(polygonMode);
-		}
 		inline static void SetPointSize(float pointSize)
 		{
 			s_RendererAPI->SetPointSize(pointSize);
