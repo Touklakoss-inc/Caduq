@@ -2,11 +2,11 @@
 #define CQ_SPLINE_H
 
 #include <Vizir.h>
+#include <Eigen/Core>
 
-#include "Eigen/Core"
 #include "Point.h"
-
 #include "Geometry/Spline.h"
+
 namespace Caduq
 {
     struct PointTangency
@@ -18,9 +18,8 @@ namespace Caduq
     class Spline
     {
         private:
-        Geometry::Spline m_spline;
-
         int m_mesh_size{ 10 };
+        Geometry::Spline m_spline;
 
         Vizir::Ref<Vizir::VertexArray> m_SplineVertexArray;
 

@@ -3,7 +3,6 @@
 
 #include <Vizir.h>
 
-#include "Eigen/Core"
 #include "Spline.h"
 
 namespace Caduq

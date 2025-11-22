@@ -154,7 +154,7 @@ namespace Geometry
         int size{};
         Eigen::MatrixXd nodes{ m_mesh };
         size = (nodes.cols()-1)*6*(nodes.rows()/3-1);  
-        Eigen::VectorXi elts{ size };
+        Eigen::VectorX<uint32_t> elts{ size };
 
 
         for (int j = 0; j < nodes.cols()-1; j++)

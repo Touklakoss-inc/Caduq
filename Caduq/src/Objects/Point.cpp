@@ -4,7 +4,6 @@
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Vizir/Platform/OpenGL/OpenGLShader.h"
 #include "Geometry/Point.h"
 
 namespace Caduq
@@ -22,27 +21,23 @@ namespace Caduq
     {
         Geometry::Point p0 = m_Point;
 
-        // Gather points
-        std::vector<float> pointsVertices(1 * 3);
         // Cast to float
-        Eigen::Vector3f pf{ p0.GetPosition().cast<float>() };
-        // copy data
-        memcpy(pointsVertices.data() + 0 * 3, pf.data(), 3 * sizeof(float));
+        Eigen::Vector3f pointVertice = p0.GetPosition().cast<float>();
+        Eigen::Vector<uint32_t, 1> pointIndice{ 0 };
+
         // Visualization buffer
         // Vertex Buffer
         Vizir::Ref<Vizir::VertexBuffer> pointsVertexBuffer;
-        pointsVertexBuffer.reset(Vizir::VertexBuffer::Create(pointsVertices.data(), pointsVertices.size() * sizeof(float)));
+        pointsVertexBuffer.reset(Vizir::VertexBuffer::Create(pointVertice.data(), pointVertice.size() * sizeof(float)));
 
         Vizir::BufferLayout pointsLayout = {
             { Vizir::ShaderDataType::Float3, "v_position"},
         };
         pointsVertexBuffer->SetLayout(pointsLayout);
+
         // Index buffer
-        uint32_t pointIndices[1] = {
-            0
-        };
         Vizir::Ref<Vizir::IndexBuffer> pointIndexBuffer;
-        pointIndexBuffer.reset(Vizir::IndexBuffer::Create(pointIndices, sizeof(pointIndices) / sizeof(uint32_t)));
+        pointIndexBuffer.reset(Vizir::IndexBuffer::Create(pointIndice.data(), pointIndice.size()));
 
         // Vertex array
         m_PointVertexArray = Vizir::VertexArray::Create();

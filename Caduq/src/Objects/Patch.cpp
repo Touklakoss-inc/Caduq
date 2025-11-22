@@ -4,8 +4,6 @@
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Vizir/Platform/OpenGL/OpenGLShader.h"
-#include "Geometry/Point.h"
 #include "Geometry/Patch.h"
 
 namespace Caduq
@@ -20,10 +18,9 @@ namespace Caduq
         Geometry::Patch c0{ m_s0.GetGeoSpline(), m_s1.GetGeoSpline(),
                             m_s2.GetGeoSpline(), m_s3.GetGeoSpline() };
 
-        // Create patch mesh, todo: replace MESH_SIZE by m_mesh_size
-        const int MESH_SIZE{ m_mesh_size };
-        Eigen::ArrayXd u{ Eigen::ArrayXd::LinSpaced(MESH_SIZE, 0.0, 1.0) };
-        Eigen::MatrixXd m = c0.Mesh(u, u, MESH_SIZE);
+        // Create patch mesh
+        Eigen::ArrayXd u{ Eigen::ArrayXd::LinSpaced(m_mesh_size, 0.0, 1.0) };
+        Eigen::MatrixXd m = c0.Mesh(u, u, m_mesh_size);
         Geometry::Mesh mesh = c0.GetGfxMesh();
 
         // Cast points to float

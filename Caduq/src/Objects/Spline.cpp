@@ -5,8 +5,6 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Geometry/Spline.h"
-#include "Vizir/Platform/OpenGL/OpenGLShader.h"
-#include "Geometry/Point.h"
 
 namespace Caduq
 {
@@ -22,21 +20,16 @@ namespace Caduq
 
     void Spline::Init()
     {
-        Geometry::Spline s0 = m_spline;
-
-        // Create spline mesh, todo: replace MESH_SIZE by m_mesh_size
-        const int MESH_SIZE{ m_mesh_size };
-        Eigen::ArrayXd u{ Eigen::ArrayXd::LinSpaced(MESH_SIZE, 0.0, 1.0) };
-        Eigen::MatrixXd U0 = s0.Mesh(u, MESH_SIZE);
-
-        // Gather points
-        std::vector<float> splineVertices(1 * 3 * MESH_SIZE);
+        // Create spline mesh
+        Eigen::ArrayXd u{ Eigen::ArrayXd::LinSpaced(m_mesh_size, 0.0, 1.0) };
+        Eigen::MatrixXd U0 = m_spline.Mesh(u, m_mesh_size);
+        Geometry::Mesh mesh = m_spline.GetGfxMesh();
 
         // Cast points to float
-        Eigen::MatrixXf splinePoints0 = U0.cast<float>();
+        Eigen::MatrixXf splineVertices = mesh.nodes.cast<float>();
+        Eigen::VectorX<uint32_t> splineIndices = mesh.elts;
 
         // Copy data
-        memcpy(splineVertices.data() + 0 * 3 * MESH_SIZE, splinePoints0.data(), MESH_SIZE * 3 * sizeof(float));
         // Vertex Buffer
         Vizir::Ref<Vizir::VertexBuffer> splinesVertexBuffer;
         splinesVertexBuffer.reset(Vizir::VertexBuffer::Create(splineVertices.data(), splineVertices.size() * sizeof(float)));
@@ -47,18 +40,8 @@ namespace Caduq
         splinesVertexBuffer->SetLayout(splinesLayout);
 
         // Index buffer
-        // vertex n * MESH_SIZE - 1 (n = 0, .., 3) is duplicated
-        // needs to be addressed !
-        std::vector<uint32_t> splinesIndices(1 * (MESH_SIZE + 1));
-        {
-            Eigen::ArrayX<uint32_t> spline0 = Eigen::ArrayX<uint32_t>::LinSpaced(MESH_SIZE + 1, 0 * MESH_SIZE, MESH_SIZE);
-            spline0[MESH_SIZE] = UINT32_MAX;
-
-            memcpy(splinesIndices.data() + 0 * (MESH_SIZE + 1), spline0.data(), (MESH_SIZE + 1) * sizeof(uint32_t));
-        }
-
         Vizir::Ref<Vizir::IndexBuffer> splinesIndexBuffer;
-        splinesIndexBuffer.reset(Vizir::IndexBuffer::Create(splinesIndices.data(), splinesIndices.size()));
+        splinesIndexBuffer.reset(Vizir::IndexBuffer::Create(splineIndices.data(), splineIndices.size()));
 
         // Vertex array
         m_SplineVertexArray = Vizir::VertexArray::Create();

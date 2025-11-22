@@ -4,17 +4,10 @@
 #include <Eigen/Dense>
 #include <tuple>
 
-#include "Point.h"
+#include "Geo.h"
 
 namespace Geometry
 {
-    struct SplinePoint
-    {
-        Geometry::Point point{};
-        Eigen::RowVector3d tangent{ 0.0, 0.0, 0.0 };
-        double tension{ 0 };
-    };
-
     class Spline
     {
         private:
@@ -28,6 +21,7 @@ namespace Geometry
         Spline(SplinePoint startPoint, SplinePoint endPoint);
         Eigen::MatrixXd Mesh(Eigen::ArrayXd u, const int MESH_SIZE);
         std::tuple<Eigen::MatrixXd, Eigen::VectorXi> GetFemMesh();
+        Geometry::Mesh GetGfxMesh();
         double GetLength();
     };
 }
