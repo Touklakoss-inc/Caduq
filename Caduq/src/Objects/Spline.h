@@ -18,10 +18,7 @@ namespace Caduq
     class Spline
     {
         private:
-        Caduq::Point m_start;
-        PointTangency m_startTangency{};
-        Caduq::Point m_end;
-        PointTangency m_endTangency{};
+        Geometry::Spline m_spline;
 
         int m_mesh_size{ 10 };
 
@@ -34,6 +31,7 @@ namespace Caduq
 
         void Init();
         void Visualize(Vizir::Ref<Vizir::Shader> m_Shader, glm::mat4 m_Transform);
+        Geometry::Spline GetGeoSpline();
     };
 }
 #endif

@@ -4,6 +4,7 @@
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Geometry/Spline.h"
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
 #include "Geometry/Point.h"
 
@@ -12,21 +13,16 @@ namespace Caduq
     Spline::Spline(Caduq::Point startPoint, PointTangency startTangency, 
                    Caduq::Point endPoint, PointTangency endTangency,
                    int mesh_size)
-        :m_start{ startPoint }, m_startTangency{ startTangency }, 
-         m_end{ endPoint }, m_endTangency{ endTangency },
-         m_mesh_size{ mesh_size }
+        :m_spline{ 
+            Geometry::SplinePoint{ startPoint.GetGeoPoint(), startTangency.tangent, startTangency.tension },
+            Geometry::SplinePoint{ endPoint.GetGeoPoint(), endTangency.tangent, startTangency.tension }
+        }
     {
     }
 
     void Spline::Init()
     {
-        Geometry::SplinePoint startPoint{ m_start.GetGeoPoint(), 
-                                          m_startTangency.tangent, 
-                                          m_startTangency.tension };
-        Geometry::SplinePoint endPoint{ m_end.GetGeoPoint(), 
-                                        m_endTangency.tangent, 
-                                        m_endTangency.tension };
-        Geometry::Spline s0{ startPoint, endPoint };
+        Geometry::Spline s0 = m_spline;
 
         // Create spline mesh, todo: replace MESH_SIZE by m_mesh_size
         const int MESH_SIZE{ m_mesh_size };
@@ -77,5 +73,9 @@ namespace Caduq
         Vizir::Renderer::Submit(m_Shader, m_SplineVertexArray, m_Transform);
 
         m_SplineVertexArray->Unbind();
+    }
+    Geometry::Spline Spline::GetGeoSpline()
+    {
+        return m_spline;
     }
 }

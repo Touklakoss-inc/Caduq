@@ -45,8 +45,15 @@ void SandboxCq::OnAttach()
 
     cp0.Init();
     cp1.Init();
+    cp2.Init();
+    cp3.Init();
 
     cs0.Init();
+    cs1.Init();
+    cs2.Init();
+    cs3.Init();
+
+    cc0.Init();
 
     Vizir::RenderCommand::SetPointSize(m_PointSize);
 	Vizir::RenderCommand::SetLineWidth(m_LineSize);
@@ -66,16 +73,26 @@ void SandboxCq::OnUpdate(Vizir::Timestep ts)
 
     std::dynamic_pointer_cast<Vizir::OpenGLShader>(m_Shader)->Bind();
 
+    // Render patches
+    std::dynamic_pointer_cast<Vizir::OpenGLShader>(m_Shader)->UploadUniformFloat3("u_Color", m_TriangleColor);
+
+    cc0.Visualize(m_Shader, m_Transform);
+
     // Render splines
     std::dynamic_pointer_cast<Vizir::OpenGLShader>(m_Shader)->UploadUniformFloat3("u_Color", m_LineColor);
 
     cs0.Visualize(m_Shader, m_Transform);
+    cs1.Visualize(m_Shader, m_Transform);
+    cs2.Visualize(m_Shader, m_Transform);
+    cs3.Visualize(m_Shader, m_Transform);
 
     // Render points
     std::dynamic_pointer_cast<Vizir::OpenGLShader>(m_Shader)->UploadUniformFloat3("u_Color", m_PointColor);
 
     cp0.Visualize(m_Shader, m_Transform);
     cp1.Visualize(m_Shader, m_Transform);
+    cp2.Visualize(m_Shader, m_Transform);
+    cp3.Visualize(m_Shader, m_Transform);
 
     std::dynamic_pointer_cast<Vizir::OpenGLShader>(m_Shader)->Unbind();
 
@@ -91,8 +108,11 @@ void SandboxCq::OnImGuiRender()
 
     ImGui::ColorEdit3("Point Color", glm::value_ptr(m_PointColor));
     ImGui::DragFloat("Point Size", &pointSize, 1.0f, 1.0f, 25.0f);
+
     ImGui::ColorEdit3("Spline Color", glm::value_ptr(m_LineColor));
     ImGui::DragFloat("Line Size", &lineSize, 1.0f, 1.0f, 10.0f);
+
+    ImGui::ColorEdit3("Patch Color", glm::value_ptr(m_TriangleColor));
 
     ImGui::End();
 
