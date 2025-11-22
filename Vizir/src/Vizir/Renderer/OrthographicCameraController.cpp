@@ -50,7 +50,14 @@ namespace Vizir
     bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e)
     {
         m_ZoomLevel -= (float)e.GetYOffset();
+
+        if (m_ZoomLevel < m_MinZoomLevel)
+        {
+          m_ZoomLevel = m_MinZoomLevel;
+        }
+
         m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
+        RecomputeSpeed();
 
         return true;
     }
@@ -59,7 +66,13 @@ namespace Vizir
     {
         m_AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
         m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
+        RecomputeSpeed();
 
         return true;
+    }
+
+    void OrthographicCameraController::RecomputeSpeed()
+    {
+      m_CameraTranslationSpeed = 2.0f * m_ZoomLevel * m_BaseCameraTranslationSpeed;
     }
 }
