@@ -10,7 +10,6 @@ namespace Vizir
 	{
 	public:
 		enum API { None = 0, OpenGL = 1 };
-		enum PolygonMode { POINT = 0, LINE = 1, FILL = 2 };
 
 		virtual void Init() = 0;
 
@@ -20,7 +19,6 @@ namespace Vizir
 
 		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray) = 0;
 
-		virtual void SetPolygonMode(PolygonMode fillMode) = 0;
 		virtual void SetPointSize(float pointSize) = 0;
 		virtual void SetLineWidth(float lineWidth) = 0;
 		virtual void EnablePrimitiveRestart() = 0;

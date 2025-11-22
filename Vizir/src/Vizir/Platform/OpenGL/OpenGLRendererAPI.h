@@ -14,9 +14,9 @@ namespace Vizir
 
 		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray) override;
 
-		virtual void SetPolygonMode(PolygonMode polygonMode) override;
 		virtual void SetPointSize(float pointSize) override;
 		virtual void SetLineWidth(float lineWidth) override;
 		virtual void EnablePrimitiveRestart() override;
+
 	};
 }

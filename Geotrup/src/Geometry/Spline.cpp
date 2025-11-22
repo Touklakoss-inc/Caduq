@@ -1,4 +1,3 @@
-#include <cstdint>
 #include <iostream>
 #include "Spline.h"
 
@@ -58,19 +57,5 @@ namespace Geometry
         Eigen::Vector3d l{ m_endPoint.point.GetPosition() - m_startPoint.point.GetPosition() };
 
         return l.norm();
-    }
-
-    Geometry::Mesh Spline::GetGfxMesh()
-    {
-        Eigen::MatrixXd nodes{ m_mesh };
-        Eigen::VectorX<uint32_t> elts{ nodes.cols()+1 };
-
-        for (uint32_t i = 0; i < nodes.cols(); i++) 
-        {
-            elts(i) = i;
-        }
-        elts(nodes.cols()) = UINT32_MAX;
-
-        return { nodes, elts };
     }
 }

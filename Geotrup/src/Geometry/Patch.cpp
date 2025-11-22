@@ -7,7 +7,7 @@ namespace Geometry
     Patch::Patch(Geometry::Spline s0, Geometry::Spline s1, Geometry::Spline s2, Geometry::Spline s3)
         : m_s0{ s0 }, m_s1{ s1 }, m_s2{ s2 }, m_s3{ s3 }
     {
-    }
+    };
     // Interpolation functions
     // Curvature continuity between multiple patches
     Eigen::VectorXd Patch::F1(Eigen::VectorXd t)
@@ -154,7 +154,7 @@ namespace Geometry
         int size{};
         Eigen::MatrixXd nodes{ m_mesh };
         size = (nodes.cols()-1)*6*(nodes.rows()/3-1);  
-        Eigen::VectorX<uint32_t> elts{ size };
+        Eigen::VectorXi elts{ size };
 
 
         for (int j = 0; j < nodes.cols()-1; j++)
