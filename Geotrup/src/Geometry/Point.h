@@ -1,5 +1,5 @@
-#ifndef POINT_H
-#define POINT_H
+#ifndef GO_POINT_H
+#define GO_POINT_H
 
 #include <Eigen/Dense>
 

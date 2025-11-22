@@ -3,6 +3,7 @@
 
 #include "Geometry/Point.h"
 #include "Objects/Point.h"
+#include "Objects/Spline.h"
 #include "Geometry/Spline.h"
 #include "Geometry/Patch.h"
 
@@ -23,6 +24,9 @@ private:
     Caduq::Point cp0{ 0.0, 0.0, 0.0 };
     Caduq::Point cp1{ 1.0, 1.0, 0.0 };
 
+    Caduq::Spline cs0{ cp0, Caduq::PointTangency{ { 1.0, 0.0, 0.0 }, 1.0 }, 
+                       cp1, Caduq::PointTangency{ { 1.0, 0.0, 0.0 }, 1.0 } };
+
 	// Rendering 
 	Vizir::OrthographicCameraController m_CameraController;
     Vizir::Ref<Vizir::Shader> m_Shader;
@@ -30,6 +34,8 @@ private:
     // 'Uniforms'
     glm::vec3 m_PointColor = { 1.0f, 0.0f, 0.0f };
     float m_PointSize = 5.0f;
+    glm::vec3 m_LineColor = { 1.0f, 1.0f, 1.0f };
+    float m_LineSize = 1.0f;
 
     glm::mat4 m_Transform;
 };

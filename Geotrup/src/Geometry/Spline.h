@@ -1,5 +1,5 @@
-#ifndef SPLINE_H
-#define SPLINE_H
+#ifndef GO_SPLINE_H
+#define GO_SPLINE_H
 
 #include <Eigen/Dense>
 #include <tuple>

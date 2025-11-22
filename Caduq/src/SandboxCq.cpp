@@ -46,7 +46,10 @@ void SandboxCq::OnAttach()
     cp0.Init();
     cp1.Init();
 
+    cs0.Init();
+
     Vizir::RenderCommand::SetPointSize(m_PointSize);
+	Vizir::RenderCommand::SetLineWidth(m_LineSize);
 
     // Transform
     m_Transform = glm::mat4(1.0f);
@@ -62,6 +65,12 @@ void SandboxCq::OnUpdate(Vizir::Timestep ts)
 	Vizir::Renderer::BeginScene(m_CameraController.GetCamera());
 
     std::dynamic_pointer_cast<Vizir::OpenGLShader>(m_Shader)->Bind();
+
+    // Render splines
+    std::dynamic_pointer_cast<Vizir::OpenGLShader>(m_Shader)->UploadUniformFloat3("u_Color", m_LineColor);
+
+    cs0.Visualize(m_Shader, m_Transform);
+
     // Render points
     std::dynamic_pointer_cast<Vizir::OpenGLShader>(m_Shader)->UploadUniformFloat3("u_Color", m_PointColor);
 
@@ -76,11 +85,14 @@ void SandboxCq::OnUpdate(Vizir::Timestep ts)
 void SandboxCq::OnImGuiRender()
 {
     float pointSize = m_PointSize;
+    float lineSize = m_LineSize;
 
     ImGui::Begin("Settings");
 
     ImGui::ColorEdit3("Point Color", glm::value_ptr(m_PointColor));
     ImGui::DragFloat("Point Size", &pointSize, 1.0f, 1.0f, 25.0f);
+    ImGui::ColorEdit3("Spline Color", glm::value_ptr(m_LineColor));
+    ImGui::DragFloat("Line Size", &lineSize, 1.0f, 1.0f, 10.0f);
 
     ImGui::End();
 
@@ -89,6 +101,13 @@ void SandboxCq::OnImGuiRender()
         m_PointSize = pointSize;
         Vizir::RenderCommand::SetPointSize(m_PointSize);
     }
+    if (lineSize != m_LineSize)
+    {
+        m_LineSize = lineSize;
+        Vizir::RenderCommand::SetLineWidth(m_LineSize);
+    }
+    
+    // ImGui::ShowDemoWindow();
 }
 
 void SandboxCq::OnEvent(Vizir::Event& e)

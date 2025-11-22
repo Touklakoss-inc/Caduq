@@ -10,17 +10,17 @@
 namespace Caduq
 {
     Point::Point(double x, double y, double z)
-        :m_Position{ x, y, z }
+        :m_Point{ x, y, z }
     {
     }
     Point::Point(Eigen::Vector3d pos)
-        :m_Position{ pos }
+        :m_Point{ pos }
     {
     }
 
     void Point::Init()
     {
-        Geometry::Point p0{ m_Position };
+        Geometry::Point p0 = m_Point;
 
         // Gather points
         std::vector<float> pointsVertices(1 * 3);
@@ -57,5 +57,10 @@ namespace Caduq
         Vizir::Renderer::Submit(m_Shader, m_PointVertexArray, m_Transform);
 
         m_PointVertexArray->Unbind();
+    }
+
+    Geometry::Point Point::GetGeoPoint()
+    {
+        return m_Point;
     }
 }
