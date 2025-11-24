@@ -63,7 +63,7 @@ jobs:
         run: |
           pwd # Debug
           ls
-          make
+          make -j
 
       # --- WINDOWS ---  
       - name: Build (Windows)
