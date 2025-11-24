@@ -1,3 +1,1 @@
 # OpenGL-Project
-
-Temp
