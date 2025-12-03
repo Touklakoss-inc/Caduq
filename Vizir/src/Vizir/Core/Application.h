@@ -22,11 +22,23 @@ namespace Vizir
 		void PushOverlay(Layer* overlay);
 		void PushLayer(Layer* layer);
 
+		void PopOverlay(Layer* layer);
+		void PopLayer(Layer* layer);
+
 		void Run();
 
 		inline static Application& Get() { return *s_Instance; }
 		inline Window& GetWindow() { return *m_Window; }
 	private:
+		struct LayerOp {
+			enum Type { PushOverlay, PopOverlay, PushLayer, PopLayer };
+			Type type;
+			Layer* layer; // Warning may cause problem
+		};
+
+		void EnqueueLayerOp(LayerOp layerOp) { m_LayerOpQueue.push(layerOp); }
+		void ProcessLayerOps();
+
 		bool OnWindowClose(WindowClosedEvent& e);
 		bool OnWindowResize(WindowResizedEvent& e);
 	private:
@@ -35,6 +47,7 @@ namespace Vizir
 		bool m_Running = true;
 		bool m_Minimized = false;
 		LayerStack m_LayerStack;
+		std::queue<LayerOp> m_LayerOpQueue;
 		float m_LastTime = 0.0f;
 	private:
 		static Application* s_Instance;
