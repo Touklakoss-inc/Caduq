@@ -75,9 +75,9 @@ void SandboxGeo::OnUpdate(Vizir::Timestep ts)
 		Vizir::RenderCommand::Clear();
 	}
 
-	Vizir::Renderer2D::BeginScene(m_CameraController.GetCamera());
+	Vizir::Renderer::BeginScene(m_CameraController.GetCamera());
 
-	Vizir::Renderer2D::EndScene();
+	Vizir::Renderer::EndScene();
 }
 
 void SandboxGeo::OnImGuiRender()
