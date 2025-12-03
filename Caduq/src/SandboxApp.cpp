@@ -4,7 +4,6 @@
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
 #include "Vizir/Renderer/Shader.h"
 
-#include "Sandbox2D.h"
 #include "SandboxGeo.h"
 
 #include "imgui/imgui.h"

@@ -1,26 +1,22 @@
-#include <Vizir.h>
+#include "Caduq.h"
+
 #include "Vizir/Core/EntryPoint.h"
 
 // ---- Layers ----
-#include "BaseParameters.h"
-#include "SandboxSplines.h"
-#include "SandboxCq.h"
+#include "LayerManager.h"
 
-class GameApplication : public Vizir::Application
+
+GameApplication::GameApplication()
 {
-public:
-	GameApplication()
-	{
-		PushOverlay(new BaseParameters());
-		// PushLayer(new SandboxSplines());
-		PushLayer(new SandboxCq());
-	}
-	~GameApplication()
-	{
+	PushOverlay(new LayerManager());
+	// PushLayer(new SandboxSplines());
+/*	PushLayer(new SandboxCq());*/
+}
 
-	}
-private:
-};
+GameApplication::~GameApplication()
+{
+
+}
 
 Vizir::Application* Vizir::CreateApplication()
 {
