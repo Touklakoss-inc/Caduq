@@ -50,6 +50,35 @@ namespace Vizir
 		}
 	}
 
+	void Application::ProcessLayerOps()
+	{
+		VZ_PROFILE_FUNC()
+
+		while (!m_LayerOpQueue.empty())
+		{
+			LayerOp layerOp = m_LayerOpQueue.front();
+			m_LayerOpQueue.pop();
+
+			switch (layerOp.type)
+			{
+			case LayerOp::PopLayer:
+				m_LayerStack.PopLayer(layerOp.layer);
+				break;
+			case LayerOp::PushLayer:
+				m_LayerStack.PushLayer(layerOp.layer);
+				break;
+			case LayerOp::PopOverlay:
+				m_LayerStack.PopOverlay(layerOp.layer);
+				break;
+			case LayerOp::PushOverlay:
+				m_LayerStack.PushOverlay(layerOp.layer);
+				break;
+			default :
+				VZ_CORE_ERROR("Layer operation Type {} was not recognized", layerOp.type);
+			}
+		}
+	}
+
 	bool Application::OnWindowClose(WindowClosedEvent& e)
 	{
 		m_Running = false;
@@ -76,14 +105,28 @@ namespace Vizir
 	{
 		VZ_PROFILE_FUNC()
 
-		m_LayerStack.PushOverlay(overlay);
+		EnqueueLayerOp({ LayerOp::PushOverlay, overlay });
 	}
 
 	void Application::PushLayer(Layer* layer)
 	{
 		VZ_PROFILE_FUNC()
 
-		m_LayerStack.PushLayer(layer);
+		EnqueueLayerOp({ LayerOp::PushLayer, layer });
+	}
+
+	void Application::PopOverlay(Layer* overlay)
+	{
+		VZ_PROFILE_FUNC()
+
+		EnqueueLayerOp({ LayerOp::PopOverlay, overlay });
+	}
+
+	void Application::PopLayer(Layer* layer)
+	{
+		VZ_PROFILE_FUNC()
+
+		EnqueueLayerOp({ LayerOp::PopLayer, layer });
 	}
 
 	void Application::Run()
@@ -95,6 +138,9 @@ namespace Vizir
 			float time = (float)glfwGetTime(); // Platform/Windows
 			Timestep timestep = time - m_LastTime;
 			m_LastTime = time;
+
+			if (!m_LayerOpQueue.empty())
+				ProcessLayerOps();
 
 			if (!m_Minimized)
 			{
@@ -114,7 +160,6 @@ namespace Vizir
 					{
 						layer->OnImGuiRender();
 					}
-
 					m_ImGuiLayer->End();
 				}
 			}
