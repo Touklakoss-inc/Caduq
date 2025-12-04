@@ -8,9 +8,7 @@
 
 GameApplication::GameApplication()
 {
-	PushOverlay(new LayerManager());
-	// PushLayer(new SandboxSplines());
-/*	PushLayer(new SandboxCq());*/
+	PushOverlay(std::make_shared<LayerManager>());
 }
 
 GameApplication::~GameApplication()

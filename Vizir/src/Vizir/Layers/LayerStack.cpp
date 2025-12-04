@@ -15,11 +15,10 @@ namespace Vizir
 		for (auto layer : m_Layers)
 		{
 			layer->OnDetach();
-			delete layer;
 		}
 	}
 
-	void LayerStack::PushLayer(Layer* layer)
+	void LayerStack::PushLayer(const Ref<Layer>& layer)
 	{
 		VZ_PROFILE_FUNC()
 
@@ -29,7 +28,7 @@ namespace Vizir
 		m_LayerInsertIndex++;
 	}
 
-	void LayerStack::PushOverlay(Layer* overlay)
+	void LayerStack::PushOverlay(const Ref<Layer>& overlay)
 	{
 		VZ_PROFILE_FUNC()
 
@@ -37,7 +36,7 @@ namespace Vizir
 		overlay->OnAttach();
 	}
 
-	void LayerStack::PopLayer(Layer* layer)
+	void LayerStack::PopLayer(const Ref<Layer>& layer)
 	{
 		VZ_PROFILE_FUNC()
 
@@ -49,7 +48,7 @@ namespace Vizir
 			layer->OnDetach();
 		}
 	}
-	void LayerStack::PopOverlay(Layer* overlay)
+	void LayerStack::PopOverlay(const Ref<Layer>& overlay)
 	{
 		VZ_PROFILE_FUNC()
 

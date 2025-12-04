@@ -9,9 +9,9 @@
 
 void LayerManager::OnAttach()
 {
-  m_RegisteredLayers.push_back(new SandboxCq());
-  m_RegisteredLayers.push_back(new SandboxGeo());
-  m_RegisteredLayers.push_back(new SandboxSplines());
+  m_RegisteredLayers.push_back(std::make_shared<SandboxCq>());
+  m_RegisteredLayers.push_back(std::make_shared<SandboxGeo>());
+  m_RegisteredLayers.push_back(std::make_shared<SandboxSplines>());
 
   Vizir::Application::Get().PushLayer(m_RegisteredLayers[0]);
 }
@@ -29,8 +29,8 @@ void LayerManager::OnImGuiRender()
   if (ImGui::Combo("Selected Layer", &newLayerIndex, m_RegisteredLayersName.data(), m_RegisteredLayersName.size())
       && newLayerIndex != m_LayerIndex)
   {
-    Layer* lastLayer = m_RegisteredLayers[m_LayerIndex];
-    Layer* newLayer = m_RegisteredLayers[newLayerIndex];
+    Vizir::Ref<Layer> lastLayer = m_RegisteredLayers[m_LayerIndex];
+    Vizir::Ref<Layer> newLayer = m_RegisteredLayers[newLayerIndex];
 
     Vizir::Application::Get().PopLayer(lastLayer);
     Vizir::Application::Get().PushLayer(newLayer);
