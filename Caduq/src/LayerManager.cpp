@@ -22,27 +22,53 @@ void LayerManager::OnUpdate(Vizir::Timestep ts)
 
 void LayerManager::OnImGuiRender()
 {
-  int newLayerIndex = m_LayerIndex;
+  ImGui::Begin("Main Parameters");
 
-	ImGui::Begin("Layer Manager");
-
-  if (ImGui::Combo("Selected Layer", &newLayerIndex, m_RegisteredLayersName.data(), m_RegisteredLayersName.size())
-      && newLayerIndex != m_LayerIndex)
+  if (ImGui::CollapsingHeader("Layer Manager"))
   {
-    Vizir::Ref<Layer> lastLayer = m_RegisteredLayers[m_LayerIndex];
-    Vizir::Ref<Layer> newLayer = m_RegisteredLayers[newLayerIndex];
+    int newLayerIndex = m_LayerIndex;
 
-    PopLayer(lastLayer);
-    PushLayer(newLayer);
+    // Render every layer as a choice on the combo
+    if (ImGui::Combo("Selected Layer", &newLayerIndex, m_RegisteredLayerNames.data(), m_RegisteredLayerNames.size())
+      && newLayerIndex != m_LayerIndex)
+    {
+      Vizir::Ref<Layer> lastLayer = m_RegisteredLayers[m_LayerIndex];
+      Vizir::Ref<Layer> newLayer = m_RegisteredLayers[newLayerIndex];
 
-    m_LayerIndex = newLayerIndex;
+      PopLayer(lastLayer);
+      PushLayer(newLayer);
+
+      m_LayerIndex = newLayerIndex;
+    }
+
+    ImGui::Separator();
+    
+    if (ImGui::CollapsingHeader("Overlays"))
+    {
+      // Render every overlay as a checkbox
+      for (auto& entry : m_RegisteredOverlayEntries)
+      {
+        // On click on checkbox enable / disable overlay
+        if (ImGui::Checkbox(entry.name, &entry.enabled))
+        {
+          if (!entry.enabled)
+            PushOverlay(entry.layer);
+          else // entry.enabled
+            PopOverlay(entry.layer);
+        }
+      }
+    }
   }
 
-  if (ImGui::Combo("Polygon Mode", &m_PolygonModeIndex, m_PolygonModeStrings, 3))
+  if (ImGui::CollapsingHeader("Graphics Parameters"))
   {
-    // New item was selected! Update your program state here.
-    Vizir::RendererAPI::PolygonMode selected_enum_value = (Vizir::RendererAPI::PolygonMode)m_PolygonModeIndex;
-    Vizir::RenderCommand::SetPolygonMode(selected_enum_value);
+    // Render every Polygon mode as a choice of the combo
+    if (ImGui::Combo("Polygon Mode", &m_PolygonModeIndex, m_PolygonModeStrings, 3))
+    {
+      // New item was selected! Update your program state here.
+      Vizir::RendererAPI::PolygonMode selected_enum_value = (Vizir::RendererAPI::PolygonMode)m_PolygonModeIndex;
+      Vizir::RenderCommand::SetPolygonMode(selected_enum_value);
+    }
   }
 
 	ImGui::End();
@@ -51,7 +77,16 @@ void LayerManager::OnImGuiRender()
 void LayerManager::RegisterLayer(const Vizir::Ref<Layer>& layer)
 {
   m_RegisteredLayers.push_back(layer);
-  m_RegisteredLayersName.push_back(layer->GetName().c_str());
+  m_RegisteredLayerNames.push_back(layer->GetName().c_str());
+}
+
+void LayerManager::RegisterOverlay(const Vizir::Ref<Layer>& overlay)
+{
+  m_RegisteredOverlayEntries.push_back({
+    overlay,
+    overlay->GetName().c_str(),
+    false
+  });
 }
 
 void LayerManager::PopLayer(const Vizir::Ref<Layer> layer)
@@ -64,4 +99,16 @@ void LayerManager::PushLayer(const Vizir::Ref<Layer> layer)
 {
   VZ_TRACE("--- Pushing layer {} ---", layer->GetName().c_str());
   Vizir::Application::Get().PushLayer(layer);
+}
+
+void LayerManager::PopOverlay(const Vizir::Ref<Layer> overlay)
+{
+  VZ_TRACE("--- Pushing overlay {} ---", overlay->GetName().c_str());
+  Vizir::Application::Get().PushOverlay(overlay);
+}
+
+void LayerManager::PushOverlay(const Vizir::Ref<Layer> overlay)
+{
+  VZ_TRACE("--- Popping overlay {} ---", overlay->GetName().c_str());
+  Vizir::Application::Get().PopOverlay(overlay);
 }
