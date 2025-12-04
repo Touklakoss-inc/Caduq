@@ -5,17 +5,20 @@ class LayerManager : public Vizir::Layer
 {
 public:
 	LayerManager() : Vizir::Layer("Layer Manager")
-	{
-
-	}
+	{	}
 
 	virtual void OnAttach() override;
 	virtual void OnDetach() override {}
 	virtual void OnUpdate(Vizir::Timestep ts) override;
 	virtual void OnImGuiRender() override;
+
+	void RegisterLayer(const Vizir::Ref<Layer>& layer);
 private:
-	std::vector<Vizir::Ref<Vizir::Layer>> m_RegisteredLayers;
-	std::vector<const char*> m_RegisteredLayersName = { "SandboxCq", "SandboxGeo", "SandboxSplines" };
+	void PopLayer(const Vizir::Ref<Layer> layer);
+	void PushLayer(const Vizir::Ref<Layer> layer);
+private:
+	std::vector<Vizir::Ref<Vizir::Layer>> m_RegisteredLayers{};
+	std::vector<const char*> m_RegisteredLayersName{};
 	int m_LayerIndex = 0;
 
 	int m_PolygonModeIndex = (int)Vizir::RendererAPI::FILL;
