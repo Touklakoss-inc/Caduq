@@ -9,11 +9,11 @@
 
 void LayerManager::OnAttach()
 {
-  m_RegisteredLayers.push_back(std::make_shared<SandboxCq>());
-  m_RegisteredLayers.push_back(std::make_shared<SandboxGeo>());
-  m_RegisteredLayers.push_back(std::make_shared<SandboxSplines>());
+  RegisterLayer(std::make_shared<SandboxCq>());
+  RegisterLayer(std::make_shared<SandboxGeo>());
+  RegisterLayer(std::make_shared<SandboxSplines>());
 
-  Vizir::Application::Get().PushLayer(m_RegisteredLayers[0]);
+  PushLayer(m_RegisteredLayers[0]);
 }
 
 void LayerManager::OnUpdate(Vizir::Timestep ts)
@@ -32,8 +32,8 @@ void LayerManager::OnImGuiRender()
     Vizir::Ref<Layer> lastLayer = m_RegisteredLayers[m_LayerIndex];
     Vizir::Ref<Layer> newLayer = m_RegisteredLayers[newLayerIndex];
 
-    Vizir::Application::Get().PopLayer(lastLayer);
-    Vizir::Application::Get().PushLayer(newLayer);
+    PopLayer(lastLayer);
+    PushLayer(newLayer);
 
     m_LayerIndex = newLayerIndex;
   }
@@ -46,4 +46,22 @@ void LayerManager::OnImGuiRender()
   }
 
 	ImGui::End();
+}
+
+void LayerManager::RegisterLayer(const Vizir::Ref<Layer>& layer)
+{
+  m_RegisteredLayers.push_back(layer);
+  m_RegisteredLayersName.push_back(layer->GetName().c_str());
+}
+
+void LayerManager::PopLayer(const Vizir::Ref<Layer> layer)
+{
+  VZ_TRACE("--- Popping layer {} ---", layer->GetName().c_str());
+  Vizir::Application::Get().PopLayer(layer);
+}
+
+void LayerManager::PushLayer(const Vizir::Ref<Layer> layer)
+{
+  VZ_TRACE("--- Pushing layer {} ---", layer->GetName().c_str());
+  Vizir::Application::Get().PushLayer(layer);
 }
