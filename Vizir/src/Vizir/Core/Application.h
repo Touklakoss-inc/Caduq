@@ -19,11 +19,11 @@ namespace Vizir
 
 		void OnEvent(Event& e);
 
-		void PushOverlay(Layer* overlay);
-		void PushLayer(Layer* layer);
+		void PushOverlay(const Ref<Layer>& overlay);
+		void PushLayer(const Ref<Layer>& layer);
 
-		void PopOverlay(Layer* layer);
-		void PopLayer(Layer* layer);
+		void PopOverlay(const Ref<Layer>& layer);
+		void PopLayer(const Ref<Layer>& layer);
 
 		void Run();
 
@@ -33,7 +33,7 @@ namespace Vizir
 		struct LayerOp {
 			enum Type { PushOverlay, PopOverlay, PushLayer, PopLayer };
 			Type type;
-			Layer* layer; // Warning may cause problem
+			Ref<Layer> layer;
 		};
 
 		void EnqueueLayerOp(LayerOp layerOp) { m_LayerOpQueue.push(layerOp); }
@@ -43,7 +43,7 @@ namespace Vizir
 		bool OnWindowResize(WindowResizedEvent& e);
 	private:
 		std::unique_ptr<Window> m_Window;
-		ImGuiLayer* m_ImGuiLayer;
+		Ref<ImGuiLayer> m_ImGuiLayer;
 		bool m_Running = true;
 		bool m_Minimized = false;
 		LayerStack m_LayerStack;

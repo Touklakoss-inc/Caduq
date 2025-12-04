@@ -4,7 +4,7 @@
 class LayerManager : public Vizir::Layer
 {
 public:
-	LayerManager() : Layer("Base Paremeters")
+	LayerManager() : Vizir::Layer("Layer Manager")
 	{
 
 	}
@@ -14,7 +14,7 @@ public:
 	virtual void OnUpdate(Vizir::Timestep ts) override;
 	virtual void OnImGuiRender() override;
 private:
-	std::vector<Layer*> m_RegisteredLayers;
+	std::vector<Vizir::Ref<Vizir::Layer>> m_RegisteredLayers;
 	std::vector<const char*> m_RegisteredLayersName = { "SandboxCq", "SandboxGeo", "SandboxSplines" };
 	int m_LayerIndex = 0;
 

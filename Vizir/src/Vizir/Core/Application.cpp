@@ -29,7 +29,7 @@ namespace Vizir
 
 		Renderer::Init();
 
-		m_ImGuiLayer = new ImGuiLayer();
+		m_ImGuiLayer = std::make_shared<ImGuiLayer>();
 		PushOverlay(m_ImGuiLayer);
 	}
 
@@ -101,28 +101,28 @@ namespace Vizir
 		return false;
 	}
 
-	void Application::PushOverlay(Layer* overlay)
+	void Vizir::Application::PushOverlay(const Ref<Layer>& overlay)
 	{
 		VZ_PROFILE_FUNC()
 
 		EnqueueLayerOp({ LayerOp::PushOverlay, overlay });
 	}
 
-	void Application::PushLayer(Layer* layer)
+	void Application::PushLayer(const Ref<Layer>& layer)
 	{
 		VZ_PROFILE_FUNC()
 
 		EnqueueLayerOp({ LayerOp::PushLayer, layer });
 	}
 
-	void Application::PopOverlay(Layer* overlay)
+	void Application::PopOverlay(const Ref<Layer>& overlay)
 	{
 		VZ_PROFILE_FUNC()
 
 		EnqueueLayerOp({ LayerOp::PopOverlay, overlay });
 	}
 
-	void Application::PopLayer(Layer* layer)
+	void Application::PopLayer(const Ref<Layer>& layer)
 	{
 		VZ_PROFILE_FUNC()
 
@@ -146,7 +146,7 @@ namespace Vizir
 			{
 				{
 					VZ_PROFILE_SCOPE("LayerStack Update")
-					for (Layer* layer : m_LayerStack)
+					for (auto layer : m_LayerStack)
 					{
 						layer->OnUpdate(timestep);
 					}
@@ -156,7 +156,7 @@ namespace Vizir
 					VZ_PROFILE_SCOPE("ImGui LayerStack Update")
 
 					m_ImGuiLayer->Begin();
-					for (Layer* layer : m_LayerStack)
+					for (auto layer : m_LayerStack)
 					{
 						layer->OnImGuiRender();
 					}
