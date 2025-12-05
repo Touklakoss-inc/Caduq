@@ -28,7 +28,7 @@ private:
 	// Overlays
 	struct OverlayEntry {
 		Vizir::Ref<Vizir::Layer> layer;
-		const char const* name;
+		const char* const name;
 		bool enabled;
 	};
 	std::vector<OverlayEntry> m_RegisteredOverlayEntries{};
