@@ -40,7 +40,8 @@ namespace Caduq
         pointIndexBuffer.reset(Vizir::IndexBuffer::Create(pointIndice.data(), pointIndice.size()));
 
         // Vertex array
-        m_PointVertexArray = Vizir::VertexArray::Create();
+        m_PointVertexArray = Vizir::VertexArray::Create();        
+        m_PointVertexArray->Bind();
         m_PointVertexArray->SetVertexBuffer(pointsVertexBuffer);
         m_PointVertexArray->SetIndexBuffer(pointIndexBuffer);
         m_PointVertexArray->SetPrimitiveType(Vizir::POINTS);

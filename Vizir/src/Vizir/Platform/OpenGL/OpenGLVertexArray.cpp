@@ -70,7 +70,6 @@ namespace Vizir
 		VZ_PROFILE_FUNC()
 
 		VZ_CORE_ASSERT(vertexBuffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout!");
-		glBindVertexArray(m_RendererID);
 		vertexBuffer->Bind();
 		const auto& layout = vertexBuffer->GetLayout();
 		int index = 0;
