@@ -45,6 +45,7 @@ namespace Caduq
 
         // Vertex array
         m_SplineVertexArray = Vizir::VertexArray::Create();
+        m_SplineVertexArray->Bind();
         m_SplineVertexArray->SetVertexBuffer(splinesVertexBuffer);
         m_SplineVertexArray->SetIndexBuffer(splinesIndexBuffer);
         m_SplineVertexArray->SetPrimitiveType(Vizir::LINE_STRIP);

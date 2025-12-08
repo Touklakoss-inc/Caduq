@@ -102,6 +102,7 @@ void SandboxSplines::OnAttach()
 
 	// Vertex array
 	m_PointVertexArray = Vizir::VertexArray::Create();
+	m_PointVertexArray->Bind();
 	m_PointVertexArray->SetVertexBuffer(pointsVertexBuffer);
 	m_PointVertexArray->SetIndexBuffer(pointIndexBuffer);
 	m_PointVertexArray->SetPrimitiveType(Vizir::POINTS);
@@ -143,6 +144,7 @@ void SandboxSplines::OnAttach()
 
 	// Vertex array
 	m_SplineVertexArray = Vizir::VertexArray::Create();
+	m_SplineVertexArray->Bind();
 	m_SplineVertexArray->SetVertexBuffer(splinesVertexBuffer);
 	m_SplineVertexArray->SetIndexBuffer(splinesIndexBuffer);
 	m_SplineVertexArray->SetPrimitiveType(Vizir::LINE_STRIP);
@@ -164,6 +166,7 @@ void SandboxSplines::OnAttach()
 
 	// Vertex array
 	m_PatchVertexArray = Vizir::VertexArray::Create();
+	m_PatchVertexArray->Bind();
 	m_PatchVertexArray->SetVertexBuffer(patchVertexBuffer);
 	m_PatchVertexArray->SetIndexBuffer(patchIndexBuffer);
 	m_PatchVertexArray->SetPrimitiveType(Vizir::TRIANGLES);

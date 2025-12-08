@@ -29,6 +29,7 @@ public:
 		: Layer("MyLayer"), m_CameraController(1280.0f / 720.0f, true)
 	{
 		m_VertexArray = Vizir::VertexArray::Create();
+		m_VertexArray->Bind();
 
 		float vertices[3 * 7] = {
 			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
@@ -56,8 +57,10 @@ public:
 		m_IndexBuffer.reset(Vizir::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 		m_VertexArray->SetPrimitiveType(Vizir::PrimitiveType::TRIANGLES);
+		m_VertexArray->Unbind();
 
 		m_BlueShaderVertexArray = Vizir::VertexArray::Create();
+		m_BlueShaderVertexArray->Bind();
 
 		float vertices2[5 * 4] = {
 			-0.75f, -0.75f, 0.0f, 0.0f, 0.0f,
@@ -86,6 +89,7 @@ public:
 
 		m_BlueShaderVertexArray->SetIndexBuffer(ib);
 		m_BlueShaderVertexArray->SetPrimitiveType(Vizir::PrimitiveType::TRIANGLES);
+		m_BlueShaderVertexArray->Unbind();
 
 		bluePosition = glm::mat4x4(1.0f); // Set identity
 		//bluePosition = glm::translate(position, glm::vec3(0.0f, 0.0f, 0.0f));

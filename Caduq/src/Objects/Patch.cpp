@@ -42,6 +42,7 @@ namespace Caduq
 
         // Vertex array
         m_PatchVertexArray = Vizir::VertexArray::Create();
+        m_PatchVertexArray->Bind();
         m_PatchVertexArray->SetVertexBuffer(patchVertexBuffer);
         m_PatchVertexArray->SetIndexBuffer(patchIndexBuffer);
         m_PatchVertexArray->SetPrimitiveType(Vizir::TRIANGLES);
