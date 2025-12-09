@@ -22,7 +22,7 @@ namespace Caduq
 
         void Init();
         void Visualize(Vizir::Ref<Vizir::Shader> m_Shader, glm::mat4 m_Transform);
-        Geometry::Point GetGeoPoint();
+        Geometry::Point GetGeoPoint() const;
     };
 }
 #endif

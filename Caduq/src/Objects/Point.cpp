@@ -55,7 +55,7 @@ namespace Caduq
         m_PointVertexArray->Unbind();
     }
 
-    Geometry::Point Point::GetGeoPoint()
+    Geometry::Point Point::GetGeoPoint() const
     {
         return m_Point;
     }

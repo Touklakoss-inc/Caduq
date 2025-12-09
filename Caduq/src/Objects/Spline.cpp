@@ -8,8 +8,8 @@
 
 namespace Caduq
 {
-    Spline::Spline(Caduq::Point startPoint, PointTangency startTangency, 
-                   Caduq::Point endPoint, PointTangency endTangency,
+    Spline::Spline(const Caduq::Point& startPoint, PointTangency startTangency, 
+                   const Caduq::Point& endPoint, PointTangency endTangency,
                    int mesh_size)
         :m_spline{ 
             Geometry::SplinePoint{ startPoint.GetGeoPoint(), startTangency.tangent, startTangency.tension },
@@ -58,7 +58,8 @@ namespace Caduq
 
         m_SplineVertexArray->Unbind();
     }
-    Geometry::Spline Spline::GetGeoSpline()
+
+    Geometry::Spline Spline::GetGeoSpline() const
     {
         return m_spline;
     }

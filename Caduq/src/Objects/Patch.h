@@ -20,7 +20,7 @@ namespace Caduq
         Vizir::Ref<Vizir::VertexArray> m_PatchVertexArray;
 
         public:
-        Patch(Caduq::Spline s0, Caduq::Spline s1, Caduq::Spline s2, Caduq::Spline s3, int mesh_size);
+        Patch(const Caduq::Spline& s0, const Caduq::Spline& s1, const Caduq::Spline& s2, const Caduq::Spline& s3, int mesh_size);
 
         void Init();
         void Visualize(Vizir::Ref<Vizir::Shader> m_Shader, glm::mat4 m_Transform);
