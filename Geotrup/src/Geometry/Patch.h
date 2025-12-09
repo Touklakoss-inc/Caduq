@@ -11,15 +11,15 @@ namespace Geometry
     class Patch
     {
         private:
-        Geometry::Spline m_s0; // not good ?
-        Geometry::Spline m_s1;
-        Geometry::Spline m_s2;
-        Geometry::Spline m_s3;
+        Spline m_s0; // not good ?
+        Spline m_s1;
+        Spline m_s2;
+        Spline m_s3;
 
         Eigen::MatrixXd m_mesh{};
 
         public:
-        Patch(const Geometry::Spline& s0, const Geometry::Spline& s1, const Geometry::Spline& s2, const Geometry::Spline& s3);
+        Patch(const Spline& s0, const Spline& s1, const Spline& s2, const Spline& s3);
         Eigen::VectorXd F1(Eigen::VectorXd t); 
         double F1(double t); 
         Eigen::VectorXd F0(Eigen::VectorXd t); 
@@ -27,7 +27,7 @@ namespace Geometry
 
         Eigen::MatrixXd Mesh(Eigen::VectorXd u, Eigen::VectorXd w, int MESH_SIZE); 
         std::tuple<Eigen::MatrixXd, Eigen::VectorXi> GetFemMesh() const;
-        Geometry::Mesh GetGfxMesh() const;
+        struct Mesh GetGfxMesh() const;
     };
 }
 

@@ -20,8 +20,9 @@ namespace Geometry
         public:
         Spline(const SplinePoint& startPoint, const SplinePoint& endPoint);
         Eigen::MatrixXd Mesh(Eigen::ArrayXd u, const int MESH_SIZE);
+
         std::tuple<Eigen::MatrixXd, Eigen::VectorXi> GetFemMesh() const;
-        Geometry::Mesh GetGfxMesh() const;
+        struct Mesh GetGfxMesh() const;
         double GetLength() const;
     };
 }
