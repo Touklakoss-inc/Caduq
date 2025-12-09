@@ -19,15 +19,15 @@ namespace Geometry
         Eigen::MatrixXd m_mesh{};
 
         public:
-        Patch(Geometry::Spline s0, Geometry::Spline s1, Geometry::Spline s2, Geometry::Spline s3);
+        Patch(const Geometry::Spline& s0, const Geometry::Spline& s1, const Geometry::Spline& s2, const Geometry::Spline& s3);
         Eigen::VectorXd F1(Eigen::VectorXd t); 
         double F1(double t); 
         Eigen::VectorXd F0(Eigen::VectorXd t); 
         double F0(double t); 
 
         Eigen::MatrixXd Mesh(Eigen::VectorXd u, Eigen::VectorXd w, int MESH_SIZE); 
-        std::tuple<Eigen::MatrixXd, Eigen::VectorXi> GetFemMesh();
-        Geometry::Mesh GetGfxMesh();
+        std::tuple<Eigen::MatrixXd, Eigen::VectorXi> GetFemMesh() const;
+        Geometry::Mesh GetGfxMesh() const;
     };
 }
 
