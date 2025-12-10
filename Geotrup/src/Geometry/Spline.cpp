@@ -5,7 +5,7 @@
 #include "Eigen/Core"
 namespace Geometry
 {
-    Spline::Spline(SplinePoint startPoint, SplinePoint endPoint)
+    Spline::Spline(const SplinePoint& startPoint, const SplinePoint& endPoint)
         : m_startPoint{ startPoint }, m_endPoint{ endPoint }
     {
         Eigen::Matrix3d H{
@@ -38,7 +38,7 @@ namespace Geometry
         return m_equationConsts.transpose() * U;
     }
 
-    std::tuple<Eigen::MatrixXd, Eigen::VectorXi> Spline::GetFemMesh()
+    std::tuple<Eigen::MatrixXd, Eigen::VectorXi> Spline::GetFemMesh() const
     {
         Eigen::MatrixXd nodes{ m_mesh };
         Eigen::VectorXi elts{ nodes.cols()*2+1 };
@@ -53,14 +53,14 @@ namespace Geometry
     };
 
 
-    double Spline::GetLength()
+    double Spline::GetLength() const
     {
         Eigen::Vector3d l{ m_endPoint.point.GetPosition() - m_startPoint.point.GetPosition() };
 
         return l.norm();
     }
 
-    Geometry::Mesh Spline::GetGfxMesh()
+    Geometry::Mesh Spline::GetGfxMesh() const
     {
         Eigen::MatrixXd nodes{ m_mesh };
         Eigen::VectorX<uint32_t> elts{ nodes.cols()+1 };

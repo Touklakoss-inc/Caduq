@@ -15,7 +15,7 @@ namespace Geometry
 
     struct SplinePoint
     {
-        Geometry::Point point{};
+        Point point{};
         Eigen::RowVector3d tangent{ 0.0, 0.0, 0.0 };
         double tension{ 0 };
     };

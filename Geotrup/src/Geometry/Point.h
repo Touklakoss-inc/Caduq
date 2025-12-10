@@ -18,7 +18,7 @@ namespace Geometry
         Point(Eigen::Vector3d pos);
 
         void SetPosition(double x, double y, double z = 0.0);
-        Eigen::Vector3d GetPosition();
+        Eigen::Vector3d GetPosition() const;
 
         void Print() const;
     };

@@ -22,7 +22,7 @@ namespace Geometry
         m_z = z;
     }
 
-    Eigen::Vector3d Point::GetPosition() 
+    Eigen::Vector3d Point::GetPosition() const 
     { 
         return Eigen::Vector3d{ m_x, m_y, m_z }; 
     }

@@ -24,13 +24,13 @@ namespace Caduq
         Vizir::Ref<Vizir::VertexArray> m_SplineVertexArray;
 
         public:
-        Spline(Caduq::Point startPoint, PointTangency startTangency, 
-               Caduq::Point endPoint, PointTangency endTangency,
+        Spline(const Caduq::Point& startPoint, PointTangency startTangency, 
+               const Caduq::Point& endPoint, PointTangency endTangency,
                int mesh_size);
 
         void Init();
         void Visualize(Vizir::Ref<Vizir::Shader> m_Shader, glm::mat4 m_Transform);
-        Geometry::Spline GetGeoSpline();
+        Geometry::Spline GetGeoSpline() const;
     };
 }
 #endif

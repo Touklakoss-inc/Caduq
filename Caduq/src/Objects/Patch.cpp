@@ -8,7 +8,7 @@
 
 namespace Caduq
 {
-    Patch::Patch(Caduq::Spline s0, Caduq::Spline s1, Caduq::Spline s2, Caduq::Spline s3, int mesh_size)
+    Patch::Patch(const Caduq::Spline& s0, const Caduq::Spline& s1, const Caduq::Spline& s2, const Caduq::Spline& s3, int mesh_size)
         :m_s0{ s0 }, m_s1{ s1 }, m_s2{ s2 }, m_s3{ s3 }, m_mesh_size{ mesh_size }
     {
     }

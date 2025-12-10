@@ -4,7 +4,7 @@
 
 namespace Geometry
 {
-    Patch::Patch(Geometry::Spline s0, Geometry::Spline s1, Geometry::Spline s2, Geometry::Spline s3)
+    Patch::Patch(const Spline& s0, const Spline& s1, const Spline& s2, const Spline& s3)
         : m_s0{ s0 }, m_s1{ s1 }, m_s2{ s2 }, m_s3{ s3 }
     {
     }
@@ -104,7 +104,7 @@ namespace Geometry
         return m_mesh;
     }; 
 
-    std::tuple<Eigen::MatrixXd, Eigen::VectorXi> Patch::GetFemMesh()
+    std::tuple<Eigen::MatrixXd, Eigen::VectorXi> Patch::GetFemMesh() const
     {
         int size{};
         Eigen::MatrixXd nodes{ m_mesh };
@@ -149,7 +149,7 @@ namespace Geometry
 
     };
 
-    Geometry::Mesh Patch::GetGfxMesh()
+    struct Mesh Patch::GetGfxMesh() const
     {
         int size{};
         Eigen::MatrixXd nodes{ m_mesh };
