@@ -4,10 +4,13 @@
 
 // --- Layers ---
 #include "SandboxCaduq.h"
+#include "SandboxTexture.h"
 
 void LayerManager::OnAttach()
 {
   RegisterLayer(std::make_shared<SandboxCaduq>());
+  RegisterLayer(std::make_shared<SandboxTexture>());
+
 
   PushLayer(m_RegisteredLayers[0]);
 }
