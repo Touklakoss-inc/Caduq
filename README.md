@@ -1,3 +1,5 @@
+<img src="rsc/caduq_logo8_final.png" alt="Caduq Logo" width="300" height="300">
+
 # Caduq
 
 Caduq is a (baby) cad surface modeling software written in C++. Its end goal is to provide an opensource, lightwheight and easy to use cad surface modeling software. The first use cases will be the modeling of tubular frame for race car design. Today no opensource tool exist for doing so in an efficient way.
