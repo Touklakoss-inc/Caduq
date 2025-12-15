@@ -6,10 +6,11 @@
 #include "Eigen/Core"
 
 #include "Geometry/Point.h"
+#include "Entity.h"
 
 namespace Caduq
 {
-    class Point
+    class Point: public Entity
     {
         private:
         Geometry::Point m_Point{};

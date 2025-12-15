@@ -9,11 +9,11 @@
 namespace Caduq
 {
     Point::Point(double x, double y, double z)
-        :m_Point{ x, y, z }
+        :Entity{ "Point" }, m_Point{ x, y, z }
     {
     }
     Point::Point(Eigen::Vector3d pos)
-        :m_Point{ pos }
+        :Entity{ "Point" }, m_Point{ pos }
     {
     }
 
