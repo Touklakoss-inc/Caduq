@@ -18,7 +18,7 @@ namespace Vizir
 
 		virtual void Bind(uint32_t slot) const override;
 
-		uint32_t GetId() { return m_RendererID; }
+		virtual uint32_t GetID() const override { return m_RendererID; }
 	private:
 		static unsigned int GetNativeFormat(Texture::Format format);
 		static unsigned int GetNativeFormatStride(Texture::Format format);
