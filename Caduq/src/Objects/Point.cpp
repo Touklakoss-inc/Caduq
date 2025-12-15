@@ -4,16 +4,17 @@
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <string>
 #include "Geometry/Point.h"
 
 namespace Caduq
 {
-    Point::Point(double x, double y, double z)
-        :Entity{ "Point" }, m_Point{ x, y, z }
+    Point::Point(double x, double y, double z, const std::string& name)
+        : m_Id{ s_IdGenerator }, m_Point{ x, y, z }, Entity{ name != "" ? name : "Point " + std::to_string(++s_IdGenerator) }
     {
     }
-    Point::Point(Eigen::Vector3d pos)
-        :Entity{ "Point" }, m_Point{ pos }
+    Point::Point(Eigen::Vector3d pos, const std::string& name)
+        : Point{ pos(0), pos(1), pos(2), name }
     {
     }
 

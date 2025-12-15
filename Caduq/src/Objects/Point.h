@@ -1,6 +1,7 @@
 #ifndef CQ_POINT_H
 #define CQ_POINT_H
 
+#include <string>
 #include <Vizir.h>
 
 #include "Eigen/Core"
@@ -13,13 +14,16 @@ namespace Caduq
     class Point: public Entity
     {
         private:
+        static inline int s_IdGenerator{ 0 };
+        int m_Id{ };
+
         Geometry::Point m_Point{};
 
         Vizir::Ref<Vizir::VertexArray> m_PointVertexArray;
 
         public:
-        Point(double x, double y, double z);
-        Point(Eigen::Vector3d pos);
+        Point(double x, double y, double z, const std::string& name = "");
+        Point(Eigen::Vector3d pos, const std::string& name = "");
 
         void Init();
         void Visualize(Vizir::Ref<Vizir::Shader> m_Shader, glm::mat4 m_Transform);

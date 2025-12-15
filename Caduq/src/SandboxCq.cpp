@@ -49,6 +49,9 @@ void SandboxCq::OnAttach()
     cp3.Init();
 
     std::cout << cp0.GetName() << '\n';
+    std::cout << cp1.GetName() << '\n';
+    std::cout << cp2.GetName() << '\n';
+    std::cout << cp3.GetName() << '\n';
 
     cs0.Init();
     cs1.Init();
