@@ -10,11 +10,11 @@ namespace Caduq
 {
     Spline::Spline(const Caduq::Point& startPoint, PointTangency startTangency, 
                    const Caduq::Point& endPoint, PointTangency endTangency,
-                   int mesh_size)
-        :m_spline{ 
+                   int mesh_size, const std::string& name)
+        : m_Id{ s_IdGenerator }, m_spline{ 
             Geometry::SplinePoint{ startPoint.GetGeoPoint(), startTangency.tangent, startTangency.tension },
             Geometry::SplinePoint{ endPoint.GetGeoPoint(), endTangency.tangent, startTangency.tension }
-        }
+        }, Entity{ name != "" ? name : "Spline " + std::to_string(++s_IdGenerator) }
     {
     }
 

@@ -58,6 +58,11 @@ void SandboxCq::OnAttach()
     cs2.Init();
     cs3.Init();
 
+    std::cout << cs0.GetName() << '\n';
+    std::cout << cs1.GetName() << '\n';
+    std::cout << cs2.GetName() << '\n';
+    std::cout << cs3.GetName() << '\n';
+
     cc0.Init();
 
     Vizir::RenderCommand::SetPointSize(m_PointSize);
