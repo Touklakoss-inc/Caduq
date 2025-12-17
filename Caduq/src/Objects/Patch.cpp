@@ -10,8 +10,8 @@ namespace Caduq
 {
     Patch::Patch(const Caduq::Spline& s0, const Caduq::Spline& s1, const Caduq::Spline& s2, const Caduq::Spline& s3,
                  int mesh_size, const std::string& name)
-        : m_Id{ s_IdGenerator }, m_s0{ s0 }, m_s1{ s1 }, m_s2{ s2 }, m_s3{ s3 }, m_mesh_size{ mesh_size }
-        , Entity{ name != "" ? name : "Patch " + std::to_string(++s_IdGenerator) }
+        : Entity{ name != "" ? name : "Patch " + std::to_string(++s_IdGenerator) }
+        , m_Id{ s_IdGenerator }, m_s0{ s0 }, m_s1{ s1 }, m_s2{ s2 }, m_s3{ s3 }, m_mesh_size{ mesh_size }
     {
     }
 

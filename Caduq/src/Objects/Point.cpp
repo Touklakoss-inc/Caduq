@@ -10,7 +10,8 @@
 namespace Caduq
 {
     Point::Point(double x, double y, double z, const std::string& name)
-        : m_Id{ s_IdGenerator }, m_Point{ x, y, z }, Entity{ name != "" ? name : "Point " + std::to_string(++s_IdGenerator) }
+        : Entity{ name != "" ? name : "Point " + std::to_string(++s_IdGenerator) }
+        , m_Id{ s_IdGenerator }, m_Point{ x, y, z }
     {
     }
     Point::Point(Eigen::Vector3d pos, const std::string& name)
