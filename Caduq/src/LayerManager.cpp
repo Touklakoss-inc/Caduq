@@ -4,11 +4,13 @@
 
 // --- Layers ---
 #include "SandboxCq.h"
+#include "SandboxCq2.h"
 #include "SandboxGeo.h"
 #include "SandboxSplines.h"
 
 void LayerManager::OnAttach()
 {
+  RegisterLayer(std::make_shared<SandboxCq2>());
   RegisterLayer(std::make_shared<SandboxCq>());
   RegisterLayer(std::make_shared<SandboxGeo>());
   RegisterLayer(std::make_shared<SandboxSplines>());

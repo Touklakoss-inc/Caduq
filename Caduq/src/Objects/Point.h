@@ -25,8 +25,9 @@ namespace Caduq
         Point(double x, double y, double z, const std::string& name = "");
         Point(Eigen::Vector3d pos, const std::string& name = "");
 
-        void Init();
-        void Visualize(Vizir::Ref<Vizir::Shader> m_Shader, glm::mat4 m_Transform);
+        void Init() override;
+        void Visualize(Vizir::Ref<Vizir::Shader> shader, glm::mat4 transform) override;
+
         Geometry::Point GetGeoPoint() const;
     };
 }

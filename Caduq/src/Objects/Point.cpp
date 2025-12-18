@@ -50,9 +50,9 @@ namespace Caduq
         m_PointVertexArray->Unbind();
     }
 
-    void Point::Visualize(Vizir::Ref<Vizir::Shader> m_Shader, glm::mat4 m_Transform)
+    void Point::Visualize(Vizir::Ref<Vizir::Shader> shader, glm::mat4 transform)
     {
-        Vizir::Renderer::Submit(m_Shader, m_PointVertexArray, m_Transform);
+        Vizir::Renderer::Submit(shader, m_PointVertexArray, transform);
 
         m_PointVertexArray->Unbind();
     }
