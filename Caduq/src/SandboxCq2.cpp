@@ -1,5 +1,7 @@
 #include "SandboxCq2.h"
 
+#include "Objects/Point.h"
+#include "Objects/Spline.h"
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
 
 #include "imgui/imgui.h"
@@ -47,6 +49,13 @@ void SandboxCq2::OnAttach()
 
     m_Entity_Manager.CreateEntity(std::make_shared<Caduq::Point>(0, 0, 0));
     m_Entity_Manager.CreateEntity(std::make_shared<Caduq::Point>(1, 0, 0));
+    m_Entity_Manager.CreateEntity(std::make_shared<Caduq::Point>(1, 1, 0));
+    m_Entity_Manager.CreateEntity(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetEntity<Caduq::Point>(0), Caduq::PointTangency{{0, 1, 0}},
+                                                                  m_Entity_Manager.GetEntity<Caduq::Point>(1), Caduq::PointTangency{{0, -1, 0}},
+                                                                  100));
+    m_Entity_Manager.CreateEntity(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetEntity<Caduq::Point>(1), Caduq::PointTangency{{1, 0, 0}},
+                                                                  m_Entity_Manager.GetEntity<Caduq::Point>(2), Caduq::PointTangency{{0, 1, 0}},
+                                                                  10));
 
     std::cout << m_Entity_Manager.GetEntity(0) << '\n';
     std::cout << m_Entity_Manager.GetEntity(0).use_count() << '\n';
