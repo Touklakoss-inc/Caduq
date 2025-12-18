@@ -11,9 +11,9 @@
 void LayerManager::OnAttach()
 {
   RegisterLayer(std::make_shared<SandboxCq2>());
-  RegisterLayer(std::make_shared<SandboxCq>());
-  RegisterLayer(std::make_shared<SandboxGeo>());
-  RegisterLayer(std::make_shared<SandboxSplines>());
+  // RegisterLayer(std::make_shared<SandboxCq>());
+  // RegisterLayer(std::make_shared<SandboxGeo>());
+  // RegisterLayer(std::make_shared<SandboxSplines>());
 
   PushLayer(m_RegisteredLayers[0]);
 }

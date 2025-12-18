@@ -3,6 +3,7 @@
 #include <Eigen/Core>
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
+#include "Vizir/Platform/OpenGL/OpenGLShader.h"
 
 #include <string>
 #include "Geometry/Point.h"
@@ -13,6 +14,7 @@ namespace Caduq
         : Entity{ name != "" ? name : "Point " + std::to_string(++s_IdGenerator) }
         , m_Id{ s_IdGenerator }, m_Point{ x, y, z }
     {
+        std::cout << "Create Point" << '\n';
     }
     Point::Point(Eigen::Vector3d pos, const std::string& name)
         : Point{ pos(0), pos(1), pos(2), name }
@@ -21,6 +23,7 @@ namespace Caduq
 
     void Point::Init()
     {
+        std::cout << m_Id << '\n';
         Geometry::Point p0 = m_Point;
 
         // Cast to float
@@ -52,6 +55,8 @@ namespace Caduq
 
     void Point::Visualize(Vizir::Ref<Vizir::Shader> shader, glm::mat4 transform)
     {
+        std::dynamic_pointer_cast<Vizir::OpenGLShader>(shader)->UploadUniformFloat3("u_Color", GetColor());
+
         Vizir::Renderer::Submit(shader, m_PointVertexArray, transform);
 
         m_PointVertexArray->Unbind();
@@ -61,4 +66,5 @@ namespace Caduq
     {
         return m_Point;
     }
+
 }

@@ -17,9 +17,12 @@ namespace Caduq
             EntityManager() = default;
 
             void CreateEntity(std::shared_ptr<Entity> entity);
+            // void DeleteEntity();
+
+
+            std::vector<std::shared_ptr<Entity>> GetEntities() { return m_Entity_List; }; // should it be returned by reference ?
             std::shared_ptr<Entity> GetEntity(int index);
             int GetUseCount(int index);
-            // void DeleteEntity();
     };
 }
 

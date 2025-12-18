@@ -8,11 +8,6 @@ namespace Caduq
     {
     }
 
-    std::string_view Entity::GetName()
-    {
-        return m_Name;
-    }
-
     void Entity::Init()
     {
     }

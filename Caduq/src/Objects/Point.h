@@ -13,7 +13,8 @@ namespace Caduq
 {
     class Point: public Entity
     {
-        private:
+    private:
+
         static inline int s_IdGenerator{ 0 };
         int m_Id{ };
 
@@ -21,7 +22,7 @@ namespace Caduq
 
         Vizir::Ref<Vizir::VertexArray> m_PointVertexArray;
 
-        public:
+    public:
         Point(double x, double y, double z, const std::string& name = "");
         Point(Eigen::Vector3d pos, const std::string& name = "");
 

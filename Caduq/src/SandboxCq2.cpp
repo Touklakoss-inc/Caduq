@@ -46,7 +46,8 @@ void SandboxCq2::OnAttach()
 
 
     m_Entity_Manager.CreateEntity(std::make_shared<Caduq::Point>(0, 0, 0));
-    m_Entity_Manager.GetEntity(0)->Init();
+    m_Entity_Manager.CreateEntity(std::make_shared<Caduq::Point>(1, 0, 0));
+
     std::cout << m_Entity_Manager.GetEntity(0) << '\n';
     std::cout << m_Entity_Manager.GetEntity(0).use_count() << '\n';
     std::cout << m_Entity_Manager.GetUseCount(0) << '\n';
@@ -69,16 +70,11 @@ void SandboxCq2::OnUpdate(Vizir::Timestep ts)
 
     std::dynamic_pointer_cast<Vizir::OpenGLShader>(m_Shader)->Bind();
 
-    // Render patches
-    std::dynamic_pointer_cast<Vizir::OpenGLShader>(m_Shader)->UploadUniformFloat3("u_Color", m_TriangleColor);
-
-    // Render splines
-    std::dynamic_pointer_cast<Vizir::OpenGLShader>(m_Shader)->UploadUniformFloat3("u_Color", m_LineColor);
-
     // Render points
-    std::dynamic_pointer_cast<Vizir::OpenGLShader>(m_Shader)->UploadUniformFloat3("u_Color", m_PointColor);
-
-    m_Entity_Manager.GetEntity(0)->Visualize(m_Shader, m_Transform);
+    for (auto entity : m_Entity_Manager.GetEntities()) //GetEntities return by value, is it good ?
+    {
+        entity->Visualize(m_Shader, m_Transform);
+    }
 
     std::dynamic_pointer_cast<Vizir::OpenGLShader>(m_Shader)->Unbind();
 
@@ -92,13 +88,13 @@ void SandboxCq2::OnImGuiRender()
 
     ImGui::Begin("Settings");
 
-    ImGui::ColorEdit3("Point Color", glm::value_ptr(m_PointColor));
+    for (auto entity : m_Entity_Manager.GetEntities())
+    {
+        ImGui::ColorEdit3(static_cast<std::string>(entity->GetName()).data(), glm::value_ptr(entity->GetColor()));
+    }
+
     ImGui::DragFloat("Point Size", &pointSize, 1.0f, 1.0f, 25.0f);
-
-    ImGui::ColorEdit3("Spline Color", glm::value_ptr(m_LineColor));
     ImGui::DragFloat("Line Size", &lineSize, 1.0f, 1.0f, 10.0f);
-
-    ImGui::ColorEdit3("Patch Color", glm::value_ptr(m_TriangleColor));
 
     ImGui::End();
 
