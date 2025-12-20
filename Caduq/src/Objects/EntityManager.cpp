@@ -1,21 +1,39 @@
 #include "EntityManager.h"
 
 #include <memory>
+
 namespace Caduq 
 {
-    void EntityManager::CreateEntity(std::shared_ptr<Entity> entity)
+    void EntityManager::CreatePoint(const std::shared_ptr<Point>& point)
     {
-        m_Entity_List.push_back(entity);
-        entity->Init();
+        m_Point_List.push_back(point); // push_back make a copy of the shared pointer
+        point->Init();
     }
 
-    std::shared_ptr<Entity> EntityManager::GetEntity(int index)
+    void EntityManager::CreateSpline(const std::shared_ptr<Spline>& spline)
     {
-        return m_Entity_List.at(index);
+        m_Spline_List.push_back(spline);
+        spline->Init();
     }
 
-    int EntityManager::GetUseCount(int index)
+    void EntityManager::CreatePatch(const std::shared_ptr<Patch>& patch)
     {
-        return m_Entity_List.at(index).use_count();
+        m_Patch_List.push_back(patch);
+        patch->Init();
+    }
+
+    std::shared_ptr<Point>& EntityManager::GetPoint(int index)
+    {
+        return m_Point_List.at(index);
+    }
+
+    std::shared_ptr<Spline>& EntityManager::GetSpline(int index)
+    {
+        return m_Spline_List.at(index);
+    }
+
+    std::shared_ptr<Patch>& EntityManager::GetPatch(int index)
+    {
+        return m_Patch_List.at(index);
     }
 }

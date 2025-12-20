@@ -1,39 +1,39 @@
 #ifndef ENTITY_MANAGER_H
 #define ENTITY_MANAGER_H
 
-#include "Entity.h"
-
 #include <vector>
 #include <memory>
+
+#include "Point.h"
+#include "Spline.h"
+#include "Patch.h"
 
 namespace Caduq 
 {
     class EntityManager
     {
         private:
-            std::vector<std::shared_ptr<Entity>> m_Entity_List {};
+            std::vector<std::shared_ptr<Caduq::Point>> m_Point_List {};
+            std::vector<std::shared_ptr<Caduq::Spline>> m_Spline_List {};
+            std::vector<std::shared_ptr<Caduq::Patch>> m_Patch_List {};
 
         public:
             EntityManager() = default;
 
-            void CreateEntity(std::shared_ptr<Entity> entity);
+            void CreatePoint(const std::shared_ptr<Point>& point);
+            void CreateSpline(const std::shared_ptr<Spline>& spline);
+            void CreatePatch(const std::shared_ptr<Patch>& patch);
             // void DeleteEntity();
 
 
-            std::vector<std::shared_ptr<Entity>> GetEntities() { return m_Entity_List; }; // should it be returned by reference ?
-            std::shared_ptr<Entity> GetEntity(int index);
-            template<typename T> 
-            std::shared_ptr<T> GetEntity(int index);
-            int GetUseCount(int index);
+            std::vector<std::shared_ptr<Point>> GetPointList() { return m_Point_List; }; // should it be returned by reference ?
+            std::vector<std::shared_ptr<Spline>> GetSplineList() { return m_Spline_List; }; // should it be returned by reference ?
+            std::vector<std::shared_ptr<Patch>> GetPatchList() { return m_Patch_List; }; // should it be returned by reference ?
+
+            std::shared_ptr<Point>& GetPoint(int index);
+            std::shared_ptr<Spline>& GetSpline(int index);
+            std::shared_ptr<Patch>& GetPatch(int index);
     };
-
-    template<typename T> 
-    std::shared_ptr<T> EntityManager::GetEntity(int index)
-    {
-        return std::dynamic_pointer_cast<T>(m_Entity_List.at(index)); // perform a check for nullptr ?
-    }
-
 }
-
 
 #endif
