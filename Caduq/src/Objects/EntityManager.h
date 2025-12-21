@@ -22,6 +22,8 @@ namespace Caduq
     public:
         EntityManager() = default;
 
+        void RenderImGui();
+
         void CreatePoint(const std::shared_ptr<Point>& point);
         void CreateSpline(const std::shared_ptr<Spline>& spline);
         void CreatePatch(const std::shared_ptr<Patch>& patch);

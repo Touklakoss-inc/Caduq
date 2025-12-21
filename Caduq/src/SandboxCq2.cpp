@@ -77,7 +77,7 @@ void SandboxCq2::OnAttach()
     VZ_INFO(m_Entity_Manager.GetPoint(0).use_count());
     VZ_INFO(m_Entity_Manager.GetPointList().size());
     VZ_INFO(m_Entity_Manager.GetSplineList().size());
-    m_Entity_Manager.DeleteSpline(m_Entity_Manager.GetSpline(0));
+    // m_Entity_Manager.DeleteSpline(m_Entity_Manager.GetSpline(0));
     VZ_INFO(m_Entity_Manager.GetSplineList().size());
 
     std::cout << m_Entity_Manager.GetPoint(0) << '\n';
@@ -128,23 +128,11 @@ void SandboxCq2::OnImGuiRender()
     float pointSize = m_PointSize;
     float lineSize = m_LineSize;
 
+    ImGuiID dockspace_id = ImGui::GetID("MyDockspace");
+    ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
+
+
     ImGui::Begin("Settings");
-
-    for (auto point : m_Entity_Manager.GetPointList()) 
-    {
-        ImGui::ColorEdit3(static_cast<std::string>(point->GetName()).data(), glm::value_ptr(point->GetColor()));
-    }
-
-    for (auto spline : m_Entity_Manager.GetSplineList()) 
-    {
-        ImGui::ColorEdit3(static_cast<std::string>(spline->GetName()).data(), glm::value_ptr(spline->GetColor()));
-    }
-
-    for (auto patch : m_Entity_Manager.GetPatchList()) 
-    {
-        ImGui::ColorEdit3(static_cast<std::string>(patch->GetName()).data(), glm::value_ptr(patch->GetColor()));
-    }
-
 
     ImGui::DragFloat("Point Size", &pointSize, 1.0f, 1.0f, 25.0f);
     ImGui::DragFloat("Line Size", &lineSize, 1.0f, 1.0f, 10.0f);
@@ -161,8 +149,31 @@ void SandboxCq2::OnImGuiRender()
         m_LineSize = lineSize;
         Vizir::RenderCommand::SetLineWidth(m_LineSize);
     }
+
+    ImGui::Begin("Hierarchy");
+
+    m_Entity_Manager.RenderImGui();
+
+    ImGui::Separator();
+
+    for (auto point : m_Entity_Manager.GetPointList()) 
+    {
+        point->RenderImGui();
+    }
+
+    for (auto spline : m_Entity_Manager.GetSplineList()) 
+    {
+        spline->RenderImGui();
+    }
+
+    for (auto patch : m_Entity_Manager.GetPatchList()) 
+    {
+        patch->RenderImGui();
+    }
+
+    ImGui::End();
     
-    // ImGui::ShowDemoWindow();
+    ImGui::ShowDemoWindow();
 }
 
 void SandboxCq2::OnEvent(Vizir::Event& e)

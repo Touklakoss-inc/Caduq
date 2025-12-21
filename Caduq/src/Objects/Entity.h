@@ -41,6 +41,7 @@ namespace Caduq
 
         virtual void Init();
         virtual void Visualize(Vizir::Ref<Vizir::Shader> shader, glm::mat4 transform);
+        void RenderImGui();
 
         void AddParent(const std::shared_ptr<Entity>& parent);
         void RemoveParent(const std::shared_ptr<Entity>& parent);
