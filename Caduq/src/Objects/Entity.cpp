@@ -46,4 +46,34 @@ namespace Caduq
     {
         return m_Children.count(child) == 1;
     }
+
+    bool Entity::Delete()
+    {
+        if (m_Children.size() > 0)
+        {
+            VZ_ERROR("You cannot delete this object because there is child(ren)");
+            return false;
+        }
+        else
+        {
+            for (const auto& p : m_Parents)
+            {
+                p->RemoveChild(shared_from_this());
+            }
+
+            m_Parents.clear();
+
+            auto test = shared_from_this();
+
+            if (shared_from_this().use_count() > 2)
+            {
+                VZ_ERROR("You cannot delete this object because there is too much shared pointer");
+                VZ_CRITICAL("PARENTS LINKS HAS BEEN DELETED");
+                return false;
+            }
+            else
+                return true;
+
+        }
+    }
 }

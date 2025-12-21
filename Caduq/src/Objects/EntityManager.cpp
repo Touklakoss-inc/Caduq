@@ -25,14 +25,21 @@ namespace Caduq
 
     void EntityManager::DeletePoint(const std::shared_ptr<Point>& point)
     {
-        // convert list to set, because i need to delete by element not index
-        // bool canDelete = point->Delete();
-        VZ_INFO("Point deleted");
+        bool canDelete = point->Delete();
     }
     void EntityManager::DeleteSpline(const std::shared_ptr<Spline>& spline)
     {
-        // m_Spline_List.erase(spline);
-        spline->Init();
+        bool canDelete = spline->Delete();
+        if (canDelete)
+        {
+            auto it = std::find(m_Spline_List.begin(),m_Spline_List.end(), spline);
+            if (it != m_Spline_List.end()) 
+            {
+                m_Spline_List.erase(it);
+            }
+        }
+        else
+            VZ_ERROR("Cannot delete object");
     }
     void EntityManager::DeletePatch(const std::shared_ptr<Patch>& patch)
     {

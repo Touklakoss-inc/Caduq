@@ -76,6 +76,9 @@ void SandboxCq2::OnAttach()
     VZ_INFO(m_Entity_Manager.GetSpline(0)->GetParents().size());
     VZ_INFO(m_Entity_Manager.GetPoint(0).use_count());
     VZ_INFO(m_Entity_Manager.GetPointList().size());
+    VZ_INFO(m_Entity_Manager.GetSplineList().size());
+    m_Entity_Manager.DeleteSpline(m_Entity_Manager.GetSpline(0));
+    VZ_INFO(m_Entity_Manager.GetSplineList().size());
 
     std::cout << m_Entity_Manager.GetPoint(0) << '\n';
     std::cout << &*(m_Entity_Manager.GetPoint(0)) << '\n';
