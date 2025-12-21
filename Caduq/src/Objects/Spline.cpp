@@ -27,6 +27,12 @@ namespace Caduq
 
     void Spline::Init()
     {
+        AddParent(m_StartPoint);
+        m_StartPoint->AddChild(shared_from_this());
+
+        AddParent(m_EndPoint);
+        m_EndPoint->AddChild(shared_from_this());
+
         // Create spline mesh
         Eigen::ArrayXd u{ Eigen::ArrayXd::LinSpaced(m_mesh_size, 0.0, 1.0) };
         Eigen::MatrixXd U0 = m_Spline.Mesh(u, m_mesh_size);

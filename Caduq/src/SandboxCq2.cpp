@@ -50,29 +50,35 @@ void SandboxCq2::OnAttach()
 
     m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(0.0f, 0.0f, 0.0f));
     m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(3.0f, 0.0f, 1.0f));
-    m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(3.0f, 4.0f, 0.0f));
-    m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(0.0f, 4.0f, 1.0f));
+    // m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(3.0f, 4.0f, 0.0f));
+    // m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(0.0f, 4.0f, 1.0f));
 
     m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(0), Caduq::PointTangency{{1, 0, 0}},
                                                                   m_Entity_Manager.GetPoint(1), Caduq::PointTangency{{1, 0, 0}},
                                                                   100));              
-    m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(2), Caduq::PointTangency{{0, -1, 0}},
-                                                                  m_Entity_Manager.GetPoint(1), Caduq::PointTangency{{0, -1, 0}},
-                                                                  10));             
-    m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(3), Caduq::PointTangency{{1, 0, 0}},
-                                                                  m_Entity_Manager.GetPoint(2), Caduq::PointTangency{{1, 0, 0}},
-                                                                  10));              
-    m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(3), Caduq::PointTangency{{0, -1, 0}},
-                                                                  m_Entity_Manager.GetPoint(0), Caduq::PointTangency{{0, -1, 0}},
-                                                                  10));
+    // m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(2), Caduq::PointTangency{{0, -1, 0}},
+    //                                                               m_Entity_Manager.GetPoint(1), Caduq::PointTangency{{0, -1, 0}},
+    //                                                               10));             
+    // m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(3), Caduq::PointTangency{{1, 0, 0}},
+    //                                                               m_Entity_Manager.GetPoint(2), Caduq::PointTangency{{1, 0, 0}},
+    //                                                               10));              
+    // m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(3), Caduq::PointTangency{{0, -1, 0}},
+    //                                                               m_Entity_Manager.GetPoint(0), Caduq::PointTangency{{0, -1, 0}},
+    //                                                               10));
+    //
+    // m_Entity_Manager.CreatePatch(std::make_shared<Caduq::Patch>(m_Entity_Manager.GetSpline(2),
+    //                                                             m_Entity_Manager.GetSpline(0),
+    //                                                             m_Entity_Manager.GetSpline(3),
+    //                                                             m_Entity_Manager.GetSpline(1), 
+    //                                                             10));
 
-    m_Entity_Manager.CreatePatch(std::make_shared<Caduq::Patch>(m_Entity_Manager.GetSpline(2),
-                                                                m_Entity_Manager.GetSpline(0),
-                                                                m_Entity_Manager.GetSpline(3),
-                                                                m_Entity_Manager.GetSpline(1), 
-                                                                10));
+    VZ_INFO(m_Entity_Manager.GetPoint(0)->GetChildren().size());
+    VZ_INFO(m_Entity_Manager.GetSpline(0)->GetParents().size());
+    VZ_INFO(m_Entity_Manager.GetPoint(0).use_count());
+    VZ_INFO(m_Entity_Manager.GetPointList().size());
 
     std::cout << m_Entity_Manager.GetPoint(0) << '\n';
+    std::cout << &*(m_Entity_Manager.GetPoint(0)) << '\n';
     std::cout << m_Entity_Manager.GetPoint(0).use_count() << '\n';
 
     Vizir::RenderCommand::SetPointSize(m_PointSize);
