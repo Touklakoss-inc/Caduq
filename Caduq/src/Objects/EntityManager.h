@@ -2,13 +2,12 @@
 #define ENTITY_MANAGER_H
 
 #include <vector>
-#include <set>
 #include <memory>
 
-#include "Entity.h"
 #include "Point.h"
 #include "Spline.h"
 #include "Patch.h"
+#include "Entity.h"
 
 namespace Caduq 
 {
@@ -33,7 +32,7 @@ namespace Caduq
         void DeletePatch(const std::shared_ptr<Patch>& patch);
 
         // should it be returned by reference ?
-        std::vector<std::shared_ptr<Point>> GetPointList() { return m_Point_List; };
+        const std::vector<std::shared_ptr<Point>>& GetPointList() { return m_Point_List; };
         std::vector<std::shared_ptr<Spline>> GetSplineList() { return m_Spline_List; };
         std::vector<std::shared_ptr<Patch>> GetPatchList() { return m_Patch_List; };
 

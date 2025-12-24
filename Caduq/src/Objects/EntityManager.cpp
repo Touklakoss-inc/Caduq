@@ -1,12 +1,13 @@
 #include "EntityManager.h"
 
-#include "Point.h"
 #include "Vizir/Logging/Log.h"
 #include "imgui/imgui.h"
 #include <memory>
 
 #include <string>
 #include <vector>
+#include <set>
+
 namespace Caduq 
 {
     template<typename T> 
@@ -43,7 +44,7 @@ namespace Caduq
 
             if (ImGui::Button("Create"))
             {
-                CreatePoint(std::make_shared<Point>(coord[0], coord[1], coord[2]));
+                CreatePoint(std::make_shared<Point>(coord[0], coord[1], coord[2], Type::point));
                 VZ_INFO("Point created at " + std::to_string(coord[0]) + ", " + std::to_string(coord[1]) + ", " + std::to_string(coord[2]));
             }
             ImGui::EndPopup();
@@ -82,14 +83,14 @@ namespace Caduq
                 if (start_point_idx != end_point_idx)
                 {
                     CreateSpline(std::make_shared<Caduq::Spline>(m_Point_List.at(start_point_idx), 
-                                                                 Caduq::PointTangency{{start_tangency[0], start_tangency[1], start_tangency[2]}, 
-                                                                                       start_tension[0]},
+                                                                 Caduq::PointTangency{{start_tangency[0], start_tangency[1], 
+                                                                                       start_tangency[2]}, start_tension[0]},
                                                                  m_Point_List.at(end_point_idx),
-                                                                 Caduq::PointTangency{{end_tangency[0], end_tangency[1], end_tangency[2]}, 
-                                                                                       end_tension[0]},
-                                                                 100));              
-                    VZ_INFO("Spline created between ", m_Point_List.at(start_point_idx)->GetName().data()
-                            , " and " , m_Point_List.at(end_point_idx)->GetName());
+                                                                 Caduq::PointTangency{{end_tangency[0], end_tangency[1],
+                                                                                       end_tangency[2]}, end_tension[0]},
+                                                                 100, Type::spline));              
+                    VZ_INFO("Spline created between " + m_Point_List.at(start_point_idx)->GetName()
+                            + " and " + m_Point_List.at(end_point_idx)->GetName());
                 }
                 else
                     VZ_INFO("Select two different points to create a spline");
@@ -128,12 +129,12 @@ namespace Caduq
                                                                m_Spline_List.at(spline_2_idx),
                                                                m_Spline_List.at(spline_3_idx),
                                                                m_Spline_List.at(spline_4_idx),
-                                                               10));
+                                                               10, Type::patch));
                         VZ_INFO("Patch created between ", 
-                                m_Spline_List.at(spline_1_idx)->GetName().data(), " and ",
-                                m_Spline_List.at(spline_2_idx)->GetName().data(), " and ",
-                                m_Spline_List.at(spline_3_idx)->GetName().data(), " and ",
-                                m_Spline_List.at(spline_4_idx)->GetName().data());
+                                m_Spline_List.at(spline_1_idx)->GetName() + " and ",
+                                m_Spline_List.at(spline_2_idx)->GetName() + " and ",
+                                m_Spline_List.at(spline_3_idx)->GetName() + " and ",
+                                m_Spline_List.at(spline_4_idx)->GetName());
                 }
                 else
                     VZ_INFO("Select two different points to create a spline");
@@ -161,25 +162,50 @@ namespace Caduq
     void EntityManager::DeletePoint(const std::shared_ptr<Point>& point)
     {
         bool canDelete = point->Delete();
+
+        if (canDelete)
+        {
+            auto it = std::find(m_Point_List.begin(), m_Point_List.end(), point);
+            if (it != m_Point_List.end())
+            {
+                m_Point_List.erase(it);
+                VZ_INFO(point->GetName() + " removed from list");
+            }
+        }
+        else
+            VZ_ERROR("You cannot delete this " + point->GetName() + " because there is child(ren)");
     }
     void EntityManager::DeleteSpline(const std::shared_ptr<Spline>& spline)
     {
         bool canDelete = spline->Delete();
+
         if (canDelete)
         {
             auto it = std::find(m_Spline_List.begin(), m_Spline_List.end(), spline);
             if (it != m_Spline_List.end())
             {
                 m_Spline_List.erase(it);
+                VZ_INFO(spline->GetName() + " removed from list");
             }
         }
         else
-            VZ_ERROR("Cannot delete object");
+            VZ_ERROR("You cannot delete this " + spline->GetName() + " because there is child(ren)");
     }
     void EntityManager::DeletePatch(const std::shared_ptr<Patch>& patch)
     {
-        // m_Patch_List.erase(patch);
-        patch->Init();
+        bool canDelete = patch->Delete();
+
+        if (canDelete)
+        {
+            auto it = std::find(m_Patch_List.begin(), m_Patch_List.end(), patch);
+            if (it != m_Patch_List.end())
+            {
+                m_Patch_List.erase(it);
+                VZ_INFO(patch->GetName() + " removed from list");
+            }
+        }
+        else
+            VZ_ERROR("You cannot delete this " + patch->GetName() + " because there is child(ren)");
     }
 
     std::shared_ptr<Point>& EntityManager::GetPoint(int index)

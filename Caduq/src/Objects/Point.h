@@ -8,6 +8,7 @@
 
 #include "Geometry/Point.h"
 #include "Entity.h"
+#include "Geometry/Point.h"
 
 namespace Caduq
 {
@@ -23,8 +24,8 @@ namespace Caduq
         Vizir::Ref<Vizir::VertexArray> m_PointVertexArray;
 
     public:
-        Point(double x, double y, double z, const std::string& name = "");
-        Point(Eigen::Vector3d pos, const std::string& name = "");
+        Point(double x, double y, double z, Type type, const std::string& name = "");
+        Point(Eigen::Vector3d pos, Type type, const std::string& name = "");
 
         void Init() override;
         void Visualize(Vizir::Ref<Vizir::Shader> shader, glm::mat4 transform) override;
