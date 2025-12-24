@@ -6,18 +6,16 @@
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
 
 #include <string>
-#include "Geometry/Point.h"
 
 namespace Caduq
 {
-    Point::Point(double x, double y, double z, const std::string& name)
-        : Entity{ name != "" ? name : "Point " + std::to_string(++s_IdGenerator) }
+    Point::Point(double x, double y, double z, Type type, const std::string& name)
+        : Entity{ name != "" ? name : "Point " + std::to_string(++s_IdGenerator), type }
         , m_Id{ s_IdGenerator }, m_Point{ x, y, z }
     {
-        std::cout << "Create Point" << '\n';
     }
-    Point::Point(Eigen::Vector3d pos, const std::string& name)
-        : Point{ pos(0), pos(1), pos(2), name }
+    Point::Point(Eigen::Vector3d pos, Type type, const std::string& name)
+        : Point{ pos(0), pos(1), pos(2), type, name }
     {
     }
 

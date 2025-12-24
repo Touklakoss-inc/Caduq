@@ -10,9 +10,9 @@
 namespace Caduq
 {
     Patch::Patch(const std::shared_ptr<Spline>& s0, const std::shared_ptr<Spline>& s1, 
-              const std::shared_ptr<Spline>& s2, const std::shared_ptr<Spline>& s3,
-              int mesh_size, const std::string& name)
-        : Entity{ name != "" ? name : "Patch " + std::to_string(++s_IdGenerator) }
+                 const std::shared_ptr<Spline>& s2, const std::shared_ptr<Spline>& s3,
+                 int mesh_size, Type type, const std::string& name)
+        : Entity{ name != "" ? name : "Patch " + std::to_string(++s_IdGenerator), type }
         , m_Id{ s_IdGenerator }, m_mesh_size{ mesh_size }
         , m_s0{ s0 }, m_s1{ s1 }, m_s2{ s2 }, m_s3{ s3 }
         , m_c0{ m_s0->GetGeoSpline(), m_s1->GetGeoSpline(),

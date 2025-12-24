@@ -1,15 +1,22 @@
 #include "Entity.h"
 
 #include "Vizir/Logging/Log.h"
+#include <memory>
 #include <string>
 #include "imgui/imgui.h"
 #include <glm/gtc/type_ptr.hpp>
 
+#include "EntityManager.h"
+
 namespace Caduq 
 {
-    Entity::Entity(const std::string& name)
-        : m_Name{ name }
+    Entity::Entity(const std::string& name, Type type)
+        : m_Name{ name }, m_Type{ type }
     {
+    }
+    Entity::~Entity()
+    {
+        VZ_INFO(m_Name + " object successfully deleted.");
     }
 
     void Entity::Init()
@@ -20,7 +27,7 @@ namespace Caduq
     {
     }
 
-    void Entity::RenderImGui()
+    void Entity::RenderImGui(EntityManager& entityManager)
     {
         if (ImGui::TreeNode(m_Name.data()))
         {
@@ -40,8 +47,22 @@ namespace Caduq
 
                 if (ImGui::Button("OK", ImVec2(120, 0))) 
                 { 
+                    switch (m_Type)
+                    {
+                        case Type::point:
+                            // /!\ shared pointer count increased by 2 because:
+                            // - shared_from_this created one
+                            // - dynamic_pointer_cast created an other one
+                            entityManager.DeletePoint(std::dynamic_pointer_cast<Point>(shared_from_this()));
+                            break;
+                        case Type::spline:
+                            entityManager.DeleteSpline(std::dynamic_pointer_cast<Spline>(shared_from_this()));
+                            break;
+                        case Type::patch:
+                            entityManager.DeletePatch(std::dynamic_pointer_cast<Patch>(shared_from_this()));
+                            break;
+                    }
                     ImGui::CloseCurrentPopup();
-                    VZ_INFO(m_Name + " deleted.");
                 }
                 ImGui::SetItemDefaultFocus();
                 ImGui::SameLine();
@@ -87,7 +108,6 @@ namespace Caduq
     {
         if (m_Children.size() > 0)
         {
-            VZ_ERROR("You cannot delete this object because there is child(ren)");
             return false;
         }
         else
@@ -99,17 +119,7 @@ namespace Caduq
 
             m_Parents.clear();
 
-            auto test = shared_from_this();
-
-            if (shared_from_this().use_count() > 2)
-            {
-                VZ_ERROR("You cannot delete this object because there is too much shared pointer");
-                VZ_CRITICAL("PARENTS LINKS HAS BEEN DELETED");
-                return false;
-            }
-            else
-                return true;
-
+            return true;
         }
     }
 }

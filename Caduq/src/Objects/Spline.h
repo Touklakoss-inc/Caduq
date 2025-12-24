@@ -36,7 +36,8 @@ namespace Caduq
         public:
         Spline(const std::shared_ptr<Point>& startPoint, PointTangency startTangency, 
                const std::shared_ptr<Point>& endPoint, PointTangency endTangency,
-               int mesh_size, const std::string& name = "");
+               int mesh_size, Type type, const std::string& name = "");
+        ~Spline();
 
         void Init() override;
         void Visualize(Vizir::Ref<Vizir::Shader> shader, glm::mat4 transform) override;

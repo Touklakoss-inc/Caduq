@@ -4,6 +4,7 @@
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 #include "Point.h"
+#include "Vizir/Logging/Log.h"
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
 
 #include "Entity.h"
@@ -13,8 +14,8 @@ namespace Caduq
 {
     Spline::Spline(const std::shared_ptr<Point>& startPoint, PointTangency startTangency, 
                    const std::shared_ptr<Point>& endPoint, PointTangency endTangency,
-                   int mesh_size, const std::string& name)
-        : Entity{ name != "" ? name : "Spline " + std::to_string(++s_IdGenerator) }
+                   int mesh_size, Type type, const std::string& name)
+        : Entity{ name != "" ? name : "Spline " + std::to_string(++s_IdGenerator), type }
         , m_Id{ s_IdGenerator }, m_mesh_size{ mesh_size }
         , m_StartPoint{ startPoint }, m_StartTangency{ startTangency }
         , m_EndPoint{ endPoint }, m_EndTangency{ endTangency }
@@ -25,8 +26,13 @@ namespace Caduq
     {
     }
 
+    Spline::~Spline()
+    {
+    }
+
     void Spline::Init()
     {
+        // Add the child/parent relationship
         AddParent(m_StartPoint);
         m_StartPoint->AddChild(shared_from_this());
 
