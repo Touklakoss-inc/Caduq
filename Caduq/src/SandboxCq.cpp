@@ -1,16 +1,13 @@
-#include "SandboxCq2.h"
+#include "SandboxCq.h"
 
-#include "Objects/Patch.h"
-#include "Objects/Point.h"
-#include "Objects/Spline.h"
-#include "Vizir/Logging/Log.h"
+#include "Objects/Entity.h"
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
 
 #include "imgui/imgui.h"
 #include <glm/gtc/type_ptr.hpp>
 
 #include <memory>
-void SandboxCq2::OnAttach()
+void SandboxCq::OnAttach()
 {
 	Vizir::RenderCommand::EnablePrimitiveRestart();
 
@@ -49,40 +46,29 @@ void SandboxCq2::OnAttach()
     m_Shader = Vizir::Shader::Create("PointShader", vertexSrc, fragmentSrc);
 
 
-    // m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(0.0f, 0.0f, 0.0f));
-    // m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(3.0f, 0.0f, 1.0f));
-    // m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(3.0f, 4.0f, 0.0f));
-    // m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(0.0f, 4.0f, 1.0f));
+    m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(0.0f, 0.0f, 0.0f, Caduq::Type::point));
+    m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(3.0f, 0.0f, 1.0f, Caduq::Type::point));
+    m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(3.0f, 4.0f, 0.0f, Caduq::Type::point));
+    m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(0.0f, 4.0f, 1.0f, Caduq::Type::point));
 
-    // m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(0), Caduq::PointTangency{{1, 0, 0}},
-    //                                                               m_Entity_Manager.GetPoint(1), Caduq::PointTangency{{1, 0, 0}},
-    //                                                               100));              
-    // m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(2), Caduq::PointTangency{{0, -1, 0}},
-    //                                                               m_Entity_Manager.GetPoint(1), Caduq::PointTangency{{0, -1, 0}},
-    //                                                               10));             
-    // m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(3), Caduq::PointTangency{{1, 0, 0}},
-    //                                                               m_Entity_Manager.GetPoint(2), Caduq::PointTangency{{1, 0, 0}},
-    //                                                               10));              
-    // m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(3), Caduq::PointTangency{{0, -1, 0}},
-    //                                                               m_Entity_Manager.GetPoint(0), Caduq::PointTangency{{0, -1, 0}},
-    //                                                               10));
-    //
-    // m_Entity_Manager.CreatePatch(std::make_shared<Caduq::Patch>(m_Entity_Manager.GetSpline(2),
-    //                                                             m_Entity_Manager.GetSpline(0),
-    //                                                             m_Entity_Manager.GetSpline(3),
-    //                                                             m_Entity_Manager.GetSpline(1), 
-    //                                                             10));
+    m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(0), Caduq::PointTangency{{1, 0, 0}},
+                                                                  m_Entity_Manager.GetPoint(1), Caduq::PointTangency{{1, 0, 0}},
+                                                                  100, Caduq::Type::spline));              
+    m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(2), Caduq::PointTangency{{0, -1, 0}},
+                                                                  m_Entity_Manager.GetPoint(1), Caduq::PointTangency{{0, -1, 0}},
+                                                                  10, Caduq::Type::spline));             
+    m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(3), Caduq::PointTangency{{1, 0, 0}},
+                                                                  m_Entity_Manager.GetPoint(2), Caduq::PointTangency{{1, 0, 0}},
+                                                                  10, Caduq::Type::spline));              
+    m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(3), Caduq::PointTangency{{0, -1, 0}},
+                                                                  m_Entity_Manager.GetPoint(0), Caduq::PointTangency{{0, -1, 0}},
+                                                                  10, Caduq::Type::spline));
 
-    // VZ_INFO(m_Entity_Manager.GetPoint(0)->GetChildren().size());
-    // VZ_INFO(m_Entity_Manager.GetSpline(0)->GetParents().size());
-    // VZ_INFO(m_Entity_Manager.GetPoint(0).use_count());
-    // VZ_INFO(m_Entity_Manager.GetPointList().size());
-    // VZ_INFO(m_Entity_Manager.GetSplineList().size());
-    // m_Entity_Manager.DeleteSpline(m_Entity_Manager.GetSpline(0));
-    // VZ_INFO(m_Entity_Manager.GetSplineList().size());
-
-    // std::cout << m_Entity_Manager.GetPoint(0) << '\n';
-    // std::cout << &*(m_Entity_Manager.GetPoint(0)) << '\n';
+    m_Entity_Manager.CreatePatch(std::make_shared<Caduq::Patch>(m_Entity_Manager.GetSpline(2),
+                                                                m_Entity_Manager.GetSpline(0),
+                                                                m_Entity_Manager.GetSpline(3),
+                                                                m_Entity_Manager.GetSpline(1), 
+                                                                10, Caduq::Type::patch));
 
     Vizir::RenderCommand::SetPointSize(m_PointSize);
 	Vizir::RenderCommand::SetLineWidth(m_LineSize);
@@ -91,7 +77,7 @@ void SandboxCq2::OnAttach()
     m_Transform = glm::mat4(1.0f);
 }
 
-void SandboxCq2::OnUpdate(Vizir::Timestep ts)
+void SandboxCq::OnUpdate(Vizir::Timestep ts)
 {
 	m_CameraController.OnUpdate(ts);
 
@@ -123,7 +109,7 @@ void SandboxCq2::OnUpdate(Vizir::Timestep ts)
 	Vizir::Renderer::EndScene();
 }
 
-void SandboxCq2::OnImGuiRender()
+void SandboxCq::OnImGuiRender()
 {
     float pointSize = m_PointSize;
     float lineSize = m_LineSize;
@@ -178,7 +164,7 @@ void SandboxCq2::OnImGuiRender()
     ImGui::ShowDemoWindow();
 }
 
-void SandboxCq2::OnEvent(Vizir::Event& e)
+void SandboxCq::OnEvent(Vizir::Event& e)
 {
 	m_CameraController.OnEvent(e);
 }

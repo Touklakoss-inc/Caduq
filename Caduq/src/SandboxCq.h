@@ -1,18 +1,12 @@
 #pragma once
 #include <Vizir.h>
 
-#include "Geometry/Point.h"
-#include "Objects/Point.h"
-#include "Objects/Spline.h"
-#include "Objects/Patch.h"
-#include "Geometry/Spline.h"
-#include "Geometry/Patch.h"
 #include "Objects/EntityManager.h"
 
-class SandboxCq2 : public Vizir::Layer
+class SandboxCq : public Vizir::Layer
 {
 public:
-	SandboxCq2() : Layer("Sandbox - Splines 2"), m_CameraController(1280.0f / 720.0f, true)
+	SandboxCq() : Layer("Sandbox - Splines 2"), m_CameraController(1280.0f / 720.0f, true)
 	{ }
 
 	virtual void OnAttach() override;
