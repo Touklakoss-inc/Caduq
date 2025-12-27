@@ -44,6 +44,7 @@ namespace Caduq
         glm::vec3 m_Color { 1.0f, 0.0f, 0.0f };
         float m_Size { 5.0f };
         Type m_Type { };
+        bool m_deleting { false };
 
         std::unordered_set<std::shared_ptr<Entity>, SharedPtrHash, SharedPtrComparator> m_Parents;
         std::unordered_set<std::shared_ptr<Entity>, SharedPtrHash, SharedPtrComparator> m_Children;
@@ -66,10 +67,11 @@ namespace Caduq
         const std::string& GetName() { return m_Name; };
         glm::vec3& GetColor() { return m_Color; };
         Type GetType() { return m_Type; };
+        bool GetDeletingStatus() { return m_deleting; };
         std::unordered_set<std::shared_ptr<Entity>, SharedPtrHash, SharedPtrComparator> GetParents() { return m_Parents; };
         std::unordered_set<std::shared_ptr<Entity>, SharedPtrHash, SharedPtrComparator> GetChildren() { return m_Children; };
 
-        bool Delete();
+        bool Delete(EntityManager& entityManager);
 
         virtual ~Entity();
     };
