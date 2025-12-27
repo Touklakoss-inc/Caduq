@@ -4,7 +4,6 @@
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 #include "Point.h"
-#include "Vizir/Logging/Log.h"
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
 
 #include "Entity.h"
