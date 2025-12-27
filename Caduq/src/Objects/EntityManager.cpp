@@ -5,6 +5,7 @@
 #include <memory>
 
 #include <string>
+#include <typeinfo>
 #include <vector>
 #include <set>
 
@@ -160,6 +161,25 @@ namespace Caduq
     {
         m_Patch_List.push_back(patch);
         patch->Init();
+    }
+
+    void EntityManager::DeleteEntity(const std::shared_ptr<Entity>& entity)
+    {
+        switch (entity->GetType())
+        {
+            case Type::point:
+                // /!\ shared pointer count increased by 2 because:
+                // - the entity pointer
+                // - dynamic_pointer_cast created an other one
+                DeletePoint(std::dynamic_pointer_cast<Point>(entity));
+                break;
+            case Type::spline:
+                DeleteSpline(std::dynamic_pointer_cast<Spline>(entity));
+                break;
+            case Type::patch:
+                DeletePatch(std::dynamic_pointer_cast<Patch>(entity));
+                break;
+        }
     }
 
     void EntityManager::DeletePoint(const std::shared_ptr<Point>& point)
