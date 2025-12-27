@@ -18,6 +18,8 @@ namespace Caduq
         std::vector<std::shared_ptr<Spline>> m_Spline_List;
         std::vector<std::shared_ptr<Patch>> m_Patch_List;
 
+        std::vector<std::shared_ptr<Entity>> m_EntityToDelete;
+
         void DeletePoint(const std::shared_ptr<Point>& point);
         void DeleteSpline(const std::shared_ptr<Spline>& spline);
         void DeletePatch(const std::shared_ptr<Patch>& patch);
@@ -32,6 +34,8 @@ namespace Caduq
         void CreatePatch(const std::shared_ptr<Patch>& patch);
 
         void DeleteEntity(const std::shared_ptr<Entity>& entity);
+        void ClearEntityToDelete();
+        auto GetEntityToDelete() { return m_EntityToDelete; };
 
         // should it be returned by reference ?
         const std::vector<std::shared_ptr<Point>>& GetPointList() { return m_Point_List; };

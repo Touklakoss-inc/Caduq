@@ -90,46 +90,20 @@ namespace Caduq
         return m_Children.count(child) == 1;
     }
 
-    bool Entity::Delete(EntityManager& entityManager)
+    void Entity::Delete(EntityManager& entityManager)
     {
         m_deleting = true;
 
-        if (m_Children.size() > 0)
+        for (const auto& p : m_Parents)
         {
-            for (const auto& c : m_Children)
+            if (!p->GetDeletingStatus())
             {
-                entityManager.DeleteEntity(c);
+                p->RemoveChild(shared_from_this());
+                VZ_INFO(m_Name + " removed from " + p->m_Name);
             }
-
-            for (const auto& p : m_Parents)
-            {
-                if (!p->GetDeletingStatus())
-                {
-                    p->RemoveChild(shared_from_this());
-                    VZ_INFO(m_Name + " removed from " + p->m_Name);
-                }
-            }
-
-            m_Parents.clear();
-            m_Children.clear();
-
-            return true;
         }
-        else
-        {
-            for (const auto& p : m_Parents)
-            {
-                // we can access to private member if we are in the same object, what is the good practice ? Using a getter or the direct access ?
-                if (!p->GetDeletingStatus())
-                {
-                    p->RemoveChild(shared_from_this());
-                    VZ_INFO(m_Name + " removed from " + p->m_Name);
-                }
-            }
 
-            m_Parents.clear();
-
-            return true;
-        }
+        m_Parents.clear();
+        m_Children.clear();
     }
 }

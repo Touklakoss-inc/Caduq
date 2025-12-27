@@ -71,7 +71,7 @@ namespace Caduq
         std::unordered_set<std::shared_ptr<Entity>, SharedPtrHash, SharedPtrComparator> GetParents() { return m_Parents; };
         std::unordered_set<std::shared_ptr<Entity>, SharedPtrHash, SharedPtrComparator> GetChildren() { return m_Children; };
 
-        bool Delete(EntityManager& entityManager);
+        void Delete(EntityManager& entityManager);
 
         virtual ~Entity();
     };

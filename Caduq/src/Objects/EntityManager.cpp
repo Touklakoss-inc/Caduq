@@ -165,70 +165,69 @@ namespace Caduq
 
     void EntityManager::DeleteEntity(const std::shared_ptr<Entity>& entity)
     {
-        switch (entity->GetType())
+        m_EntityToDelete.push_back(entity);
+        for (const auto& c : entity->GetChildren())
         {
-            case Type::point:
-                // /!\ shared pointer count increased by 2 because:
-                // - the entity pointer
-                // - dynamic_pointer_cast created an other one
-                DeletePoint(std::dynamic_pointer_cast<Point>(entity));
-                break;
-            case Type::spline:
-                DeleteSpline(std::dynamic_pointer_cast<Spline>(entity));
-                break;
-            case Type::patch:
-                DeletePatch(std::dynamic_pointer_cast<Patch>(entity));
-                break;
+            m_EntityToDelete.push_back(c);
         }
+    }
+
+    void EntityManager::ClearEntityToDelete()
+    {
+        for (const auto& entity : m_EntityToDelete)
+        {
+            switch (entity->GetType())
+            {
+                case Type::point:
+                    // /!\ shared pointer count increased by 2 because:
+                    // - the entity pointer
+                    // - dynamic_pointer_cast created an other one
+                    DeletePoint(std::dynamic_pointer_cast<Point>(entity));
+                    break;
+                case Type::spline:
+                    DeleteSpline(std::dynamic_pointer_cast<Spline>(entity));
+                    break;
+                case Type::patch:
+                    DeletePatch(std::dynamic_pointer_cast<Patch>(entity));
+                    break;
+            }
+        }
+
+        m_EntityToDelete.clear();
     }
 
     void EntityManager::DeletePoint(const std::shared_ptr<Point>& point)
     {
-        bool canDelete = point->Delete(*this);
+        point->Delete(*this);
 
-        if (canDelete)
+        auto it = std::find(m_Point_List.begin(), m_Point_List.end(), point);
+        if (it != m_Point_List.end())
         {
-            auto it = std::find(m_Point_List.begin(), m_Point_List.end(), point);
-            if (it != m_Point_List.end())
-            {
-                m_Point_List.erase(it);
-                VZ_INFO(point->GetName() + " removed from list");
-            }
+            m_Point_List.erase(it);
+            VZ_INFO(point->GetName() + " removed from list");
         }
-        else
-            VZ_ERROR("You cannot delete this " + point->GetName() + " because there is child(ren)");
     }
     void EntityManager::DeleteSpline(const std::shared_ptr<Spline>& spline)
     {
-        bool canDelete = spline->Delete(*this);
+        spline->Delete(*this);
 
-        if (canDelete)
+        auto it = std::find(m_Spline_List.begin(), m_Spline_List.end(), spline);
+        if (it != m_Spline_List.end())
         {
-            auto it = std::find(m_Spline_List.begin(), m_Spline_List.end(), spline);
-            if (it != m_Spline_List.end())
-            {
-                m_Spline_List.erase(it);
-                VZ_INFO(spline->GetName() + " removed from list");
-            }
+            m_Spline_List.erase(it);
+            VZ_INFO(spline->GetName() + " removed from list");
         }
-        else
-            VZ_ERROR("You cannot delete this " + spline->GetName() + " because there is child(ren)");
     }
     void EntityManager::DeletePatch(const std::shared_ptr<Patch>& patch)
     {
-        bool canDelete = patch->Delete(*this);
+        patch->Delete(*this);
 
-        if (canDelete)
+        auto it = std::find(m_Patch_List.begin(), m_Patch_List.end(), patch);
+        if (it != m_Patch_List.end())
         {
-            auto it = std::find(m_Patch_List.begin(), m_Patch_List.end(), patch);
-            if (it != m_Patch_List.end())
-            {
-                m_Patch_List.erase(it);
-                VZ_INFO(patch->GetName() + " removed from list");
-            }
+            m_Patch_List.erase(it);
+            VZ_INFO(patch->GetName() + " removed from list");
         }
-        else
-            VZ_ERROR("You cannot delete this " + patch->GetName() + " because there is child(ren)");
     }
 
     std::shared_ptr<Point>& EntityManager::GetPoint(int index)
