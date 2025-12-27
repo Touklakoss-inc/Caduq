@@ -162,12 +162,13 @@ namespace Caduq
         patch->Init();
     }
 
+    // /!\ recursive function, maybe change ?
     void EntityManager::DeleteEntity(const std::shared_ptr<Entity>& entity)
     {
         m_EntityToDelete.push_back(entity);
         for (const auto& c : entity->GetChildren())
         {
-            m_EntityToDelete.push_back(c);
+            DeleteEntity(c);
         }
     }
 
@@ -190,6 +191,7 @@ namespace Caduq
                     DeletePatch(std::dynamic_pointer_cast<Patch>(entity));
                     break;
             }
+            VZ_WARN(entity->GetName() + " removed from list");
         }
 
         m_EntityToDelete.clear();
@@ -203,7 +205,6 @@ namespace Caduq
         if (it != m_Point_List.end())
         {
             m_Point_List.erase(it);
-            VZ_INFO(point->GetName() + " removed from list");
         }
     }
     void EntityManager::DeleteSpline(const std::shared_ptr<Spline>& spline)
@@ -214,7 +215,6 @@ namespace Caduq
         if (it != m_Spline_List.end())
         {
             m_Spline_List.erase(it);
-            VZ_INFO(spline->GetName() + " removed from list");
         }
     }
     void EntityManager::DeletePatch(const std::shared_ptr<Patch>& patch)
@@ -225,7 +225,6 @@ namespace Caduq
         if (it != m_Patch_List.end())
         {
             m_Patch_List.erase(it);
-            VZ_INFO(patch->GetName() + " removed from list");
         }
     }
 
