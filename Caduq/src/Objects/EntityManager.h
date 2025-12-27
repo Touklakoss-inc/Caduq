@@ -14,9 +14,13 @@ namespace Caduq
     class EntityManager
     {
     private:
-        std::vector<std::shared_ptr<Caduq::Point>> m_Point_List;
-        std::vector<std::shared_ptr<Caduq::Spline>> m_Spline_List;
-        std::vector<std::shared_ptr<Caduq::Patch>> m_Patch_List;
+        std::vector<std::shared_ptr<Point>> m_Point_List;
+        std::vector<std::shared_ptr<Spline>> m_Spline_List;
+        std::vector<std::shared_ptr<Patch>> m_Patch_List;
+
+        void DeletePoint(const std::shared_ptr<Point>& point);
+        void DeleteSpline(const std::shared_ptr<Spline>& spline);
+        void DeletePatch(const std::shared_ptr<Patch>& patch);
 
     public:
         EntityManager() = default;
@@ -27,9 +31,7 @@ namespace Caduq
         void CreateSpline(const std::shared_ptr<Spline>& spline);
         void CreatePatch(const std::shared_ptr<Patch>& patch);
 
-        void DeletePoint(const std::shared_ptr<Point>& point);
-        void DeleteSpline(const std::shared_ptr<Spline>& spline);
-        void DeletePatch(const std::shared_ptr<Patch>& patch);
+        void DeleteEntity(const std::shared_ptr<Entity>& entity);
 
         // should it be returned by reference ?
         const std::vector<std::shared_ptr<Point>>& GetPointList() { return m_Point_List; };

@@ -47,21 +47,7 @@ namespace Caduq
 
                 if (ImGui::Button("OK", ImVec2(120, 0))) 
                 { 
-                    switch (m_Type)
-                    {
-                        case Type::point:
-                            // /!\ shared pointer count increased by 2 because:
-                            // - shared_from_this created one
-                            // - dynamic_pointer_cast created an other one
-                            entityManager.DeletePoint(std::dynamic_pointer_cast<Point>(shared_from_this()));
-                            break;
-                        case Type::spline:
-                            entityManager.DeleteSpline(std::dynamic_pointer_cast<Spline>(shared_from_this()));
-                            break;
-                        case Type::patch:
-                            entityManager.DeletePatch(std::dynamic_pointer_cast<Patch>(shared_from_this()));
-                            break;
-                    }
+                    entityManager.DeleteEntity(shared_from_this());
                     ImGui::CloseCurrentPopup();
                 }
                 ImGui::SetItemDefaultFocus();
