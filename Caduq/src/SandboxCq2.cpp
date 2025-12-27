@@ -3,6 +3,7 @@
 #include "Objects/Patch.h"
 #include "Objects/Point.h"
 #include "Objects/Spline.h"
+#include "Vizir/Logging/Log.h"
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
 
 #include "imgui/imgui.h"
@@ -169,6 +170,8 @@ void SandboxCq2::OnImGuiRender()
     {
         patch->RenderImGui(m_Entity_Manager);
     }
+
+    m_Entity_Manager.ClearEntityToDelete();
 
     ImGui::End();
     
