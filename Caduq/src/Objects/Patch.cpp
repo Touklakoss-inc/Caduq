@@ -22,6 +22,19 @@ namespace Caduq
 
     void Patch::Init()
     {
+        // Add the child/parent relationship
+        AddParent(m_s0);
+        m_s0->AddChild(shared_from_this());
+
+        AddParent(m_s1);
+        m_s1->AddChild(shared_from_this());
+
+        AddParent(m_s2);
+        m_s2->AddChild(shared_from_this());
+        
+        AddParent(m_s3);
+        m_s3->AddChild(shared_from_this());
+
         // Create patch mesh
         Eigen::ArrayXd u{ Eigen::ArrayXd::LinSpaced(m_mesh_size, 0.0, 1.0) };
         Eigen::MatrixXd m = m_c0.Mesh(u, u, m_mesh_size);
