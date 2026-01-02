@@ -21,6 +21,7 @@
 #include "Vizir/Renderer/RenderCommand.h"
 
 #include "Vizir/Renderer/Buffer.h"
+#include "Vizir/Renderer/Framebuffer.h"
 #include "Vizir/Renderer/Shader.h"
 #include "Vizir/Renderer/Texture.h"
 #include "Vizir/Renderer/VertexArray.h"
