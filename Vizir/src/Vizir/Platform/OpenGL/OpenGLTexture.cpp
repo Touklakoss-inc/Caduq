@@ -24,14 +24,13 @@ namespace Vizir
 		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-		SetData(NULL, m_Width * m_Height * m_Channels);
-
-		glBindTexture(GL_TEXTURE_2D, 0);
-
+		glTextureStorage2D(m_RendererID, 1, m_FormatStride, m_Width, m_Height);
 	}
 
 	OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
 	{
+		VZ_PROFILE_FUNC()
+
 		Texture::TextureData textureData = LoadFile(path);
 
 		m_Width = textureData.width;
@@ -68,8 +67,7 @@ namespace Vizir
 	{
 		VZ_PROFILE_FUNC()
 
-		uint32_t bpp = (m_Format == GL_RGBA) ? 4 : 3;
-		VZ_CORE_ASSERT(size == m_Width * m_Height * bpp, "Data must cover all the texture");
+		VZ_CORE_ASSERT(size == m_Width * m_Height * m_Channels, "Data must cover all the texture");
 
 		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, m_Format, GL_UNSIGNED_BYTE, data);
 	}
