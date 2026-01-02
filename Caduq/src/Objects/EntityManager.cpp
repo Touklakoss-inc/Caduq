@@ -199,7 +199,7 @@ namespace Caduq
 
     void EntityManager::DeletePoint(const std::shared_ptr<Point>& point)
     {
-        point->Delete(*this);
+        point->Delete();
 
         auto it = std::find(m_Point_List.begin(), m_Point_List.end(), point);
         if (it != m_Point_List.end())
@@ -209,7 +209,7 @@ namespace Caduq
     }
     void EntityManager::DeleteSpline(const std::shared_ptr<Spline>& spline)
     {
-        spline->Delete(*this);
+        spline->Delete();
 
         auto it = std::find(m_Spline_List.begin(), m_Spline_List.end(), spline);
         if (it != m_Spline_List.end())
@@ -219,7 +219,7 @@ namespace Caduq
     }
     void EntityManager::DeletePatch(const std::shared_ptr<Patch>& patch)
     {
-        patch->Delete(*this);
+        patch->Delete();
 
         auto it = std::find(m_Patch_List.begin(), m_Patch_List.end(), patch);
         if (it != m_Patch_List.end())

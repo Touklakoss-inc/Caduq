@@ -42,7 +42,7 @@ namespace Caduq
 
             if (ImGui::BeginPopupModal("Delete?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
             {
-                ImGui::Text("%s will NOT be deleted (cause the dev is an idiot).", m_Name.c_str());
+                ImGui::Text("%s will be deleted.", m_Name.c_str());
                 ImGui::Separator();
 
                 if (ImGui::Button("OK", ImVec2(120, 0))) 
@@ -90,7 +90,7 @@ namespace Caduq
         return m_Children.count(child) == 1;
     }
 
-    void Entity::Delete(EntityManager& entityManager)
+    void Entity::Delete()
     {
         m_deleting = true;
 
@@ -99,7 +99,7 @@ namespace Caduq
             if (!p->GetDeletingStatus())
             {
                 p->RemoveChild(shared_from_this());
-                VZ_INFO(m_Name + " removed from " + p->m_Name);
+                VZ_WARN(m_Name + " removed from " + p->m_Name);
             }
         }
 
