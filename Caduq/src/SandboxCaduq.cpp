@@ -1,4 +1,4 @@
-#include "SandboxCq.h"
+#include "SandboxCaduq.h"
 
 #include "Objects/Entity.h"
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
@@ -7,7 +7,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <memory>
-void SandboxCq::OnAttach()
+void SandboxCaduq::OnAttach()
 {
 	Vizir::RenderCommand::EnablePrimitiveRestart();
 
@@ -77,7 +77,7 @@ void SandboxCq::OnAttach()
     m_Transform = glm::mat4(1.0f);
 }
 
-void SandboxCq::OnUpdate(Vizir::Timestep ts)
+void SandboxCaduq::OnUpdate(Vizir::Timestep ts)
 {
 	m_CameraController.OnUpdate(ts);
 
@@ -109,7 +109,7 @@ void SandboxCq::OnUpdate(Vizir::Timestep ts)
 	Vizir::Renderer::EndScene();
 }
 
-void SandboxCq::OnImGuiRender()
+void SandboxCaduq::OnImGuiRender()
 {
     float pointSize = m_PointSize;
     float lineSize = m_LineSize;
@@ -164,7 +164,7 @@ void SandboxCq::OnImGuiRender()
     ImGui::ShowDemoWindow();
 }
 
-void SandboxCq::OnEvent(Vizir::Event& e)
+void SandboxCaduq::OnEvent(Vizir::Event& e)
 {
 	m_CameraController.OnEvent(e);
 }

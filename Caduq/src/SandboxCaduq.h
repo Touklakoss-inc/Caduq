@@ -3,10 +3,10 @@
 
 #include "Objects/EntityManager.h"
 
-class SandboxCq : public Vizir::Layer
+class SandboxCaduq : public Vizir::Layer
 {
 public:
-	SandboxCq() : Layer("Sandbox - Splines 2"), m_CameraController(1280.0f / 720.0f, true)
+	SandboxCaduq() : Layer("Sandbox - Caduq Geometry Test"), m_CameraController(1280.0f / 720.0f, true)
 	{ }
 
 	virtual void OnAttach() override;
