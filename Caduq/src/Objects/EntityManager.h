@@ -39,8 +39,8 @@ namespace Caduq
 
         // should it be returned by reference ?
         const std::vector<std::shared_ptr<Point>>& GetPointList() { return m_Point_List; };
-        std::vector<std::shared_ptr<Spline>> GetSplineList() { return m_Spline_List; };
-        std::vector<std::shared_ptr<Patch>> GetPatchList() { return m_Patch_List; };
+        const std::vector<std::shared_ptr<Spline>>& GetSplineList() { return m_Spline_List; };
+        const std::vector<std::shared_ptr<Patch>>& GetPatchList() { return m_Patch_List; };
 
         std::shared_ptr<Point>& GetPoint(int index);
         std::shared_ptr<Spline>& GetSpline(int index);
