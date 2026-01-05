@@ -48,11 +48,14 @@ namespace Caduq
         std::unordered_set<std::shared_ptr<Entity>, SharedPtrHash, SharedPtrComparator> m_Parents;
         std::unordered_set<std::shared_ptr<Entity>, SharedPtrHash, SharedPtrComparator> m_Children;
 
+    protected:
+        Vizir::Ref<Vizir::VertexArray> m_VertexArray;
+
     public:
         Entity(const std::string& name, Type type);
 
         virtual void Init();
-        virtual void Visualize(Vizir::Ref<Vizir::Shader> shader, glm::mat4 transform);
+        void Visualize(Vizir::Ref<Vizir::Shader> shader, glm::mat4 transform);
         void RenderImGui(EntityManager& entityManager);
 
         void AddParent(const std::shared_ptr<Entity>& parent);
@@ -64,7 +67,6 @@ namespace Caduq
         bool HasChild(const std::shared_ptr<Entity>& child) const;
 
         const std::string& GetName() { return m_Name; };
-        glm::vec3& GetColor() { return m_Color; };
         Type GetType() { return m_Type; };
         bool GetDeletingStatus() { return m_deleting; };
         std::unordered_set<std::shared_ptr<Entity>, SharedPtrHash, SharedPtrComparator> GetParents() { return m_Parents; };

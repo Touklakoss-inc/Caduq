@@ -5,6 +5,7 @@
 #include <string>
 #include "imgui/imgui.h"
 #include <glm/gtc/type_ptr.hpp>
+#include "Vizir/Platform/OpenGL/OpenGLShader.h"
 
 #include "EntityManager.h"
 
@@ -25,6 +26,11 @@ namespace Caduq
 
     void Entity::Visualize(Vizir::Ref<Vizir::Shader> shader, glm::mat4 transform)
     {
+        std::dynamic_pointer_cast<Vizir::OpenGLShader>(shader)->UploadUniformFloat3("u_Color", m_Color);
+
+        Vizir::Renderer::Submit(shader, m_VertexArray, transform);
+
+        m_VertexArray->Unbind();
     }
 
     void Entity::RenderImGui(EntityManager& entityManager)

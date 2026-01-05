@@ -31,8 +31,6 @@ namespace Caduq
 
         Geometry::Spline m_Spline;
 
-        Vizir::Ref<Vizir::VertexArray> m_SplineVertexArray;
-
         public:
         Spline(const std::shared_ptr<Point>& startPoint, PointTangency startTangency, 
                const std::shared_ptr<Point>& endPoint, PointTangency endTangency,
@@ -40,7 +38,6 @@ namespace Caduq
         ~Spline();
 
         void Init() override;
-        void Visualize(Vizir::Ref<Vizir::Shader> shader, glm::mat4 transform) override;
 
         Geometry::Spline GetGeoSpline() const;
     };

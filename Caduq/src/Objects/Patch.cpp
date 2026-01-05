@@ -58,20 +58,12 @@ namespace Caduq
         patchIndexBuffer.reset(Vizir::IndexBuffer::Create(patchIndices.data(), patchIndices.size()));
 
         // Vertex array
-        m_PatchVertexArray = Vizir::VertexArray::Create();
-        m_PatchVertexArray->Bind();
-        m_PatchVertexArray->SetVertexBuffer(patchVertexBuffer);
-        m_PatchVertexArray->SetIndexBuffer(patchIndexBuffer);
-        m_PatchVertexArray->SetPrimitiveType(Vizir::TRIANGLES);
-        m_PatchVertexArray->Unbind();
+        m_VertexArray = Vizir::VertexArray::Create();
+        m_VertexArray->Bind();
+        m_VertexArray->SetVertexBuffer(patchVertexBuffer);
+        m_VertexArray->SetIndexBuffer(patchIndexBuffer);
+        m_VertexArray->SetPrimitiveType(Vizir::TRIANGLES);
+        m_VertexArray->Unbind();
     }
 
-    void Patch::Visualize(Vizir::Ref<Vizir::Shader> shader, glm::mat4 transform)
-    {
-        std::dynamic_pointer_cast<Vizir::OpenGLShader>(shader)->UploadUniformFloat3("u_Color", GetColor());
-
-        Vizir::Renderer::Submit(shader, m_PatchVertexArray, transform);
-
-        m_PatchVertexArray->Unbind();
-    }
 }

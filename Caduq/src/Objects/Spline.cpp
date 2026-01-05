@@ -4,7 +4,6 @@
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 #include "Point.h"
-#include "Vizir/Platform/OpenGL/OpenGLShader.h"
 
 #include "Entity.h"
 #include "Geometry/Spline.h"
@@ -62,21 +61,12 @@ namespace Caduq
         splinesIndexBuffer.reset(Vizir::IndexBuffer::Create(splineIndices.data(), splineIndices.size()));
 
         // Vertex array
-        m_SplineVertexArray = Vizir::VertexArray::Create();
-        m_SplineVertexArray->Bind();
-        m_SplineVertexArray->SetVertexBuffer(splinesVertexBuffer);
-        m_SplineVertexArray->SetIndexBuffer(splinesIndexBuffer);
-        m_SplineVertexArray->SetPrimitiveType(Vizir::LINE_STRIP);
-        m_SplineVertexArray->Unbind();
-    }
-
-    void Spline::Visualize(Vizir::Ref<Vizir::Shader> shader, glm::mat4 transform)
-    {
-        std::dynamic_pointer_cast<Vizir::OpenGLShader>(shader)->UploadUniformFloat3("u_Color", GetColor());
-
-        Vizir::Renderer::Submit(shader, m_SplineVertexArray, transform);
-
-        m_SplineVertexArray->Unbind();
+        m_VertexArray = Vizir::VertexArray::Create();
+        m_VertexArray->Bind();
+        m_VertexArray->SetVertexBuffer(splinesVertexBuffer);
+        m_VertexArray->SetIndexBuffer(splinesIndexBuffer);
+        m_VertexArray->SetPrimitiveType(Vizir::LINE_STRIP);
+        m_VertexArray->Unbind();
     }
 
     Geometry::Spline Spline::GetGeoSpline() const

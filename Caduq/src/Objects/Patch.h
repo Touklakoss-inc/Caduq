@@ -24,15 +24,12 @@ namespace Caduq
 
         int m_mesh_size{ 10 };
 
-        Vizir::Ref<Vizir::VertexArray> m_PatchVertexArray;
-
         public:
         Patch(const std::shared_ptr<Spline>& s0, const std::shared_ptr<Spline>& s1, 
               const std::shared_ptr<Spline>& s2, const std::shared_ptr<Spline>& s3,
               int mesh_size, Type type, const std::string& name = "");
 
         void Init() override;
-        void Visualize(Vizir::Ref<Vizir::Shader> shader, glm::mat4 transform) override;
     };
 }
 #endif

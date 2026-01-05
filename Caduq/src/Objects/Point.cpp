@@ -3,7 +3,6 @@
 #include <Eigen/Core>
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
-#include "Vizir/Platform/OpenGL/OpenGLShader.h"
 
 #include <string>
 
@@ -43,21 +42,12 @@ namespace Caduq
         pointIndexBuffer.reset(Vizir::IndexBuffer::Create(pointIndice.data(), pointIndice.size()));
 
         // Vertex array
-        m_PointVertexArray = Vizir::VertexArray::Create();        
-        m_PointVertexArray->Bind();
-        m_PointVertexArray->SetVertexBuffer(pointsVertexBuffer);
-        m_PointVertexArray->SetIndexBuffer(pointIndexBuffer);
-        m_PointVertexArray->SetPrimitiveType(Vizir::POINTS);
-        m_PointVertexArray->Unbind();
-    }
-
-    void Point::Visualize(Vizir::Ref<Vizir::Shader> shader, glm::mat4 transform)
-    {
-        std::dynamic_pointer_cast<Vizir::OpenGLShader>(shader)->UploadUniformFloat3("u_Color", GetColor());
-
-        Vizir::Renderer::Submit(shader, m_PointVertexArray, transform);
-
-        m_PointVertexArray->Unbind();
+        m_VertexArray = Vizir::VertexArray::Create();        
+        m_VertexArray->Bind();
+        m_VertexArray->SetVertexBuffer(pointsVertexBuffer);
+        m_VertexArray->SetIndexBuffer(pointIndexBuffer);
+        m_VertexArray->SetPrimitiveType(Vizir::POINTS);
+        m_VertexArray->Unbind();
     }
 
     Geometry::Point Point::GetGeoPoint() const
