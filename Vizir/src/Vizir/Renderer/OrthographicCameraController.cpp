@@ -47,28 +47,33 @@ namespace Vizir
         dispatcher.Dispatch<WindowResizedEvent>(BIND_EVENT_FN(OrthographicCameraController::OnWindowResized));
     }
 
-    bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e)
+    void OrthographicCameraController::ResizeBounds(float width, float height)
     {
-        m_ZoomLevel -= (float)e.GetYOffset();
-
-        if (m_ZoomLevel < m_MinZoomLevel)
-        {
-          m_ZoomLevel = m_MinZoomLevel;
-        }
-
+        m_AspectRatio = width / height;
         m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
         RecomputeSpeed();
+    }
 
-        return true;
+    bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e)
+    {
+      m_ZoomLevel -= (float)e.GetYOffset();
+
+      if (m_ZoomLevel < m_MinZoomLevel)
+      {
+        m_ZoomLevel = m_MinZoomLevel;
+      }
+
+      m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
+      RecomputeSpeed();
+
+      return true;
     }
 
     bool OrthographicCameraController::OnWindowResized(WindowResizedEvent& e)
     {
-        m_AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
-        m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
-        RecomputeSpeed();
+      ResizeBounds((float)e.GetWidth(), (float)e.GetHeight());
 
-        return true;
+      return true;
     }
 
     void OrthographicCameraController::RecomputeSpeed()

@@ -83,6 +83,7 @@ void SandboxFramebuffer::OnImGuiRender()
 		m_WindowHeight = size.y;
 
 		m_Framebuffer->Resize(m_WindowWidth, m_WindowHeight);
+		m_CameraController.ResizeBounds(m_WindowWidth, m_WindowHeight);
 	}
 
 	ImGui::Image((void*)m_Framebuffer->GetAttachmentNativeID(), ImVec2(m_WindowWidth, m_WindowHeight), ImVec2(0, 1), ImVec2(1, 0));
