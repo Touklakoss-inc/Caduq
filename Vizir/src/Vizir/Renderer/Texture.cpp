@@ -34,15 +34,15 @@ namespace Vizir
 		}
 
 		// Extract format and type
-		Texture::Type type = Texture::Type::UINT;
-		Texture::Format format;
+		TextureType type = TextureType::UINT;
+		TextureFormat format;
 		if (channels == 4)
 		{
-			format = Texture::Format::R8G8B8A8;
+			format = TextureFormat::R8G8B8A8;
 		}
 		else if (channels == 3)
 		{
-			format = Texture::Format::R8G8B8;
+			format = TextureFormat::R8G8B8;
 		}
 		else
 		{
@@ -58,18 +58,21 @@ namespace Vizir
 		};
 	}
 
-	uint32_t Texture::GetChannels(Format format)
+	uint32_t Texture::GetChannels(TextureFormat format)
 	{
 		switch (format)
 		{
-		case Format::R8G8B8:
+		case TextureFormat::R8G8B8:
 			return 3;
-		case Format::R8G8B8A8:
+		case TextureFormat::R8G8B8A8:
+		case TextureFormat::D24S8:
 			return 4;
+		default:
+			VZ_CORE_ASSERT(false, "Unknown texture format"); return 0;
 		}
 	}
 
-	Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height, Format format, Type type)
+	Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height, TextureFormat format, TextureType type)
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -80,6 +83,7 @@ namespace Vizir
 		VZ_CORE_ASSERT(false, "Unknown Render API");
 		return nullptr;
 	}
+
 	Ref<Texture2D> Texture2D::Create(const std::string& path)
 	{
 		switch (Renderer::GetAPI())

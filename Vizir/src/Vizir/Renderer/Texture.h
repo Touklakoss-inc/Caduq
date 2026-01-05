@@ -7,16 +7,28 @@
 
 namespace Vizir
 {
+	enum TextureType {
+		UINT,
+		UINT_UNORM
+	}; // Should be defined at another location
+
+	enum TextureFormat {
+		R8G8B8,
+		R8G8B8A8,
+		D24S8
+	};
+
+	struct TextureSpecifications {
+		TextureType type;
+		TextureFormat format;
+		uint32_t width, height, channels;
+	};
+
 	class Texture
 	{
 	public:
-		enum Type { UINT }; // Should be defined at another location
-		enum Format { R8G8B8, R8G8B8A8 };
-
 		struct TextureData {
-			Type type;
-			Format format;
-			uint32_t width, height, channels;
+			TextureSpecifications specifications;
 			std::vector<unsigned char> data;
 		};
 
@@ -31,14 +43,13 @@ namespace Vizir
 		virtual uint32_t GetID() const = 0;
 	protected:
 		static TextureData LoadFile(const std::string& path);
-
-		static uint32_t GetChannels(Format format);
+		static uint32_t GetChannels(TextureFormat format);
 	};
 
 	class Texture2D : public Texture
 	{
 	public:
-		static Ref<Texture2D> Create(uint32_t width, uint32_t height, Format format = Format::R8G8B8, Type type = Type::UINT);
+		static Ref<Texture2D> Create(uint32_t width, uint32_t height, TextureFormat format = TextureFormat::R8G8B8, TextureType type = TextureType::UINT);
 		static Ref<Texture2D> Create(const std::string& path);
 	};
 }

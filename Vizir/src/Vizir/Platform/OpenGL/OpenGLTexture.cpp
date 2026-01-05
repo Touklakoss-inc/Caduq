@@ -7,16 +7,23 @@
 
 namespace Vizir
 {
-	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height, Format format, Type type)
-		: m_Width(width), m_Height(height), m_Channels(GetChannels(format))
+	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height, TextureFormat format, TextureType type)
 	{
+		m_Specifications = {
+			type,
+			format,
+			width,
+			height,
+			GetChannels(format)
+		};
+
 		VZ_PROFILE_FUNC()
 
-		m_Format = GetNativeFormat(format);
-		m_FormatStride = GetNativeFormatStride(format);
+		m_NativeFormat = GetNativeFormat(m_Specifications.format);
+		m_NativeFormatStride = GetNativeFormatStride(m_Specifications.format);
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
-		glTextureStorage2D(m_RendererID, 1, m_FormatStride, m_Width, m_Height);
+		glTextureStorage2D(m_RendererID, 1, m_NativeFormatStride, m_Specifications.width, m_Specifications.height);
 
 		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -24,7 +31,7 @@ namespace Vizir
 		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-		glTextureStorage2D(m_RendererID, 1, m_FormatStride, m_Width, m_Height);
+		glTextureStorage2D(m_RendererID, 1, m_NativeFormatStride, m_Specifications.width, m_Specifications.height);
 	}
 
 	OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
@@ -32,18 +39,18 @@ namespace Vizir
 		VZ_PROFILE_FUNC()
 
 		Texture::TextureData textureData = LoadFile(path);
+		m_Specifications = textureData.specifications;
 
-		m_Width = textureData.width;
-		m_Height = textureData.height;
-		m_Channels = textureData.channels;
+		m_NativeFormat = GetNativeFormat(m_Specifications.format);
+		m_NativeFormatStride = GetNativeFormatStride(m_Specifications.format);
 
-		m_Format = GetNativeFormat(textureData.format);
-		m_FormatStride = GetNativeFormatStride(textureData.format);
+		m_NativeFormat = GetNativeFormat(textureData.specifications.format);
+		m_NativeFormatStride = GetNativeFormatStride(textureData.specifications.format);
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
 		glBindTexture(GL_TEXTURE_2D, m_RendererID);
 
-		glTextureStorage2D(m_RendererID, 1, m_FormatStride, m_Width, m_Height);
+		glTextureStorage2D(m_RendererID, 1, m_NativeFormatStride, m_Specifications.width, m_Specifications.height);
 
 		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -51,7 +58,7 @@ namespace Vizir
 		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-		SetData(textureData.data.data(), m_Width * m_Height * textureData.channels);
+		SetData(textureData.data.data(), m_Specifications.width * m_Specifications.height * m_Specifications.channels);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
@@ -67,9 +74,9 @@ namespace Vizir
 	{
 		VZ_PROFILE_FUNC()
 
-		VZ_CORE_ASSERT(size == m_Width * m_Height * m_Channels, "Data must cover all the texture");
+		VZ_CORE_ASSERT(size == m_Specifications.width * m_Specifications.height * m_Specifications.channels, "Data must cover all the texture");
 
-		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, m_Format, GL_UNSIGNED_BYTE, data);
+		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Specifications.width, m_Specifications.height, m_NativeFormat, GL_UNSIGNED_BYTE, data);
 	}
 
 	void OpenGLTexture2D::Bind(uint32_t slot) const
@@ -79,13 +86,33 @@ namespace Vizir
 		glBindTextureUnit(slot, m_RendererID);
 	}
 
-	unsigned int OpenGLTexture2D::GetNativeFormat(Texture::Format format)
+	unsigned int OpenGLTexture2D::GetNativeFormat(TextureFormat format)
 	{
-		return format == Texture::Format::R8G8B8 ? GL_RGB : GL_RGBA;
+		switch (format)
+		{
+		case TextureFormat::R8G8B8:
+			return GL_RGB;
+		case TextureFormat::R8G8B8A8:
+			return GL_RGBA;
+		case TextureFormat::D24S8:
+			return 0;
+		default:
+			VZ_CORE_ASSERT(false, "Texture format was not recognized"); return 0;
+		}
 	}
 
-	unsigned int OpenGLTexture2D::GetNativeFormatStride(Texture::Format format)
+	unsigned int OpenGLTexture2D::GetNativeFormatStride(TextureFormat format)
 	{
-		return format == Texture::Format::R8G8B8 ? GL_RGB8 : GL_RGBA8;
+		switch (format)
+	{
+		case TextureFormat::R8G8B8:
+			return GL_RGB8;
+		case TextureFormat::R8G8B8A8:
+			return GL_RGBA8;
+		case TextureFormat::D24S8:
+			return GL_DEPTH24_STENCIL8;
+		default:
+			VZ_CORE_ASSERT(false, "Texture format was not recognized"); return 0;
+		}
 	}
 }

@@ -69,7 +69,7 @@ void SandboxFramebuffer::OnAttach()
 	// --------------------------------------------------------------------------------------
 
 	m_Framebuffer = Vizir::Framebuffer::Create(WIDTH, HEIGHT);
-	m_ColorAttachment = Vizir::Texture2D::Create(WIDTH, HEIGHT, Vizir::Texture::Format::R8G8B8A8);
+	m_ColorAttachment = Vizir::Texture2D::Create(WIDTH, HEIGHT, Vizir::TextureFormat::R8G8B8A8);
 
 	m_Framebuffer->Bind();
 	m_Framebuffer->AddColorAttachement(m_ColorAttachment);

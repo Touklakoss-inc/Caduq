@@ -7,12 +7,12 @@ namespace Vizir
 	class OpenGLTexture2D : public Texture2D
 	{
 	public:
-		OpenGLTexture2D(uint32_t width, uint32_t height, Format format, Type type);
+		OpenGLTexture2D(uint32_t width, uint32_t height, TextureFormat format, TextureType type);
 		OpenGLTexture2D(const std::string& path);
 		virtual ~OpenGLTexture2D();
 
-		virtual uint32_t GetWidth() const override { return m_Width; }
-		virtual uint32_t Getheight() const override { return m_Height; }
+		virtual uint32_t GetWidth() const override { return m_Specifications.width; }
+		virtual uint32_t Getheight() const override { return m_Specifications.height; }
 
 		virtual void SetData(void* data, uint32_t size) override;
 
@@ -20,11 +20,11 @@ namespace Vizir
 
 		virtual uint32_t GetID() const override { return m_RendererID; }
 	private:
-		static unsigned int GetNativeFormat(Texture::Format format);
-		static unsigned int GetNativeFormatStride(Texture::Format format);
+		static unsigned int GetNativeFormat(TextureFormat format);
+		static unsigned int GetNativeFormatStride(TextureFormat format);
 
-		uint32_t m_Width, m_Height, m_Channels;
+		TextureSpecifications m_Specifications;
 		uint32_t m_RendererID;
-		unsigned int m_Format, m_FormatStride;
+		unsigned int m_NativeFormat, m_NativeFormatStride;
 	};
 }
