@@ -64,7 +64,11 @@ namespace Caduq
 
     void Entity::AddParent(const std::shared_ptr<Entity>& parent)
     {
-        m_Parents.insert(parent);
+        auto status = m_Parents.insert(parent);
+        if (!status.second)
+        {
+            VZ_WARN(parent->GetName() + " is already the parent of " + m_Name);
+        }
     }
 
     void Entity::RemoveParent(const std::shared_ptr<Entity>& parent)
@@ -79,7 +83,11 @@ namespace Caduq
 
     void Entity::AddChild(const std::shared_ptr<Entity>& child)
     {
-        m_Children.insert(child);
+        auto status = m_Children.insert(child);
+        if (!status.second)
+        {
+            VZ_WARN(child->GetName() + " has already the child " + m_Name);
+        }
     }
 
     void Entity::RemoveChild(const std::shared_ptr<Entity>& child)

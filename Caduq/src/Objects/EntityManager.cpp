@@ -95,7 +95,7 @@ namespace Caduq
                             + " and " + m_Point_List.at(end_point_idx)->GetName());
                 }
                 else
-                    VZ_INFO("Select two different points to create a spline");
+                    VZ_WARN("Select two different points to create a spline");
             }
             ImGui::EndPopup();
         }
@@ -133,14 +133,14 @@ namespace Caduq
                                                                m_Spline_List.at(spline_3_idx),
                                                                m_Spline_List.at(spline_4_idx),
                                                                10, Type::patch));
-                        VZ_INFO("Patch created between ", 
-                                m_Spline_List.at(spline_1_idx)->GetName() + " and ",
-                                m_Spline_List.at(spline_2_idx)->GetName() + " and ",
-                                m_Spline_List.at(spline_3_idx)->GetName() + " and ",
+                        VZ_INFO("Patch created between " +
+                                m_Spline_List.at(spline_1_idx)->GetName() + " and " +
+                                m_Spline_List.at(spline_2_idx)->GetName() + " and " +
+                                m_Spline_List.at(spline_3_idx)->GetName() + " and " +
                                 m_Spline_List.at(spline_4_idx)->GetName());
                 }
                 else
-                    VZ_INFO("Select two different points to create a spline");
+                    VZ_WARN("Select four different splines to create a patch");
             }
             ImGui::EndPopup();
         }
