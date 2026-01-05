@@ -5,12 +5,12 @@
 
 namespace Vizir
 {
-	Vizir::OpenGLFramebuffer::OpenGLFramebuffer(uint32_t width, uint32_t height)
-		: m_Width(width), m_Height(height)
+	Vizir::OpenGLFramebuffer::OpenGLFramebuffer(FramebufferSpecifications specs)
+		: m_Specifications(specs)
 	{
 		VZ_PROFILE_FUNC();
 
-		glCreateFramebuffers(1, &m_RendererID);
+		Init();
 	}
 
 	Vizir::OpenGLFramebuffer::~OpenGLFramebuffer()
@@ -34,34 +34,49 @@ namespace Vizir
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void OpenGLFramebuffer::AddColorAttachement(const Ref<Texture2D>& texture)
-	{
-		VZ_CORE_ASSERT(texture->GetWidth() == m_Width && texture->Getheight() == m_Height, "Framebuffer and texture size mismatch");
-
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + m_ColorAttachments.size(), GL_TEXTURE_2D, texture->GetID(), 0);
-		m_ColorAttachments.push_back(texture);
-	}
-
-	void OpenGLFramebuffer::Validate()
+	void OpenGLFramebuffer::Resize(uint32_t width, uint32_t height)
 	{
 		VZ_PROFILE_FUNC();
 
-		// Implemented this way for convenience
-		// In case of more specific usage, should be changed
-		GenerateDepthStencilAttachment();
+		m_Specifications.width = width;
+		m_Specifications.height = height;
+
+		Cleanup();
+		Init();
+	}
+
+	void OpenGLFramebuffer::Init()
+	{
+		VZ_PROFILE_FUNC();
+
+		glCreateFramebuffers(1, &m_RendererID);
+		Bind();
+		GenerateAttachments();
 
 		VZ_CORE_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is not complete!");
+
+		Unbind();
 	}
 
-	void OpenGLFramebuffer::GenerateDepthStencilAttachment()
+	void OpenGLFramebuffer::Cleanup()
 	{
 		VZ_PROFILE_FUNC();
 
-		glGenRenderbuffers(1, &m_DepthStencilRendererID);
-		glBindRenderbuffer(GL_RENDERBUFFER, m_DepthStencilRendererID);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_Width, m_Height);
-		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		glDeleteFramebuffers(1, &m_RendererID);
+		m_ColorAttachment.reset();
+		m_DepthStencilAttachment.reset();
+	}
 
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_DepthStencilRendererID);
+	void OpenGLFramebuffer::GenerateAttachments()
+	{
+		VZ_PROFILE_FUNC();
+
+		// Create color attachement
+		m_ColorAttachment = Texture2D::Create(m_Specifications.width, m_Specifications.height, TextureFormat::R8G8B8A8, TextureType::UINT);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ColorAttachment->GetID(), 0);
+
+		// Create render buffer
+		m_DepthStencilAttachment = Texture2D::Create(m_Specifications.width, m_Specifications.height, TextureFormat::D24S8, TextureType::UINT_UNORM);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_DepthStencilAttachment->GetID());
 	}
 }

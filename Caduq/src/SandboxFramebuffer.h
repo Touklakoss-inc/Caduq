@@ -1,6 +1,8 @@
 #pragma once
 #include <Vizir.h>
 
+extern class ImVec2;
+
 class SandboxFramebuffer : public Vizir::Layer
 {
 public:
@@ -29,5 +31,5 @@ private:
   // Framebuffer
   Vizir::Ref<Vizir::Framebuffer> m_Framebuffer;
   Vizir::Ref<Vizir::Texture2D> m_ColorAttachment;
-  const uint32_t WIDTH = 400, HEIGHT = 400;
+  uint32_t m_WindowWidth{ 400 }, m_WindowHeight{ 400 };
 };

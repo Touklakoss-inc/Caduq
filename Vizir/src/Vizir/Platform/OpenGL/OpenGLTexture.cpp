@@ -30,8 +30,6 @@ namespace Vizir
 
 		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-		glTextureStorage2D(m_RendererID, 1, m_NativeFormatStride, m_Specifications.width, m_Specifications.height);
 	}
 
 	OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
@@ -43,9 +41,6 @@ namespace Vizir
 
 		m_NativeFormat = GetNativeFormat(m_Specifications.format);
 		m_NativeFormatStride = GetNativeFormatStride(m_Specifications.format);
-
-		m_NativeFormat = GetNativeFormat(textureData.specifications.format);
-		m_NativeFormatStride = GetNativeFormatStride(textureData.specifications.format);
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
 		glBindTexture(GL_TEXTURE_2D, m_RendererID);
@@ -104,7 +99,7 @@ namespace Vizir
 	unsigned int OpenGLTexture2D::GetNativeFormatStride(TextureFormat format)
 	{
 		switch (format)
-	{
+		{
 		case TextureFormat::R8G8B8:
 			return GL_RGB8;
 		case TextureFormat::R8G8B8A8:

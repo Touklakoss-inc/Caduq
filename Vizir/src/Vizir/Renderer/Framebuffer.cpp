@@ -7,11 +7,11 @@
 
 namespace Vizir
 {
-	Ref<Framebuffer> Framebuffer::Create(uint32_t width, uint32_t height)
+	Ref<Framebuffer> Framebuffer::Create(FramebufferSpecifications specs)
 	{
 		switch (Renderer::GetAPI())
 		{
-			case RendererAPI::API::OpenGL:	return std::make_shared<OpenGLFramebuffer>(width, height);
+			case RendererAPI::API::OpenGL:	return std::make_shared<OpenGLFramebuffer>(specs);
 			case RendererAPI::API::None:		VZ_CORE_ASSERT(false, "RendererAPI::None is not currently supported");  return nullptr;
 		}
 

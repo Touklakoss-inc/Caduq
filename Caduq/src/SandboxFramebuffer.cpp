@@ -68,21 +68,27 @@ void SandboxFramebuffer::OnAttach()
 	// Framebuffer setup
 	// --------------------------------------------------------------------------------------
 
-	m_Framebuffer = Vizir::Framebuffer::Create(WIDTH, HEIGHT);
-	m_ColorAttachment = Vizir::Texture2D::Create(WIDTH, HEIGHT, Vizir::TextureFormat::R8G8B8A8);
-
-	m_Framebuffer->Bind();
-	m_Framebuffer->AddColorAttachement(m_ColorAttachment);
-	m_Framebuffer->Validate();
+	m_Framebuffer = Vizir::Framebuffer::Create({ m_WindowWidth, m_WindowHeight });
 }
 
 void SandboxFramebuffer::OnImGuiRender()
 {
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+
 	ImGui::Begin(GetName().c_str());
+	ImVec2 size = ImGui::GetContentRegionAvail();
+	if (m_WindowWidth != size.x || m_WindowHeight != size.y)
+	{
+		m_WindowWidth = size.x;
+		m_WindowHeight = size.y;
 
-	ImGui::Image((void*)m_ColorAttachment->GetID(), ImVec2(WIDTH, HEIGHT), ImVec2(0, 1), ImVec2(1, 0));
+		m_Framebuffer->Resize(m_WindowWidth, m_WindowHeight);
+	}
 
+	ImGui::Image((void*)m_Framebuffer->GetAttachmentNativeID(), ImVec2(m_WindowWidth, m_WindowHeight), ImVec2(0, 1), ImVec2(1, 0));
 	ImGui::End();
+
+	ImGui::PopStyleVar();
 }
 
 void SandboxFramebuffer::OnUpdate(Vizir::Timestep ts)
