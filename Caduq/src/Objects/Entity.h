@@ -54,7 +54,7 @@ namespace Caduq
     public:
         Entity(const std::string& name, Type type);
 
-        virtual void Init();
+        virtual void Init() = 0;
         void Visualize(Vizir::Ref<Vizir::Shader> shader, glm::mat4 transform);
         void RenderImGui(EntityManager& entityManager);
 

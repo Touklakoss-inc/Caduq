@@ -20,10 +20,6 @@ namespace Caduq
         VZ_INFO(m_Name + " object successfully deleted.");
     }
 
-    void Entity::Init()
-    {
-    }
-
     void Entity::Visualize(Vizir::Ref<Vizir::Shader> shader, glm::mat4 transform)
     {
         std::dynamic_pointer_cast<Vizir::OpenGLShader>(shader)->UploadUniformFloat3("u_Color", m_Color);

@@ -3,7 +3,6 @@
 #include <Eigen/Core>
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
-#include "Vizir/Platform/OpenGL/OpenGLShader.h"
 
 #include "Geometry/Patch.h"
 
