@@ -13,7 +13,6 @@ class SandboxTexture: public Vizir::Layer
     virtual void OnImGuiRender() override;
     virtual void OnEvent(Vizir::Event& e) override;
   private:
-  private:
     Vizir::OrthographicCameraController m_CameraController;
     Vizir::ShaderLibrary m_ShaderLibrary;
     Vizir::Ref<Vizir::Texture2D> m_GridTexture, m_LogoTexture;
