@@ -82,6 +82,6 @@ namespace Vizir
 
 		// Create render buffer
 		m_DepthStencilAttachment = Texture2D::Create(m_Specifications.width, m_Specifications.height, TextureFormat::D24S8, TextureType::UINT_UNORM);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_DepthStencilAttachment->GetID());
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, m_DepthStencilAttachment->GetID(), 0);
 	}
 }
