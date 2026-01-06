@@ -74,6 +74,11 @@ namespace Vizir
 		m_ColorAttachment = Texture2D::Create(m_Specifications.width, m_Specifications.height, TextureFormat::R8G8B8A8, TextureType::UINT);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ColorAttachment->GetID(), 0);
 
+		// Clear color attachment
+		glDrawBuffer(GL_COLOR_ATTACHMENT0); //Only need to do this once.
+		uint32_t clearColor[4] = { 0, 0, 0, 0 };
+		glClearBufferuiv(GL_COLOR, 0, clearColor);
+
 		// Create render buffer
 		m_DepthStencilAttachment = Texture2D::Create(m_Specifications.width, m_Specifications.height, TextureFormat::D24S8, TextureType::UINT_UNORM);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_DepthStencilAttachment->GetID());
