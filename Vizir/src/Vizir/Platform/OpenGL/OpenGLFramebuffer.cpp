@@ -25,6 +25,7 @@ namespace Vizir
 		VZ_PROFILE_FUNC();
 
 		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
+		glViewport(0, 0, m_Specifications.width, m_Specifications.height);
 	}
 
 	void Vizir::OpenGLFramebuffer::Unbind()
