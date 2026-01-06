@@ -3,15 +3,11 @@
 #include "imgui/imgui.h"
 
 // --- Layers ---
-#include "SandboxCq.h"
-#include "SandboxGeo.h"
-#include "SandboxSplines.h"
+#include "SandboxCaduq.h"
 
 void LayerManager::OnAttach()
 {
-  RegisterLayer(std::make_shared<SandboxCq>());
-  RegisterLayer(std::make_shared<SandboxGeo>());
-  RegisterLayer(std::make_shared<SandboxSplines>());
+  RegisterLayer(std::make_shared<SandboxCaduq>());
 
   PushLayer(m_RegisteredLayers[0]);
 }

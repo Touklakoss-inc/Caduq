@@ -3,27 +3,33 @@
 
 #include <Vizir.h>
 
+#include <memory>
 #include "Spline.h"
+#include "Geometry/Patch.h"
 
 namespace Caduq
 {
-    class Patch
+    class Patch: public Entity
     {
         private:
-        Caduq::Spline m_s0;
-        Caduq::Spline m_s1;
-        Caduq::Spline m_s2;
-        Caduq::Spline m_s3;
+        static inline int s_IdGenerator{ 0 };
+        int m_Id{ };
+
+        std::shared_ptr<Spline> m_s0;
+        std::shared_ptr<Spline> m_s1;
+        std::shared_ptr<Spline> m_s2;
+        std::shared_ptr<Spline> m_s3;
+
+        Geometry::Patch m_c0;
 
         int m_mesh_size{ 10 };
 
-        Vizir::Ref<Vizir::VertexArray> m_PatchVertexArray;
-
         public:
-        Patch(const Caduq::Spline& s0, const Caduq::Spline& s1, const Caduq::Spline& s2, const Caduq::Spline& s3, int mesh_size);
+        Patch(const std::shared_ptr<Spline>& s0, const std::shared_ptr<Spline>& s1, 
+              const std::shared_ptr<Spline>& s2, const std::shared_ptr<Spline>& s3,
+              int mesh_size, Type type, const std::string& name = "");
 
-        void Init();
-        void Visualize(Vizir::Ref<Vizir::Shader> m_Shader, glm::mat4 m_Transform);
+        void Init() override;
     };
 }
 #endif

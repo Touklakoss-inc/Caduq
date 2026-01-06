@@ -4,21 +4,23 @@
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Geometry/Point.h"
+#include <string>
 
 namespace Caduq
 {
-    Point::Point(double x, double y, double z)
-        :m_Point{ x, y, z }
+    Point::Point(double x, double y, double z, Type type, const std::string& name)
+        : Entity{ name != "" ? name : "Point " + std::to_string(++s_IdGenerator), type }
+        , m_Id{ s_IdGenerator }, m_Point{ x, y, z }
     {
     }
-    Point::Point(Eigen::Vector3d pos)
-        :m_Point{ pos }
+    Point::Point(Eigen::Vector3d pos, Type type, const std::string& name)
+        : Point{ pos(0), pos(1), pos(2), type, name }
     {
     }
 
     void Point::Init()
     {
+        std::cout << m_Id << '\n';
         Geometry::Point p0 = m_Point;
 
         // Cast to float
@@ -40,23 +42,17 @@ namespace Caduq
         pointIndexBuffer.reset(Vizir::IndexBuffer::Create(pointIndice.data(), pointIndice.size()));
 
         // Vertex array
-        m_PointVertexArray = Vizir::VertexArray::Create();        
-        m_PointVertexArray->Bind();
-        m_PointVertexArray->SetVertexBuffer(pointsVertexBuffer);
-        m_PointVertexArray->SetIndexBuffer(pointIndexBuffer);
-        m_PointVertexArray->SetPrimitiveType(Vizir::POINTS);
-        m_PointVertexArray->Unbind();
-    }
-
-    void Point::Visualize(Vizir::Ref<Vizir::Shader> m_Shader, glm::mat4 m_Transform)
-    {
-        Vizir::Renderer::Submit(m_Shader, m_PointVertexArray, m_Transform);
-
-        m_PointVertexArray->Unbind();
+        m_VertexArray = Vizir::VertexArray::Create();        
+        m_VertexArray->Bind();
+        m_VertexArray->SetVertexBuffer(pointsVertexBuffer);
+        m_VertexArray->SetIndexBuffer(pointIndexBuffer);
+        m_VertexArray->SetPrimitiveType(Vizir::POINTS);
+        m_VertexArray->Unbind();
     }
 
     Geometry::Point Point::GetGeoPoint() const
     {
         return m_Point;
     }
+
 }

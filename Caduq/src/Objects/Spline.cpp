@@ -3,27 +3,44 @@
 #include <Eigen/Core>
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
+#include "Point.h"
 
+#include "Entity.h"
 #include "Geometry/Spline.h"
 
 namespace Caduq
 {
-    Spline::Spline(const Caduq::Point& startPoint, PointTangency startTangency, 
-                   const Caduq::Point& endPoint, PointTangency endTangency,
-                   int mesh_size)
-        :m_spline{ 
-            Geometry::SplinePoint{ startPoint.GetGeoPoint(), startTangency.tangent, startTangency.tension },
-            Geometry::SplinePoint{ endPoint.GetGeoPoint(), endTangency.tangent, startTangency.tension }
+    Spline::Spline(const std::shared_ptr<Point>& startPoint, PointTangency startTangency, 
+                   const std::shared_ptr<Point>& endPoint, PointTangency endTangency,
+                   int mesh_size, Type type, const std::string& name)
+        : Entity{ name != "" ? name : "Spline " + std::to_string(++s_IdGenerator), type }
+        , m_Id{ s_IdGenerator }, m_mesh_size{ mesh_size }
+        , m_StartPoint{ startPoint }, m_StartTangency{ startTangency }
+        , m_EndPoint{ endPoint }, m_EndTangency{ endTangency }
+        , m_Spline{  // Move this to the init section ?
+            Geometry::SplinePoint{ startPoint->GetGeoPoint(), startTangency.tangent, startTangency.tension },
+            Geometry::SplinePoint{ endPoint->GetGeoPoint(), endTangency.tangent, startTangency.tension } 
         }
+    {
+    }
+
+    Spline::~Spline()
     {
     }
 
     void Spline::Init()
     {
+        // Add the child/parent relationship
+        AddParent(m_StartPoint);
+        m_StartPoint->AddChild(shared_from_this());
+
+        AddParent(m_EndPoint);
+        m_EndPoint->AddChild(shared_from_this());
+
         // Create spline mesh
         Eigen::ArrayXd u{ Eigen::ArrayXd::LinSpaced(m_mesh_size, 0.0, 1.0) };
-        Eigen::MatrixXd U0 = m_spline.Mesh(u, m_mesh_size);
-        Geometry::Mesh mesh = m_spline.GetGfxMesh();
+        Eigen::MatrixXd U0 = m_Spline.Mesh(u, m_mesh_size);
+        Geometry::Mesh mesh = m_Spline.GetGfxMesh();
 
         // Cast points to float
         Eigen::MatrixXf splineVertices = mesh.nodes.cast<float>();
@@ -44,23 +61,16 @@ namespace Caduq
         splinesIndexBuffer.reset(Vizir::IndexBuffer::Create(splineIndices.data(), splineIndices.size()));
 
         // Vertex array
-        m_SplineVertexArray = Vizir::VertexArray::Create();
-        m_SplineVertexArray->Bind();
-        m_SplineVertexArray->SetVertexBuffer(splinesVertexBuffer);
-        m_SplineVertexArray->SetIndexBuffer(splinesIndexBuffer);
-        m_SplineVertexArray->SetPrimitiveType(Vizir::LINE_STRIP);
-        m_SplineVertexArray->Unbind();
-    }
-
-    void Spline::Visualize(Vizir::Ref<Vizir::Shader> m_Shader, glm::mat4 m_Transform)
-    {
-        Vizir::Renderer::Submit(m_Shader, m_SplineVertexArray, m_Transform);
-
-        m_SplineVertexArray->Unbind();
+        m_VertexArray = Vizir::VertexArray::Create();
+        m_VertexArray->Bind();
+        m_VertexArray->SetVertexBuffer(splinesVertexBuffer);
+        m_VertexArray->SetIndexBuffer(splinesIndexBuffer);
+        m_VertexArray->SetPrimitiveType(Vizir::LINE_STRIP);
+        m_VertexArray->Unbind();
     }
 
     Geometry::Spline Spline::GetGeoSpline() const
     {
-        return m_spline;
+        return m_Spline;
     }
 }
