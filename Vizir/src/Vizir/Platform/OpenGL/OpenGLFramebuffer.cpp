@@ -63,8 +63,7 @@ namespace Vizir
 		VZ_PROFILE_FUNC();
 
 		glDeleteFramebuffers(1, &m_RendererID);
-		m_ColorAttachment.reset();
-		m_DepthStencilAttachment.reset();
+		// Textures are disposed automatically
 	}
 
 	void OpenGLFramebuffer::GenerateAttachments()

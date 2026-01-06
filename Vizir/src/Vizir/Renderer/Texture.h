@@ -4,11 +4,11 @@
 
 #include "Vizir/Core/Core.h"
 
-
 namespace Vizir
 {
 	enum TextureType {
 		UINT,
+		UBYTE,
 		UINT_UNORM
 	}; // Should be defined at another location
 
@@ -36,7 +36,7 @@ namespace Vizir
 
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t Getheight() const = 0;
-
+		
 		virtual void SetData(void* data, uint32_t size) = 0;
 
 		virtual void Bind(uint32_t slot = 0) const = 0;

@@ -34,7 +34,7 @@ namespace Vizir
 		}
 
 		// Extract format and type
-		TextureType type = TextureType::UINT;
+		TextureType type = TextureType::UBYTE;
 		TextureFormat format;
 		if (channels == 4)
 		{

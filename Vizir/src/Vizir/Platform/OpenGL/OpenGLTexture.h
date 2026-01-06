@@ -22,9 +22,10 @@ namespace Vizir
 	private:
 		static unsigned int GetNativeFormat(TextureFormat format);
 		static unsigned int GetNativeFormatStride(TextureFormat format);
+		static unsigned int GetNativeType(TextureType type);
 
 		TextureSpecifications m_Specifications;
 		uint32_t m_RendererID;
-		unsigned int m_NativeFormat, m_NativeFormatStride;
+		unsigned int m_NativeFormat, m_NativeFormatStride, m_NativeType;
 	};
 }

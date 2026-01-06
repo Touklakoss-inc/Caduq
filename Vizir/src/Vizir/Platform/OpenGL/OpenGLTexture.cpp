@@ -21,6 +21,7 @@ namespace Vizir
 
 		m_NativeFormat = GetNativeFormat(m_Specifications.format);
 		m_NativeFormatStride = GetNativeFormatStride(m_Specifications.format);
+		m_NativeType = GetNativeType(m_Specifications.type);
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
 		glTextureStorage2D(m_RendererID, 1, m_NativeFormatStride, m_Specifications.width, m_Specifications.height);
@@ -41,6 +42,7 @@ namespace Vizir
 
 		m_NativeFormat = GetNativeFormat(m_Specifications.format);
 		m_NativeFormatStride = GetNativeFormatStride(m_Specifications.format);
+		m_NativeType = GetNativeType(m_Specifications.type);
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
 		glBindTexture(GL_TEXTURE_2D, m_RendererID);
@@ -71,7 +73,7 @@ namespace Vizir
 
 		VZ_CORE_ASSERT(size == m_Specifications.width * m_Specifications.height * m_Specifications.channels, "Data must cover all the texture");
 
-		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Specifications.width, m_Specifications.height, m_NativeFormat, GL_UNSIGNED_BYTE, data);
+		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Specifications.width, m_Specifications.height, m_NativeFormat, m_NativeType, data);
 	}
 
 	void OpenGLTexture2D::Bind(uint32_t slot) const
@@ -90,7 +92,7 @@ namespace Vizir
 		case TextureFormat::R8G8B8A8:
 			return GL_RGBA;
 		case TextureFormat::D24S8:
-			return 0;
+			return GL_DEPTH_STENCIL;
 		default:
 			VZ_CORE_ASSERT(false, "Texture format was not recognized"); return 0;
 		}
@@ -106,6 +108,21 @@ namespace Vizir
 			return GL_RGBA8;
 		case TextureFormat::D24S8:
 			return GL_DEPTH24_STENCIL8;
+		default:
+			VZ_CORE_ASSERT(false, "Texture format was not recognized"); return 0;
+		}
+	}
+
+	unsigned int OpenGLTexture2D::GetNativeType(TextureType type)
+	{
+		switch (type)
+		{
+		case TextureType::UINT:
+			return GL_UNSIGNED_INT;		
+		case TextureType::UBYTE:
+				return GL_UNSIGNED_BYTE;
+		case TextureType::UINT_UNORM:
+			return 0;
 		default:
 			VZ_CORE_ASSERT(false, "Texture format was not recognized"); return 0;
 		}
