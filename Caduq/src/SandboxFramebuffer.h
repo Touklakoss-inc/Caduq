@@ -1,8 +1,6 @@
 #pragma once
 #include <Vizir.h>
 
-extern class ImVec2;
-
 class SandboxFramebuffer : public Vizir::Layer
 {
 public:
@@ -14,7 +12,6 @@ public:
   virtual void OnUpdate(Vizir::Timestep ts) override;
   virtual void OnImGuiRender() override;
   virtual void OnEvent(Vizir::Event& e) override;
-private:
 private:
   // Scene
   Vizir::OrthographicCameraController m_CameraController;
