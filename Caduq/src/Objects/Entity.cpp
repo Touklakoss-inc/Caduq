@@ -1,5 +1,6 @@
 #include "Entity.h"
 
+#include "Vizir/Core/Core.h"
 #include "Vizir/Logging/Log.h"
 #include <memory>
 #include <string>
@@ -31,9 +32,29 @@ namespace Caduq
 
     void Entity::RenderImGui(EntityManager& entityManager)
     {
+        ImGuiID id = 0;
+
+        switch (m_Type)
+        {
+            case Type::point:
+                id = ImGui::GetID("create_point_popup");
+                break;
+            case Type::spline:
+                id = ImGui::GetID("create_spline_popup");
+                break;
+            case Type::patch:
+                id = ImGui::GetID("create_patch_popup");
+                break;
+            default:
+                VZ_ASSERT(false, "Wrong entity type");
+        }
+
         if (ImGui::TreeNode(m_Name.data()))
         {
             ImGui::ColorEdit3("", glm::value_ptr(m_Color));
+            ImGui::SameLine();
+            if (ImGui::Button("Modify")) 
+                ImGui::OpenPopup(id);
             ImGui::SameLine();
             if (ImGui::Button("Delete")) 
                 ImGui::OpenPopup("Delete?");

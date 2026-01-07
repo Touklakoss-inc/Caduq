@@ -1,5 +1,6 @@
 #include "EntityManager.h"
 
+#include "Eigen/Core"
 #include "Vizir/Logging/Log.h"
 #include "imgui/imgui.h"
 #include <memory>
@@ -36,6 +37,7 @@ namespace Caduq
         if (ImGui::Button("Create Point"))
             ImGui::OpenPopup("create_point_popup");
 
+
         if (ImGui::BeginPopup("create_point_popup"))
         {
             static float coord[3] = { 0.0f, 0.0f, 0.0f };
@@ -46,7 +48,6 @@ namespace Caduq
             if (ImGui::Button("Create"))
             {
                 CreatePoint(std::make_shared<Point>(coord[0], coord[1], coord[2], Type::point));
-                VZ_INFO("Point created at " + std::to_string(coord[0]) + ", " + std::to_string(coord[1]) + ", " + std::to_string(coord[2]));
             }
             ImGui::EndPopup();
         }
@@ -91,8 +92,6 @@ namespace Caduq
                                                                  Caduq::PointTangency{{end_tangency[0], end_tangency[1],
                                                                                        end_tangency[2]}, end_tension[0]},
                                                                  100, Type::spline));              
-                    VZ_INFO("Spline created between " + m_Point_List.at(start_point_idx)->GetName()
-                            + " and " + m_Point_List.at(end_point_idx)->GetName());
                 }
                 else
                     VZ_WARN("Select two different points to create a spline");
@@ -133,11 +132,6 @@ namespace Caduq
                                                                m_Spline_List.at(spline_3_idx),
                                                                m_Spline_List.at(spline_4_idx),
                                                                10, Type::patch));
-                        VZ_INFO("Patch created between " +
-                                m_Spline_List.at(spline_1_idx)->GetName() + " and " +
-                                m_Spline_List.at(spline_2_idx)->GetName() + " and " +
-                                m_Spline_List.at(spline_3_idx)->GetName() + " and " +
-                                m_Spline_List.at(spline_4_idx)->GetName());
                 }
                 else
                     VZ_WARN("Select four different splines to create a patch");
@@ -150,16 +144,19 @@ namespace Caduq
     {
         m_Point_List.push_back(point); // push_back make a copy of the shared pointer
         point->Init();
+        VZ_INFO("Point created");
     }
     void EntityManager::CreateSpline(const std::shared_ptr<Spline>& spline)
     {
         m_Spline_List.push_back(spline);
         spline->Init();
+        VZ_INFO("Spline created");
     }
     void EntityManager::CreatePatch(const std::shared_ptr<Patch>& patch)
     {
         m_Patch_List.push_back(patch);
         patch->Init();
+        VZ_INFO("Patch created");
     }
 
     // /!\ recursive function, maybe change ?
