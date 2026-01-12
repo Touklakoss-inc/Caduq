@@ -43,7 +43,7 @@ When it is finished, you can launch caduq:
 
 ### For Windows
 
-Execute `Sctips/Win-GenProject.bat` to generate the files for your IDE. By default, the IDE is Visual Studio 2022. You can change that in the `.bat` file, though we only tested the project with VS22.
+Execute `Scripts/Win-GenProject.bat` to generate the files for your IDE. By default, the IDE is Visual Studio 2022. You can change that in the `.bat` file, though we only tested the project with VS22.
 
 ## License
 [GPL-3.0](https://choosealicense.com/licenses/gpl-3.0/)
