@@ -37,7 +37,6 @@ namespace Caduq
         if (ImGui::Button("Create Point"))
             ImGui::OpenPopup("create_point_popup");
 
-
         if (ImGui::BeginPopup("create_point_popup"))
         {
             static float coord[3] = { 0.0f, 0.0f, 0.0f };
@@ -102,7 +101,10 @@ namespace Caduq
         ImGui::SameLine();
         // Patch Creation
         if (ImGui::Button("Create Patch"))
+        {
+            m_PopupOpened = true;
             ImGui::OpenPopup("create_patch_popup");
+        }
 
         if (ImGui::BeginPopup("create_patch_popup"))
         {
@@ -122,21 +124,57 @@ namespace Caduq
 
             ImGui::Separator();
 
-            if (ImGui::Button("Create"))
+            if (ImGui::Button("Cancel"))
             {
-                std::set<int> indexes = { spline_1_idx, spline_2_idx, spline_3_idx, spline_4_idx };
-                if (indexes.size() == 4)
+            }
+
+            ImGui::SameLine();
+
+            if (ImGui::Button("Apply"))
+            {
+            }
+
+            ImGui::SameLine();
+
+            if (ImGui::Button("Ok"))
+            {
+                if (m_CurEntity == nullptr)
                 {
-                    CreatePatch(std::make_shared<Caduq::Patch>(m_Spline_List.at(spline_1_idx),
-                                                               m_Spline_List.at(spline_2_idx),
-                                                               m_Spline_List.at(spline_3_idx),
-                                                               m_Spline_List.at(spline_4_idx),
-                                                               10, Type::patch));
+                    // Check if all 4 selected splines are different
+                    std::set<int> indexes = { spline_1_idx, spline_2_idx, spline_3_idx, spline_4_idx };
+                    if (indexes.size() == 4)
+                    {
+                        CreatePatch(std::make_shared<Caduq::Patch>(m_Spline_List.at(spline_1_idx),
+                                                                   m_Spline_List.at(spline_2_idx),
+                                                                   m_Spline_List.at(spline_3_idx),
+                                                                   m_Spline_List.at(spline_4_idx),
+                                                                   10, Type::patch));
+                    }
+                    else
+                        VZ_WARN("Select four different splines to create a patch");
                 }
                 else
-                    VZ_WARN("Select four different splines to create a patch");
+                {
+                    std::set<int> indexes = { spline_1_idx, spline_2_idx, spline_3_idx, spline_4_idx };
+                    if (indexes.size() == 4)
+                    {
+                        VZ_TRACE(m_CurEntity->GetName());
+                        std::dynamic_pointer_cast<Caduq::Patch>(m_CurEntity)->Update(m_Spline_List.at(spline_1_idx),
+                                                                                     m_Spline_List.at(spline_2_idx),
+                                                                                     m_Spline_List.at(spline_3_idx),
+                                                                                     m_Spline_List.at(spline_4_idx));
+                    }
+                    else
+                        VZ_WARN("Select four different splines to create a patch");
+                }
             }
             ImGui::EndPopup();
+        }
+        else if (m_PopupOpened)
+        {
+            VZ_INFO("popup closed");
+            m_CurEntity = nullptr;
+            m_PopupOpened = false;
         }
     }
 

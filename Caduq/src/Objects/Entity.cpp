@@ -54,7 +54,11 @@ namespace Caduq
             ImGui::ColorEdit3("", glm::value_ptr(m_Color));
             ImGui::SameLine();
             if (ImGui::Button("Modify")) 
+            {
+                entityManager.SetCurEntity(shared_from_this());
+                entityManager.SetPopupOpened(true);
                 ImGui::OpenPopup(id);
+            }
             ImGui::SameLine();
             if (ImGui::Button("Delete")) 
                 ImGui::OpenPopup("Delete?");

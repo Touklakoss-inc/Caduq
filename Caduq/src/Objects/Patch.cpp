@@ -6,6 +6,7 @@
 
 #include "Geometry/Patch.h"
 
+#include "Vizir/Logging/Log.h"
 namespace Caduq
 {
     Patch::Patch(const std::shared_ptr<Spline>& s0, const std::shared_ptr<Spline>& s1, 
@@ -65,4 +66,29 @@ namespace Caduq
         m_VertexArray->Unbind();
     }
 
+    void Patch::Update(const std::shared_ptr<Spline>& s0, const std::shared_ptr<Spline>& s1, 
+                       const std::shared_ptr<Spline>& s2, const std::shared_ptr<Spline>& s3)
+    {
+        for (const auto& p : GetParents())
+        {
+            p->RemoveChild(shared_from_this());
+        }
+
+        ClearParents();
+
+        m_s0 = s0;
+        m_s1 = s1;
+        m_s2 = s2;
+        m_s3 = s3;
+        m_c0 = { m_s0->GetGeoSpline(), m_s1->GetGeoSpline(),
+                m_s2->GetGeoSpline(), m_s3->GetGeoSpline() };
+        Init();
+
+        for (const auto& child : m_Children)
+        {
+            child->Update();
+        }
+
+        VZ_INFO("Patch modified");
+    }
 }

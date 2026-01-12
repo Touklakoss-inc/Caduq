@@ -20,6 +20,10 @@ namespace Caduq
 
         std::vector<std::shared_ptr<Entity>> m_EntityToDelete;
 
+        std::shared_ptr<Entity> m_CurEntity { nullptr };
+
+        bool m_PopupOpened { false };
+
         void DeletePoint(const std::shared_ptr<Point>& point);
         void DeleteSpline(const std::shared_ptr<Spline>& spline);
         void DeletePatch(const std::shared_ptr<Patch>& patch);
@@ -36,6 +40,8 @@ namespace Caduq
         void DeleteEntity(const std::shared_ptr<Entity>& entity);
         void ClearEntityToDelete();
         auto GetEntityToDelete() { return m_EntityToDelete; };
+        void SetCurEntity(const std::shared_ptr<Entity>& curEntity) { m_CurEntity = curEntity; };
+        void SetPopupOpened(bool status) { m_PopupOpened = status; };
 
         // should it be returned by reference ?
         const std::vector<std::shared_ptr<Point>>& GetPointList() { return m_Point_List; };

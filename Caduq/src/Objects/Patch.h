@@ -30,6 +30,8 @@ namespace Caduq
               int mesh_size, Type type, const std::string& name = "");
 
         void Init() override;
+        void Update(const std::shared_ptr<Spline>& s0, const std::shared_ptr<Spline>& s1, 
+                    const std::shared_ptr<Spline>& s2, const std::shared_ptr<Spline>& s3);
     };
 }
 #endif
