@@ -33,7 +33,6 @@ namespace Caduq
     void Entity::RenderImGui(EntityManager& entityManager)
     {
         ImGuiID id = 0;
-
         switch (m_Type)
         {
             case Type::point:
@@ -55,8 +54,23 @@ namespace Caduq
             ImGui::SameLine();
             if (ImGui::Button("Modify")) 
             {
+                switch (m_Type)
+                {
+                    case Type::point:
+                        entityManager.PointPopupOpened();
+                        break;
+                    case Type::spline:
+                        entityManager.SplinePopupOpened();
+                        break;
+                    case Type::patch:
+                        entityManager.PatchPopupOpened();
+                        break;
+                    default:
+                        VZ_ASSERT(false, "Wrong entity type");
+                }
+
                 entityManager.SetCurEntity(shared_from_this());
-                entityManager.SetPopupOpened(true);
+                entityManager.FirstPopupOpening();
                 ImGui::OpenPopup(id);
             }
             ImGui::SameLine();

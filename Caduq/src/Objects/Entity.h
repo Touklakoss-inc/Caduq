@@ -55,7 +55,7 @@ namespace Caduq
         Entity(const std::string& name, Type type);
 
         virtual void Init() = 0;
-        virtual void Update() = 0;
+        virtual void UpdateGFX() = 0;
         void Visualize(Vizir::Ref<Vizir::Shader> shader, glm::mat4 transform);
         void RenderImGui(EntityManager& entityManager);
 
@@ -70,6 +70,7 @@ namespace Caduq
         void ClearChildren() { m_Children.clear(); };
 
         const std::string& GetName() { return m_Name; };
+        virtual int GetID() const = 0;
         Type GetType() { return m_Type; };
         bool GetDeletingStatus() { return m_deleting; };
         std::unordered_set<std::shared_ptr<Entity>, SharedPtrHash, SharedPtrComparator> GetParents() { return m_Parents; };

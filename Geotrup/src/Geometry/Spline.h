@@ -24,6 +24,8 @@ namespace Geometry
         std::tuple<Eigen::MatrixXd, Eigen::VectorXi> GetFemMesh() const;
         struct Mesh GetGfxMesh() const;
         double GetLength() const;
+        SplinePoint GetStartPoint() const { return m_startPoint; };
+        SplinePoint GetEndPoint() const { return m_endPoint; };
     };
 }
 

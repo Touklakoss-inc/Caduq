@@ -14,7 +14,7 @@ namespace Caduq
                    const std::shared_ptr<Point>& endPoint, PointTangency endTangency,
                    int mesh_size, Type type, const std::string& name)
         : Entity{ name != "" ? name : "Spline " + std::to_string(++s_IdGenerator), type }
-        , m_Id{ s_IdGenerator }, m_mesh_size{ mesh_size }
+        , m_Id{ name != "" ? ++s_IdGenerator : s_IdGenerator }, m_mesh_size{ mesh_size }
         , m_StartPoint{ startPoint }, m_StartTangency{ startTangency }
         , m_EndPoint{ endPoint }, m_EndTangency{ endTangency }
         , m_Spline{  // Move this to the init section ?
@@ -37,6 +37,13 @@ namespace Caduq
         AddParent(m_EndPoint);
         m_EndPoint->AddChild(shared_from_this());
 
+        UpdateGFX();
+    }
+
+    void Spline::UpdateGFX()
+    {
+        m_Spline = {Geometry::SplinePoint{ m_StartPoint->GetGeoPoint(), m_StartTangency.tangent, m_StartTangency.tension },
+                    Geometry::SplinePoint{ m_EndPoint->GetGeoPoint(), m_EndTangency.tangent, m_StartTangency.tension } };
         // Create spline mesh
         Eigen::ArrayXd u{ Eigen::ArrayXd::LinSpaced(m_mesh_size, 0.0, 1.0) };
         Eigen::MatrixXd U0 = m_Spline.Mesh(u, m_mesh_size);
@@ -67,10 +74,29 @@ namespace Caduq
         m_VertexArray->SetIndexBuffer(splinesIndexBuffer);
         m_VertexArray->SetPrimitiveType(Vizir::LINE_STRIP);
         m_VertexArray->Unbind();
+
+        for (const auto& child : m_Children)
+        {
+            child->UpdateGFX();
+        }
     }
 
-    Geometry::Spline Spline::GetGeoSpline() const
+    void Spline::Update(const std::shared_ptr<Point>& startPoint, PointTangency startTangency, 
+                        const std::shared_ptr<Point>& endPoint, PointTangency endTangency)
     {
-        return m_Spline;
+        for (const auto& p : GetParents())
+        {
+            p->RemoveChild(shared_from_this());
+        }
+
+        ClearParents();
+
+        m_StartPoint = startPoint;
+        m_StartTangency = startTangency;
+        m_EndPoint = endPoint;
+        m_EndTangency = endTangency;
+        Init();
+
+        VZ_INFO("Patch modified");
     }
 }

@@ -22,11 +22,18 @@ namespace Caduq
 
         std::shared_ptr<Entity> m_CurEntity { nullptr };
 
-        bool m_PopupOpened { false };
+        bool m_PointPopupOpened { false };
+        bool m_SplinePopupOpened { false };
+        bool m_PatchPopupOpened { false };
+        bool m_FirstPopupOpening { false };
 
         void DeletePoint(const std::shared_ptr<Point>& point);
         void DeleteSpline(const std::shared_ptr<Spline>& spline);
         void DeletePatch(const std::shared_ptr<Patch>& patch);
+
+        void PointPopup();
+        void SplinePopup();
+        void PatchPopup();
 
     public:
         EntityManager() = default;
@@ -41,7 +48,10 @@ namespace Caduq
         void ClearEntityToDelete();
         auto GetEntityToDelete() { return m_EntityToDelete; };
         void SetCurEntity(const std::shared_ptr<Entity>& curEntity) { m_CurEntity = curEntity; };
-        void SetPopupOpened(bool status) { m_PopupOpened = status; };
+        void PointPopupOpened() { m_PointPopupOpened = true; };
+        void SplinePopupOpened() { m_SplinePopupOpened = true; };
+        void PatchPopupOpened() { m_PatchPopupOpened = true; };
+        void FirstPopupOpening() { m_FirstPopupOpening = true; };
 
         // should it be returned by reference ?
         const std::vector<std::shared_ptr<Point>>& GetPointList() { return m_Point_List; };

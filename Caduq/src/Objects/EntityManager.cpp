@@ -35,54 +35,158 @@ namespace Caduq
     {
         // Point Creation
         if (ImGui::Button("Create Point"))
-            ImGui::OpenPopup("create_point_popup");
-
-        if (ImGui::BeginPopup("create_point_popup"))
         {
-            static float coord[3] = { 0.0f, 0.0f, 0.0f };
-            ImGui::InputFloat2("", coord);
-
-            ImGui::Separator();
-
-            if (ImGui::Button("Create"))
-            {
-                CreatePoint(std::make_shared<Point>(coord[0], coord[1], coord[2], Type::point));
-            }
-            ImGui::EndPopup();
+            m_PointPopupOpened = true;
+            ImGui::OpenPopup("create_point_popup");
         }
 
         ImGui::SameLine();
         // Spline Creation
         if (ImGui::Button("Create Spline"))
+        {
+            m_SplinePopupOpened = true;
             ImGui::OpenPopup("create_spline_popup");
+        }
+
+        ImGui::SameLine();
+        // Patch Creation
+        if (ImGui::Button("Create Patch"))
+        {
+            m_PatchPopupOpened = true;
+            ImGui::OpenPopup("create_patch_popup");
+        }
+
+        if (ImGui::BeginPopup("create_point_popup"))
+            PointPopup();
+        else if (m_PointPopupOpened)
+        {
+            VZ_TRACE("Point popup closed");
+            m_CurEntity = nullptr;
+            m_PointPopupOpened = false;
+        }
 
         if (ImGui::BeginPopup("create_spline_popup"))
+            SplinePopup(); 
+        else if (m_SplinePopupOpened)
         {
-            static int start_point_idx = 0; // Here we store our selection data as an index.
-            MyCombo("Start Point", m_Point_List, start_point_idx);
+            VZ_TRACE("Spline popup closed");
+            m_CurEntity = nullptr;
+            m_SplinePopupOpened = false;
+        }
 
-            static float start_tangency[3] = { 0.0f, 0.0f, 0.0f };
-            ImGui::InputFloat2("Start Tangent Vector", start_tangency);
+        if (ImGui::BeginPopup("create_patch_popup"))
+            PatchPopup();
+        else if (m_PatchPopupOpened)
+        {
+            VZ_TRACE("Patch popup closed");
+            m_CurEntity = nullptr;
+            m_PatchPopupOpened = false;
+        }
+    }
 
-            static float start_tension[1] = { 1.0f };
-            ImGui::InputFloat("Start Tension", start_tension);
+    void EntityManager::PointPopup()
+    {
+        static float coord[3] = { 0.0f, 0.0f, 0.0f };
+        if (m_CurEntity != nullptr && m_FirstPopupOpening)
+        {
+            auto curPointPos = std::dynamic_pointer_cast<Caduq::Point>(m_CurEntity)->GetGeoPoint().GetPosition();
 
-            ImGui::Separator();
+            coord[0] = curPointPos[0];
+            coord[1] = curPointPos[1];
 
-            static int end_point_idx = 0; // Here we store our selection data as an index.
-            MyCombo("End Point", m_Point_List, end_point_idx);
+            m_FirstPopupOpening = false;
+        }
 
-            static float end_tangency[3] = { 0.0f, 0.0f, 0.0f };
-            ImGui::InputFloat2("End Tangent Vector", end_tangency);
+        ImGui::InputFloat2("", coord);
 
-            static float end_tension[1] = { 1.0f };
-            ImGui::InputFloat("End Tension", end_tension);
+        ImGui::Separator();
 
-            ImGui::Separator();
+        if (ImGui::Button("Cancel"))
+        {
+            ImGui::CloseCurrentPopup();
+            m_CurEntity = nullptr;
+        }
 
-            if (ImGui::Button("Create"))
+        ImGui::SameLine();
+
+        if (ImGui::Button("Ok"))
+        {
+            if (m_CurEntity == nullptr)
+                CreatePoint(std::make_shared<Caduq::Point>(coord[0], coord[1], coord[2], Type::point));
+            else
             {
-                if (start_point_idx != end_point_idx)
+                std::dynamic_pointer_cast<Caduq::Point>(m_CurEntity)->Update(coord[0], coord[1], coord[2]);
+
+                ImGui::CloseCurrentPopup();
+                m_CurEntity = nullptr;
+            }
+        }
+        ImGui::EndPopup();
+    }
+
+    void EntityManager::SplinePopup()
+    {
+        static int start_point_idx = 0; // Here we store our selection data as an index.
+        static float start_tangency[3] = { 0.0f, 0.0f, 0.0f };
+        static float start_tension[1] = { 1.0f };
+
+        static int end_point_idx = 0; // Here we store our selection data as an index.
+        static float end_tangency[3] = { 0.0f, 0.0f, 0.0f };
+        static float end_tension[1] = { 1.0f };
+
+        // Setting default values for all entries when modifying entity
+        if (m_CurEntity != nullptr && m_FirstPopupOpening)
+        {
+            auto curSpline = std::dynamic_pointer_cast<Caduq::Spline>(m_CurEntity);
+
+            auto curStartPoint = curSpline->GetGeoSpline().GetStartPoint();
+            for (int i = 0; i < 3; i++)
+                start_tangency[i] = curStartPoint.tangent[i];
+            start_tension[0] = static_cast<float>(curStartPoint.tension);
+
+            auto curEndPoint = curSpline->GetGeoSpline().GetEndPoint();
+            for (int i = 0; i < 3; i++)
+                end_tangency[i] = curEndPoint.tangent[i];
+            end_tension[0] = static_cast<float>(curEndPoint.tension);
+
+
+            for (int i = 0; i < m_Point_List.size(); i++)
+            {
+                if (m_Point_List.at(i)->GetID() == curSpline->GetStartPoint()->GetID())
+                    start_point_idx = i;
+
+                if (m_Point_List.at(i)->GetID() == curSpline->GetEndPoint()->GetID())
+                    end_point_idx = i;
+            }
+            m_FirstPopupOpening = false;
+        }
+
+        MyCombo("Start Point", m_Point_List, start_point_idx);
+        ImGui::InputFloat2("Start Tangent Vector", start_tangency);
+        ImGui::InputFloat("Start Tension", start_tension);
+
+        ImGui::Separator();
+
+        MyCombo("End Point", m_Point_List, end_point_idx);
+        ImGui::InputFloat2("End Tangent Vector", end_tangency);
+        ImGui::InputFloat("End Tension", end_tension);
+
+        ImGui::Separator();
+
+        if (ImGui::Button("Cancel"))
+        {
+            ImGui::CloseCurrentPopup();
+            m_CurEntity = nullptr;
+        }
+
+        ImGui::SameLine();
+
+        if (ImGui::Button("Ok"))
+        {
+            // Check if all 4 selected splines are different
+            if (start_point_idx != end_point_idx)
+            {
+                if (m_CurEntity == nullptr)
                 {
                     CreateSpline(std::make_shared<Caduq::Spline>(m_Point_List.at(start_point_idx), 
                                                                  Caduq::PointTangency{{start_tangency[0], start_tangency[1], 
@@ -93,89 +197,101 @@ namespace Caduq
                                                                  100, Type::spline));              
                 }
                 else
-                    VZ_WARN("Select two different points to create a spline");
+                {
+                    std::dynamic_pointer_cast<Caduq::Spline>(m_CurEntity)->Update(
+                                                                 m_Point_List.at(start_point_idx), 
+                                                                 Caduq::PointTangency{{start_tangency[0], start_tangency[1], 
+                                                                                       start_tangency[2]}, start_tension[0]},
+                                                                 m_Point_List.at(end_point_idx),
+                                                                 Caduq::PointTangency{{end_tangency[0], end_tangency[1],
+                                                                                       end_tangency[2]}, end_tension[0]});
+
+                }
+
+                ImGui::CloseCurrentPopup();
+                m_CurEntity = nullptr;
             }
-            ImGui::EndPopup();
+            else
+                VZ_WARN("Select two different points to create a spline");
+        }
+        ImGui::EndPopup();
+    }
+
+    void EntityManager::PatchPopup()
+    {
+        static int spline_1_idx = 0; // Here we store our selection data as an index.
+        static int spline_2_idx = 0; // Here we store our selection data as an index.
+        static int spline_3_idx = 0; // Here we store our selection data as an index.
+        static int spline_4_idx = 0; // Here we store our selection data as an index.
+
+        if (m_CurEntity != nullptr && m_FirstPopupOpening)
+        {
+            auto curPatch = std::dynamic_pointer_cast<Caduq::Patch>(m_CurEntity);
+            for (int i = 0; i < m_Spline_List.size(); i++)
+            {
+                auto curSplineID = m_Spline_List.at(i)->GetID();
+
+                if (curSplineID == curPatch->GetSpline0()->GetID())
+                    spline_1_idx = i;
+                if (curSplineID == curPatch->GetSpline1()->GetID())
+                    spline_2_idx = i;
+                if (curSplineID == curPatch->GetSpline2()->GetID())
+                    spline_3_idx = i;
+                if (curSplineID == curPatch->GetSpline3()->GetID())
+                    spline_4_idx = i;
+            }
+
+            m_FirstPopupOpening = false;
+        }
+
+        MyCombo("First Spline", m_Spline_List, spline_1_idx);
+        MyCombo("Second Spline", m_Spline_List, spline_2_idx);
+
+        ImGui::Separator();
+
+        MyCombo("Third Spline", m_Spline_List, spline_3_idx);
+        MyCombo("Fourth Spline", m_Spline_List, spline_4_idx);
+
+        ImGui::Separator();
+
+        if (ImGui::Button("Cancel"))
+        {
+            ImGui::CloseCurrentPopup();
+            m_CurEntity = nullptr;
         }
 
         ImGui::SameLine();
-        // Patch Creation
-        if (ImGui::Button("Create Patch"))
+
+        if (ImGui::Button("Ok"))
         {
-            m_PopupOpened = true;
-            ImGui::OpenPopup("create_patch_popup");
-        }
-
-        if (ImGui::BeginPopup("create_patch_popup"))
-        {
-            static int spline_1_idx = 0; // Here we store our selection data as an index.
-            MyCombo("First Spline", m_Spline_List, spline_1_idx);
-
-            static int spline_2_idx = 0; // Here we store our selection data as an index.
-            MyCombo("Second Spline", m_Spline_List, spline_2_idx);
-
-            ImGui::Separator();
-
-            static int spline_3_idx = 0; // Here we store our selection data as an index.
-            MyCombo("Third Spline", m_Spline_List, spline_3_idx);
-
-            static int spline_4_idx = 0; // Here we store our selection data as an index.
-            MyCombo("Fourth Spline", m_Spline_List, spline_4_idx);
-
-            ImGui::Separator();
-
-            if (ImGui::Button("Cancel"))
-            {
-            }
-
-            ImGui::SameLine();
-
-            if (ImGui::Button("Apply"))
-            {
-            }
-
-            ImGui::SameLine();
-
-            if (ImGui::Button("Ok"))
+            // Check if all 4 selected splines are different
+            std::set<int> indexes = { spline_1_idx, spline_2_idx, spline_3_idx, spline_4_idx };
+            if (indexes.size() == 4)
             {
                 if (m_CurEntity == nullptr)
                 {
-                    // Check if all 4 selected splines are different
-                    std::set<int> indexes = { spline_1_idx, spline_2_idx, spline_3_idx, spline_4_idx };
-                    if (indexes.size() == 4)
-                    {
-                        CreatePatch(std::make_shared<Caduq::Patch>(m_Spline_List.at(spline_1_idx),
-                                                                   m_Spline_List.at(spline_2_idx),
-                                                                   m_Spline_List.at(spline_3_idx),
-                                                                   m_Spline_List.at(spline_4_idx),
-                                                                   10, Type::patch));
-                    }
-                    else
-                        VZ_WARN("Select four different splines to create a patch");
+                    CreatePatch(std::make_shared<Caduq::Patch>(m_Spline_List.at(spline_1_idx),
+                                                               m_Spline_List.at(spline_2_idx),
+                                                               m_Spline_List.at(spline_3_idx),
+                                                               m_Spline_List.at(spline_4_idx),
+                                                               10, Type::patch));
                 }
                 else
                 {
-                    std::set<int> indexes = { spline_1_idx, spline_2_idx, spline_3_idx, spline_4_idx };
-                    if (indexes.size() == 4)
-                    {
-                        VZ_TRACE(m_CurEntity->GetName());
-                        std::dynamic_pointer_cast<Caduq::Patch>(m_CurEntity)->Update(m_Spline_List.at(spline_1_idx),
-                                                                                     m_Spline_List.at(spline_2_idx),
-                                                                                     m_Spline_List.at(spline_3_idx),
-                                                                                     m_Spline_List.at(spline_4_idx));
-                    }
-                    else
-                        VZ_WARN("Select four different splines to create a patch");
+                    VZ_TRACE(m_CurEntity->GetName());
+                    std::dynamic_pointer_cast<Caduq::Patch>(m_CurEntity)->Update(m_Spline_List.at(spline_1_idx),
+                                                                                 m_Spline_List.at(spline_2_idx),
+                                                                                 m_Spline_List.at(spline_3_idx),
+                                                                                 m_Spline_List.at(spline_4_idx));
                 }
+
+                ImGui::CloseCurrentPopup();
+                m_CurEntity = nullptr;
             }
-            ImGui::EndPopup();
+            else
+                VZ_WARN("Select four different splines to create a patch");
         }
-        else if (m_PopupOpened)
-        {
-            VZ_INFO("popup closed");
-            m_CurEntity = nullptr;
-            m_PopupOpened = false;
-        }
+        ImGui::EndPopup();
     }
 
     void EntityManager::CreatePoint(const std::shared_ptr<Point>& point)
