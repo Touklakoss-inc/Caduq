@@ -31,13 +31,11 @@ namespace Vizir
 
 	struct BufferElement 
 	{
-		std::string Name;
-		ShaderDataType Type;
-		uint32_t Offset;
-		uint32_t Size;
-		bool Normalized;
-
-		BufferElement() {}
+		std::string Name{};
+		ShaderDataType Type{};
+		uint32_t Offset{};
+		uint32_t Size{};
+		bool Normalized{};
 
 		BufferElement(ShaderDataType type, const std::string& name, bool normalized = false)
 			: Type(type), Name(name), Size(ShaderDataTypeSize(type)), Offset(0), Normalized(normalized)

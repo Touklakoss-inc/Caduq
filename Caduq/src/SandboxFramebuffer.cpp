@@ -68,7 +68,7 @@ void SandboxFramebuffer::OnAttach()
 	// Framebuffer setup
 	// --------------------------------------------------------------------------------------
 
-	m_Framebuffer = Vizir::Framebuffer::Create({ m_WindowWidth, m_WindowHeight });
+	m_Framebuffer = Vizir::Framebuffer::Create({ static_cast<uint32_t>(m_WindowWidth), static_cast<uint32_t>(m_WindowHeight) });
 }
 
 void SandboxFramebuffer::OnImGuiRender()
@@ -82,11 +82,11 @@ void SandboxFramebuffer::OnImGuiRender()
 		m_WindowWidth = size.x;
 		m_WindowHeight = size.y;
 
-		m_Framebuffer->Resize(m_WindowWidth, m_WindowHeight);
+		m_Framebuffer->Resize(static_cast<uint32_t>(m_WindowWidth), static_cast<uint32_t>(m_WindowHeight));
 		m_CameraController.ResizeBounds(m_WindowWidth, m_WindowHeight);
 	}
 
-	ImGui::Image((void*)m_Framebuffer->GetAttachmentNativeID(), ImVec2(m_WindowWidth, m_WindowHeight), ImVec2(0, 1), ImVec2(1, 0));
+	ImGui::Image(reinterpret_cast<void*>(static_cast<uintptr_t>(m_Framebuffer->GetAttachmentNativeID())), ImVec2(m_WindowWidth, m_WindowHeight), ImVec2(0, 1), ImVec2(1, 0));
 	ImGui::End();
 
 	ImGui::PopStyleVar();

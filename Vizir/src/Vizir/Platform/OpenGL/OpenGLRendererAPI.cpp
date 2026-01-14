@@ -15,6 +15,8 @@ namespace Vizir
 			return GL_LINE;
 		case RendererAPI::PolygonMode::FILL:
 			return GL_FILL;
+		default:
+			VZ_CORE_ASSERT(false, "Unknown Polygon mode"); return 0;
 		}
 	}
 

@@ -45,7 +45,7 @@ void SandboxLayout::OnImGuiRender()
 
   VZ_TRACE("Rendering");
   ImGui::Begin("Settings");
-  ImGui::Image((void*)m_Texture->GetID(), ImVec2{ 200.0f, 200.0f });
+  ImGui::Image(reinterpret_cast<void*>(static_cast<uintptr_t>(m_Texture->GetID())), ImVec2{ 200.0f, 200.0f });
   ImGui::End();
 }
 

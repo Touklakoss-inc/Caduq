@@ -28,5 +28,5 @@ private:
   // Framebuffer
   Vizir::Ref<Vizir::Framebuffer> m_Framebuffer;
   Vizir::Ref<Vizir::Texture2D> m_ColorAttachment;
-  uint32_t m_WindowWidth{ 400 }, m_WindowHeight{ 400 };
+  float m_WindowWidth{ 400.0f }, m_WindowHeight{ 400.0f };
 };

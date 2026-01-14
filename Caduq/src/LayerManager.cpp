@@ -32,7 +32,7 @@ void LayerManager::OnImGuiRender()
     int newLayerIndex = m_LayerIndex;
 
     // Render every layer as a choice on the combo
-    if (ImGui::Combo("Selected Layer", &newLayerIndex, m_RegisteredLayerNames.data(), m_RegisteredLayerNames.size())
+    if (ImGui::Combo("Selected Layer", &newLayerIndex, m_RegisteredLayerNames.data(), static_cast<int>(m_RegisteredLayerNames.size()))
       && newLayerIndex != m_LayerIndex)
     {
       Vizir::Ref<Layer> lastLayer = m_RegisteredLayers[m_LayerIndex];
