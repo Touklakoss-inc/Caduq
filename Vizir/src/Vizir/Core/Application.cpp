@@ -74,7 +74,7 @@ namespace Vizir
 				m_LayerStack.PushOverlay(layerOp.layer);
 				break;
 			default :
-				VZ_CORE_ERROR("Layer operation Type {} was not recognized", layerOp.type);
+				VZ_CORE_ERROR("Layer operation Type {} was not recognized", (int)layerOp.type);
 			}
 		}
 	}
