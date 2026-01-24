@@ -3,7 +3,7 @@
 #include "Objects/Entity.h"
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
 
-#include "imgui/imgui.h"
+#include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
 #include <memory>

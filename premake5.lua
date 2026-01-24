@@ -20,6 +20,8 @@ IncludeDir["stb_image"] = "Vizir/vendor/stb_image"
 IncludeDir["Eigen"] = "Vizir/vendor/Eigen"
 
 group "Dependencies"
+    warnings ("off")
+
 	include "Vizir/vendor/GLFW"
 	include "Vizir/vendor/glad"
 	include "Vizir/vendor/imgui"

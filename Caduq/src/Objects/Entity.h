@@ -1,7 +1,7 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-#include "glm/fwd.hpp"
+#include <glm/fwd.hpp>
 #include <Vizir.h>
 #include <memory>
 #include <string>

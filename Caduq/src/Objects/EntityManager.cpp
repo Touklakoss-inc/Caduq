@@ -2,7 +2,7 @@
 
 #include "Eigen/Core"
 #include "Vizir/Logging/Log.h"
-#include "imgui/imgui.h"
+#include <imgui/imgui.h>
 #include <memory>
 
 #include <string>
