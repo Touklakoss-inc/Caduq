@@ -33,6 +33,9 @@ project "Vizir"
     cppdialect "C++17"
     staticruntime "on"
 
+    externalanglebrackets ("on")
+    externalwarnings "Off"
+
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
@@ -123,6 +126,9 @@ project "Geotrup"
     cppdialect "C++17"
     staticruntime "on"
 
+    externalanglebrackets ("on")
+    externalwarnings "Off"
+
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
@@ -190,6 +196,8 @@ project "Caduq"
     cppdialect "C++17"
     staticruntime "on"
 
+    externalanglebrackets ("on")
+    externalwarnings "Off"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
