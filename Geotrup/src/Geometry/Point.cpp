@@ -2,7 +2,7 @@
 
 #include "Point.h"
 
-#include "Eigen/Core"
+#include <Eigen/Core>
 namespace Geometry
 {
     Point::Point(double x, double y, double z)

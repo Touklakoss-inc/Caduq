@@ -34,7 +34,7 @@ namespace Caduq
         // Visualization buffer
         // Vertex Buffer
         Vizir::Ref<Vizir::VertexBuffer> pointsVertexBuffer;
-        pointsVertexBuffer.reset(Vizir::VertexBuffer::Create(pointVertice.data(), pointVertice.size() * sizeof(float)));
+        pointsVertexBuffer.reset(Vizir::VertexBuffer::Create(pointVertice.data(), static_cast<uint32_t>(pointVertice.size()) * sizeof(float)));
 
         Vizir::BufferLayout pointsLayout = {
             { Vizir::ShaderDataType::Float3, "v_position"},
@@ -43,7 +43,7 @@ namespace Caduq
 
         // Index buffer
         Vizir::Ref<Vizir::IndexBuffer> pointIndexBuffer;
-        pointIndexBuffer.reset(Vizir::IndexBuffer::Create(pointIndice.data(), pointIndice.size()));
+        pointIndexBuffer.reset(Vizir::IndexBuffer::Create(pointIndice.data(), static_cast<uint32_t>(pointIndice.size())));
 
         // Vertex array
         m_VertexArray = Vizir::VertexArray::Create();        

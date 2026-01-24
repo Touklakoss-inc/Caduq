@@ -52,7 +52,7 @@ namespace Caduq
 
         // Vertex Buffer
         Vizir::Ref<Vizir::VertexBuffer> patchVertexBuffer;
-        patchVertexBuffer.reset(Vizir::VertexBuffer::Create(patchVertices.data(), patchVertices.size() * sizeof(float)));
+        patchVertexBuffer.reset(Vizir::VertexBuffer::Create(patchVertices.data(), static_cast<uint32_t>(patchVertices.size()) * sizeof(float)));
 
         Vizir::BufferLayout patchLayout = {
             { Vizir::ShaderDataType::Float3, "v_position"},
@@ -61,7 +61,7 @@ namespace Caduq
 
         // Index buffer
         Vizir::Ref<Vizir::IndexBuffer> patchIndexBuffer;
-        patchIndexBuffer.reset(Vizir::IndexBuffer::Create(patchIndices.data(), patchIndices.size()));
+        patchIndexBuffer.reset(Vizir::IndexBuffer::Create(patchIndices.data(), static_cast<uint32_t>(patchIndices.size())));
 
         // Vertex array
         m_VertexArray = Vizir::VertexArray::Create();

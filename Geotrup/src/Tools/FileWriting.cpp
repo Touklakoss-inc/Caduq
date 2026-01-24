@@ -40,7 +40,7 @@ namespace Geometry::Tools
                 outfile << RJust(std::to_string(nodes(2, i)), 16);
                 outfile << '\n';
             }
-            node_offset += nodes.cols();
+            node_offset += static_cast<int>(nodes.cols());
         }
 
         outfile << "*ELEMENT_BEAM\n";
@@ -58,7 +58,7 @@ namespace Geometry::Tools
                 outfile << RJust(std::to_string(0), 8);
                 outfile << '\n';
             }
-            node_offset += nodes.cols();
+            node_offset += static_cast<int>(nodes.cols());
         }
 
         outfile << "*END\n";

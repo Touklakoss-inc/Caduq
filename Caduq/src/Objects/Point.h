@@ -4,11 +4,10 @@
 #include <string>
 #include <Vizir.h>
 
-#include "Eigen/Core"
+#include <Eigen/Core>
 
 #include "Geometry/Point.h"
 #include "Entity.h"
-#include "Geometry/Point.h"
 
 namespace Caduq
 {
