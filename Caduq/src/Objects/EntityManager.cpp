@@ -37,6 +37,7 @@ namespace Caduq
         if (ImGui::Button("Create Point"))
         {
             m_PointPopupOpened = true;
+            FirstPopupOpening();
             ImGui::OpenPopup("create_point_popup");
         }
 
@@ -45,6 +46,7 @@ namespace Caduq
         if (ImGui::Button("Create Spline"))
         {
             m_SplinePopupOpened = true;
+            FirstPopupOpening();
             ImGui::OpenPopup("create_spline_popup");
         }
 
@@ -53,6 +55,7 @@ namespace Caduq
         if (ImGui::Button("Create Patch"))
         {
             m_PatchPopupOpened = true;
+            FirstPopupOpening();
             ImGui::OpenPopup("create_patch_popup");
         }
 
@@ -87,13 +90,22 @@ namespace Caduq
     void EntityManager::PointPopup()
     {
         static float coord[3] = { 0.0f, 0.0f, 0.0f };
-        if (m_CurEntity != nullptr && m_FirstPopupOpening)
+        if (m_FirstPopupOpening)
         {
-            auto curPointPos = std::dynamic_pointer_cast<Caduq::Point>(m_CurEntity)->GetGeoPoint().GetPosition();
+            if (m_CurEntity != nullptr)
+            {
+                auto curPointPos = std::dynamic_pointer_cast<Caduq::Point>(m_CurEntity)->GetGeoPoint().GetPosition();
 
-            coord[0] = curPointPos[0];
-            coord[1] = curPointPos[1];
-
+                coord[0] = curPointPos[0];
+                coord[1] = curPointPos[1];
+                coord[2] = curPointPos[2];
+            }
+            else
+            {
+                coord[0] = 0.0f;
+                coord[1] = 0.0f;
+                coord[2] = 0.0f;
+            }
             m_FirstPopupOpening = false;
         }
 
@@ -134,29 +146,47 @@ namespace Caduq
         static float end_tangency[3] = { 0.0f, 0.0f, 0.0f };
         static float end_tension[1] = { 1.0f };
 
-        // Setting default values for all entries when modifying entity
-        if (m_CurEntity != nullptr && m_FirstPopupOpening)
+        if (m_FirstPopupOpening)
         {
-            auto curSpline = std::dynamic_pointer_cast<Caduq::Spline>(m_CurEntity);
-
-            auto curStartPoint = curSpline->GetGeoSpline().GetStartPoint();
-            for (int i = 0; i < 3; i++)
-                start_tangency[i] = curStartPoint.tangent[i];
-            start_tension[0] = static_cast<float>(curStartPoint.tension);
-
-            auto curEndPoint = curSpline->GetGeoSpline().GetEndPoint();
-            for (int i = 0; i < 3; i++)
-                end_tangency[i] = curEndPoint.tangent[i];
-            end_tension[0] = static_cast<float>(curEndPoint.tension);
-
-
-            for (int i = 0; i < m_Point_List.size(); i++)
+            // Setting default values for all entries when modifying entity
+            if (m_CurEntity != nullptr)
             {
-                if (m_Point_List.at(i)->GetID() == curSpline->GetStartPoint()->GetID())
-                    start_point_idx = i;
+                auto curSpline = std::dynamic_pointer_cast<Caduq::Spline>(m_CurEntity);
 
-                if (m_Point_List.at(i)->GetID() == curSpline->GetEndPoint()->GetID())
-                    end_point_idx = i;
+                auto curStartPoint = curSpline->GetGeoSpline().GetStartPoint();
+                for (int i = 0; i < 3; i++)
+                    start_tangency[i] = curStartPoint.tangent[i];
+                start_tension[0] = static_cast<float>(curStartPoint.tension);
+
+                auto curEndPoint = curSpline->GetGeoSpline().GetEndPoint();
+                for (int i = 0; i < 3; i++)
+                    end_tangency[i] = curEndPoint.tangent[i];
+                end_tension[0] = static_cast<float>(curEndPoint.tension);
+
+
+                for (int i = 0; i < m_Point_List.size(); i++)
+                {
+                    if (m_Point_List.at(i)->GetID() == curSpline->GetStartPoint()->GetID())
+                        start_point_idx = i;
+
+                    if (m_Point_List.at(i)->GetID() == curSpline->GetEndPoint()->GetID())
+                        end_point_idx = i;
+                }
+            }
+            else
+            {
+                VZ_TRACE("Set static var to default");
+                start_point_idx = 0; // Here we store our selection data as an index.
+                start_tangency[0] = 0.0f;
+                start_tangency[1] = 0.0f;
+                start_tangency[2] = 0.0f;
+                start_tension[0] = 1.0f;
+
+                end_point_idx = 0; // Here we store our selection data as an index.
+                end_tangency[0] = 0.0f;
+                end_tangency[1] = 0.0f;
+                end_tangency[2] = 0.0f;
+                end_tension[0] = 1.0f;
             }
             m_FirstPopupOpening = false;
         }
@@ -224,23 +254,32 @@ namespace Caduq
         static int spline_3_idx = 0; // Here we store our selection data as an index.
         static int spline_4_idx = 0; // Here we store our selection data as an index.
 
-        if (m_CurEntity != nullptr && m_FirstPopupOpening)
+        if (m_FirstPopupOpening)
         {
-            auto curPatch = std::dynamic_pointer_cast<Caduq::Patch>(m_CurEntity);
-            for (int i = 0; i < m_Spline_List.size(); i++)
+            if (m_CurEntity != nullptr)
             {
-                auto curSplineID = m_Spline_List.at(i)->GetID();
+                auto curPatch = std::dynamic_pointer_cast<Caduq::Patch>(m_CurEntity);
+                for (int i = 0; i < m_Spline_List.size(); i++)
+                {
+                    auto curSplineID = m_Spline_List.at(i)->GetID();
 
-                if (curSplineID == curPatch->GetSpline0()->GetID())
-                    spline_1_idx = i;
-                if (curSplineID == curPatch->GetSpline1()->GetID())
-                    spline_2_idx = i;
-                if (curSplineID == curPatch->GetSpline2()->GetID())
-                    spline_3_idx = i;
-                if (curSplineID == curPatch->GetSpline3()->GetID())
-                    spline_4_idx = i;
+                    if (curSplineID == curPatch->GetSpline0()->GetID())
+                        spline_1_idx = i;
+                    if (curSplineID == curPatch->GetSpline1()->GetID())
+                        spline_2_idx = i;
+                    if (curSplineID == curPatch->GetSpline2()->GetID())
+                        spline_3_idx = i;
+                    if (curSplineID == curPatch->GetSpline3()->GetID())
+                        spline_4_idx = i;
+                }
             }
-
+            else
+            {
+                spline_1_idx = 0;
+                spline_2_idx = 0;
+                spline_3_idx = 0;
+                spline_4_idx = 0;
+            }
             m_FirstPopupOpening = false;
         }
 
