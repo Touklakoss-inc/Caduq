@@ -3,6 +3,7 @@
 #include "Vizir/Core/Core.h"
 
 #define FMT_UNICODE 0
+#define SPDLOG_USE_STD_FORMAT
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 
