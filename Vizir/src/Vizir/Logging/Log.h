@@ -2,17 +2,9 @@
 
 #include "Vizir/Core/Core.h"
 
-#pragma warning (push)
-#pragma warning (disable : 26498)
-#pragma warning (disable : 26495)
-#pragma warning (disable : 26800)
-#pragma warning (disable : 6294)
-
 #define FMT_UNICODE 0
-#include "spdlog/spdlog.h"
-#include "spdlog/sinks/stdout_color_sinks.h"
-
-#pragma warning (pop)
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
 
 namespace Vizir
 {

@@ -32,7 +32,7 @@ project "Vizir"
     location "Vizir"
     kind "StaticLib"
     language "C++"
-    cppdialect "C++17"
+        cppdialect "C++20"
     staticruntime "on"
 
     externalanglebrackets ("on")
@@ -125,7 +125,7 @@ project "Geotrup"
     location "Geotrup"
     kind "StaticLib"
     language "C++"
-    cppdialect "C++17"
+        cppdialect "C++20"
     staticruntime "on"
 
     externalanglebrackets ("on")
@@ -195,7 +195,7 @@ project "Caduq"
     location "Caduq"
     kind "ConsoleApp"
     language "C++"
-    cppdialect "C++17"
+        cppdialect "C++20"
     staticruntime "on"
 
     externalanglebrackets ("on")
