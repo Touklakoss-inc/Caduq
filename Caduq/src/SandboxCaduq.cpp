@@ -50,6 +50,7 @@ void SandboxCaduq::OnAttach()
     m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(3.0f, 0.0f, 1.0f, Caduq::Type::point));
     m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(3.0f, 4.0f, 0.0f, Caduq::Type::point));
     m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(0.0f, 4.0f, 1.0f, Caduq::Type::point));
+    m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(5.0f, 2.0f, 1.0f, Caduq::Type::point));
 
     m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(0), Caduq::PointTangency{{1, 0, 0}},
                                                                   m_Entity_Manager.GetPoint(1), Caduq::PointTangency{{1, 0, 0}},
@@ -68,6 +69,19 @@ void SandboxCaduq::OnAttach()
                                                                 m_Entity_Manager.GetSpline(0),
                                                                 m_Entity_Manager.GetSpline(3),
                                                                 m_Entity_Manager.GetSpline(1), 
+                                                                10, Caduq::Type::patch));
+
+    m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(1), Caduq::PointTangency{{1, 0, 0}},
+                                                                  m_Entity_Manager.GetPoint(4), Caduq::PointTangency{{1, 1, 0}},
+                                                                  10, Caduq::Type::spline));
+    m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(2), Caduq::PointTangency{{1, 0, 0}},
+                                                                  m_Entity_Manager.GetPoint(4), Caduq::PointTangency{{1, 1, 0}},
+                                                                  10, Caduq::Type::spline));
+
+    m_Entity_Manager.CreatePatch(std::make_shared<Caduq::Patch>(m_Entity_Manager.GetSpline(5),
+                                                                m_Entity_Manager.GetSpline(4),
+                                                                m_Entity_Manager.GetSpline(1),
+                                                                nullptr, 
                                                                 10, Caduq::Type::patch));
 
     Vizir::RenderCommand::SetPointSize(m_PointSize);

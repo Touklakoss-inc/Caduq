@@ -30,17 +30,25 @@ namespace Caduq
 
         AddParent(m_s2);
         m_s2->AddChild(shared_from_this());
-        
-        AddParent(m_s3);
-        m_s3->AddChild(shared_from_this());
+
+        if (m_s3 != nullptr)
+        {
+            AddParent(m_s3);
+            m_s3->AddChild(shared_from_this());
+        }
 
         UpdateGFX();
     }
 
     void Patch::UpdateGFX()
     {
-        m_c0 = { m_s0->GetGeoSpline(), m_s1->GetGeoSpline(),
-                m_s2->GetGeoSpline(), m_s3->GetGeoSpline() };
+        if (m_s3 != nullptr)
+            m_c0 = { m_s0->GetGeoSpline(), m_s1->GetGeoSpline(),
+                    m_s2->GetGeoSpline(), m_s3->GetGeoSpline() };
+        else
+            m_c0 = { m_s0->GetGeoSpline(), m_s1->GetGeoSpline(),
+                    m_s2->GetGeoSpline() };
+
         // Create patch mesh
         Eigen::ArrayXd u{ Eigen::ArrayXd::LinSpaced(m_mesh_size, 0.0, 1.0) };
         Eigen::MatrixXd m = m_c0.Mesh(u, u, m_mesh_size);

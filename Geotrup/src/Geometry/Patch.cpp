@@ -9,6 +9,11 @@ namespace Geometry
     {
     }
 
+    Patch::Patch(const Spline& s0, const Spline& s1, const Spline& s2)
+        : m_s0{ s0 }, m_s1{ s1 }, m_s2{ s2 }, m_s3{ s0.GetEndPoint(), s0.GetEndPoint() }
+    {
+    }
+
     // Interpolation functions
     // Curvature continuity between multiple patches
     Eigen::VectorXd Patch::F1(Eigen::VectorXd t)

@@ -3,6 +3,7 @@
 
 #include <Eigen/Dense>
 
+#include <optional>
 #include "Spline.h"
 #include "Geo.h"
 
@@ -21,6 +22,7 @@ namespace Geometry
         public:
         Patch() = default;
         Patch(const Spline& s0, const Spline& s1, const Spline& s2, const Spline& s3);
+        Patch(const Spline& s0, const Spline& s1, const Spline& s2);
 
         Eigen::VectorXd F1(Eigen::VectorXd t); 
         double F1(double t); 

@@ -27,6 +27,8 @@ namespace Caduq
         bool m_PatchPopupOpened { false };
         bool m_FirstPopupOpening { false };
 
+        bool m_CreatePatch4 { true }; // if false => create patch 3
+
         void DeletePoint(const std::shared_ptr<Point>& point);
         void DeleteSpline(const std::shared_ptr<Spline>& spline);
         void DeletePatch(const std::shared_ptr<Patch>& patch);
