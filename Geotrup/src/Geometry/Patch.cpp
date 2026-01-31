@@ -29,7 +29,6 @@ namespace Geometry
 
     Eigen::MatrixXd Patch::Mesh(Eigen::VectorXd u, Eigen::VectorXd w, const int MESH_SIZE)
     {
-        std::cout << "patch meshing...\n";
         // First interpolation construction (Lc)
         Eigen::MatrixXd Lc{ MESH_SIZE*3, MESH_SIZE };
         Eigen::MatrixXd U{ MESH_SIZE*3, 2 };

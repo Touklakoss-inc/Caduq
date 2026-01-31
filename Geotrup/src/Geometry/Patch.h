@@ -19,6 +19,7 @@ namespace Geometry
         Eigen::MatrixXd m_mesh{};
 
         public:
+        Patch() = default;
         Patch(const Spline& s0, const Spline& s1, const Spline& s2, const Spline& s3);
         Eigen::VectorXd F1(Eigen::VectorXd t); 
         double F1(double t); 

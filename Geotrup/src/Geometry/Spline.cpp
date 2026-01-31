@@ -32,7 +32,6 @@ namespace Geometry
         U.row(2) = u*u;
         U.row(3) = u*u*u;
 
-        std::cout << "spline meshing...\n";
         m_mesh = m_equationConsts.transpose() * U;
 
         return m_equationConsts.transpose() * U;

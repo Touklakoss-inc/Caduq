@@ -18,6 +18,7 @@ namespace Geometry
         Eigen::MatrixXd m_mesh{ 3, 10 };
 
         public:
+        Spline() = default;
         Spline(const SplinePoint& startPoint, const SplinePoint& endPoint);
         Eigen::MatrixXd Mesh(Eigen::ArrayXd u, const int MESH_SIZE);
 
