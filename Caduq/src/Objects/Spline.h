@@ -29,7 +29,7 @@ namespace Caduq
         std::shared_ptr<Point> m_EndPoint;
         PointTangency m_EndTangency;
 
-        Geometry::Spline m_Spline;
+        Geometry::Spline m_Spline{ };
 
     public:
         Spline(const std::shared_ptr<Point>& startPoint, PointTangency startTangency, 

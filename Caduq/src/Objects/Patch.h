@@ -21,7 +21,7 @@ namespace Caduq
         std::shared_ptr<Spline> m_s2;
         std::shared_ptr<Spline> m_s3;
 
-        Geometry::Patch m_c0;
+        Geometry::Patch m_c0{ };
 
         int m_mesh_size{ 10 };
 

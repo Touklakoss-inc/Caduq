@@ -16,8 +16,6 @@ namespace Caduq
         : Entity{ name != "" ? name : "Patch " + std::to_string(++s_IdGenerator), type }
         , m_Id{ name != "" ? ++s_IdGenerator : s_IdGenerator }, m_mesh_size{ mesh_size }
         , m_s0{ s0 }, m_s1{ s1 }, m_s2{ s2 }, m_s3{ s3 }
-        , m_c0{ m_s0->GetGeoSpline(), m_s1->GetGeoSpline(),
-                m_s2->GetGeoSpline(), m_s3->GetGeoSpline() }
     {
     }
 

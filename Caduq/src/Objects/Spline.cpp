@@ -17,10 +17,6 @@ namespace Caduq
         , m_Id{ name != "" ? ++s_IdGenerator : s_IdGenerator }, m_mesh_size{ mesh_size }
         , m_StartPoint{ startPoint }, m_StartTangency{ startTangency }
         , m_EndPoint{ endPoint }, m_EndTangency{ endTangency }
-        , m_Spline{  // Move this to the init section ?
-            Geometry::SplinePoint{ startPoint->GetGeoPoint(), startTangency.tangent, startTangency.tension },
-            Geometry::SplinePoint{ endPoint->GetGeoPoint(), endTangency.tangent, startTangency.tension } 
-        }
     {
     }
 
@@ -97,6 +93,6 @@ namespace Caduq
         m_EndTangency = endTangency;
         Init();
 
-        VZ_INFO("Patch modified");
+        VZ_INFO("Spline modified");
     }
 }

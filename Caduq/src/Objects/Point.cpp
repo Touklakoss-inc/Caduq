@@ -72,6 +72,6 @@ namespace Caduq
 
         Init();
 
-        VZ_INFO("Patch modified");
+        VZ_INFO("Point modified");
     }
 }
