@@ -2,7 +2,7 @@
 #define ENTITY_H
 
 #include <glm/fwd.hpp>
-#include <Vizir.h>
+#include "Vizir.h"
 #include <memory>
 #include <string>
 

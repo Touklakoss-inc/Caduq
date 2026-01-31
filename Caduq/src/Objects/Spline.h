@@ -1,7 +1,7 @@
 #ifndef CQ_SPLINE_H
 #define CQ_SPLINE_H
 
-#include <Vizir.h>
+#include "Vizir.h"
 #include <Eigen/Core>
 
 #include <memory>

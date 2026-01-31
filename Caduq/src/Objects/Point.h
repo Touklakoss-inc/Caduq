@@ -2,7 +2,7 @@
 #define CQ_POINT_H
 
 #include <string>
-#include <Vizir.h>
+#include "Vizir.h"
 
 #include <Eigen/Core>
 
