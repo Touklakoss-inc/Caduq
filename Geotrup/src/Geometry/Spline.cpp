@@ -2,7 +2,7 @@
 #include <iostream>
 #include "Spline.h"
 
-#include "Eigen/Core"
+#include <Eigen/Core>
 namespace Geometry
 {
     Spline::Spline(const SplinePoint& startPoint, const SplinePoint& endPoint)

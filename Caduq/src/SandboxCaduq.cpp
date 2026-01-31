@@ -3,7 +3,7 @@
 #include "Objects/Entity.h"
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
 
-#include "imgui/imgui.h"
+#include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
 #include <memory>
@@ -71,10 +71,7 @@ void SandboxCaduq::OnAttach()
                                                                 10, Caduq::Type::patch));
 
     Vizir::RenderCommand::SetPointSize(m_PointSize);
-	Vizir::RenderCommand::SetLineWidth(m_LineSize);
-
-    // Transform
-    m_Transform = glm::mat4(1.0f);
+	  Vizir::RenderCommand::SetLineWidth(m_LineSize);
 }
 
 void SandboxCaduq::OnUpdate(Vizir::Timestep ts)

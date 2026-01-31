@@ -1,5 +1,5 @@
 #include "Patch.h"
-#include "Eigen/Core"
+#include <Eigen/Core>
 #include <iostream>
 
 namespace Geometry
@@ -107,7 +107,7 @@ namespace Geometry
     {
         int size{};
         Eigen::MatrixXd nodes{ m_mesh };
-        size = (nodes.cols()-1)*4*(nodes.rows()/3-1);  
+        size = (static_cast<uint32_t>(nodes.cols())-1)*4*(static_cast<uint32_t>(nodes.rows())/3-1);
         Eigen::VectorXi elts{ size };
 
 
@@ -135,12 +135,12 @@ namespace Geometry
             {
                 int n{};
                 int m{};
-                n =  i*nodes.cols() + j;
-                m = i*(nodes.cols()-1) + j;
+                n =  i* static_cast<int>(nodes.cols()) + j;
+                m = i*(static_cast<int>(nodes.cols())-1) + j;
                 elts(m*4) = n;
                 elts(m*4+1) = n+1;
-                elts(m*4+2) = n+1+nodes.rows()/3;
-                elts(m*4+3) = n+nodes.rows()/3;
+                elts(m*4+2) = n+1+ static_cast<int>(nodes.rows())/3;
+                elts(m*4+3) = n+ static_cast<int>(nodes.rows())/3;
             }
         }
 
@@ -152,7 +152,7 @@ namespace Geometry
     {
         int size{};
         Eigen::MatrixXd nodes{ m_mesh };
-        size = (nodes.cols()-1)*6*(nodes.rows()/3-1);  
+        size = (static_cast<int>(nodes.cols())-1)*6*(static_cast<int>(nodes.rows())/3-1);
         Eigen::VectorX<uint32_t> elts{ size };
 
 
@@ -162,14 +162,14 @@ namespace Geometry
             {
                 int n{};
                 int m{};
-                n =  i*nodes.cols() + j;
-                m = i*(nodes.cols()-1) + j;
+                n =  i* static_cast<int>(nodes.cols()) + j;
+                m = i*(static_cast<int>(nodes.cols())-1) + j;
                 elts(m*6) = n;
                 elts(m*6+1) = n+1;
-                elts(m*6+2) = n+1+nodes.rows()/3;
+                elts(m*6+2) = n+1+ static_cast<uint32_t>(nodes.rows())/3;
                 elts(m*6+3) = n;
-                elts(m*6+4) = n+1+nodes.rows()/3;
-                elts(m*6+5) = n+nodes.rows()/3;
+                elts(m*6+4) = n+1+ static_cast<uint32_t>(nodes.rows())/3;
+                elts(m*6+5) = n+ static_cast<uint32_t>(nodes.rows())/3;
             }
         }
 

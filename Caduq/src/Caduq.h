@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Vizir.h>
+#include "Vizir.h"
 
 class GameApplication : public Vizir::Application
 {

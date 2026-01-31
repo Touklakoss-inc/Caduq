@@ -1,7 +1,11 @@
 #pragma once
 
 #include "Vizir/Core/Core.h"
-#include "spdlog/spdlog.h"
+
+#define FMT_UNICODE 0
+#define SPDLOG_USE_STD_FORMAT
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
 
 namespace Vizir
 {
@@ -29,4 +33,3 @@ namespace Vizir
 #define VZ_WARN(...)	::Vizir::Log::GetClientLogger()->warn(__VA_ARGS__)
 #define VZ_INFO(...)	::Vizir::Log::GetClientLogger()->info(__VA_ARGS__)
 #define VZ_TRACE(...)	::Vizir::Log::GetClientLogger()->trace(__VA_ARGS__)
-

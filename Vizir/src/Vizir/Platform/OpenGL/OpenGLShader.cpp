@@ -84,7 +84,7 @@ namespace Vizir
 
 		std::unordered_map<GLenum, std::string> shaderSources;
 
-		char* typeToken = "#type";
+		const char* typeToken = "#type";
 		size_t typeTokenLength = std::strlen(typeToken);
 		size_t pos = source.find(typeToken, 0);
 		while (pos != source.npos)

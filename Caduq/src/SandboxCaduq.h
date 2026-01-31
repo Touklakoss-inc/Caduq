@@ -1,5 +1,5 @@
 #pragma once
-#include <Vizir.h>
+#include "Vizir.h"
 
 #include "Objects/EntityManager.h"
 
@@ -32,6 +32,6 @@ private:
 
 	glm::vec3 m_TriangleColor = { 0.0f, 0.0f, 1.0f };
 
-    glm::mat4 m_Transform;
+	glm::mat4 m_Transform = glm::mat4(1.0f);;
 };
 

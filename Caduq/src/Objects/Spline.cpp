@@ -52,7 +52,7 @@ namespace Caduq
         // Copy data
         // Vertex Buffer
         Vizir::Ref<Vizir::VertexBuffer> splinesVertexBuffer;
-        splinesVertexBuffer.reset(Vizir::VertexBuffer::Create(splineVertices.data(), splineVertices.size() * sizeof(float)));
+        splinesVertexBuffer.reset(Vizir::VertexBuffer::Create(splineVertices.data(), static_cast<uint32_t>(splineVertices.size()) * sizeof(float)));
 
         Vizir::BufferLayout splinesLayout = {
             { Vizir::ShaderDataType::Float3, "v_position"},
@@ -61,7 +61,7 @@ namespace Caduq
 
         // Index buffer
         Vizir::Ref<Vizir::IndexBuffer> splinesIndexBuffer;
-        splinesIndexBuffer.reset(Vizir::IndexBuffer::Create(splineIndices.data(), splineIndices.size()));
+        splinesIndexBuffer.reset(Vizir::IndexBuffer::Create(splineIndices.data(), static_cast<uint32_t>(splineIndices.size())));
 
         // Vertex array
         m_VertexArray = Vizir::VertexArray::Create();
