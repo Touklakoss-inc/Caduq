@@ -75,7 +75,7 @@ void SandboxCaduq::OnAttach()
                                                                   m_Entity_Manager.GetPoint(4), Caduq::PointTangency{{1, 1, 0}},
                                                                   10, Caduq::Type::spline));
     m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(2), Caduq::PointTangency{{1, 0, 0}},
-                                                                  m_Entity_Manager.GetPoint(4), Caduq::PointTangency{{1, 1, 0}},
+                                                                  m_Entity_Manager.GetPoint(4), Caduq::PointTangency{{1, -1, 0}},
                                                                   10, Caduq::Type::spline));
 
     m_Entity_Manager.CreatePatch(std::make_shared<Caduq::Patch>(m_Entity_Manager.GetSpline(5),

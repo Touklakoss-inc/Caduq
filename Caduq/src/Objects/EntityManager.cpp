@@ -226,30 +226,35 @@ namespace Caduq
         if (ImGui::Button("Ok"))
         {
             // Check if all 4 selected splines are different
-            if (m_CurEntity == nullptr)
+            if (start_point_idx != end_point_idx)
             {
-                CreateSpline(std::make_shared<Caduq::Spline>(m_Point_List.at(start_point_idx), 
-                                                             Caduq::PointTangency{{start_tangency[0], start_tangency[1], 
-                                                                                   start_tangency[2]}, start_tension[0]},
-                                                             m_Point_List.at(end_point_idx),
-                                                             Caduq::PointTangency{{end_tangency[0], end_tangency[1],
-                                                                                   end_tangency[2]}, end_tension[0]},
-                                                             100, Type::spline));              
+                if (m_CurEntity == nullptr)
+                {
+                    CreateSpline(std::make_shared<Caduq::Spline>(m_Point_List.at(start_point_idx), 
+                                                                 Caduq::PointTangency{{start_tangency[0], start_tangency[1], 
+                                                                                       start_tangency[2]}, start_tension[0]},
+                                                                 m_Point_List.at(end_point_idx),
+                                                                 Caduq::PointTangency{{end_tangency[0], end_tangency[1],
+                                                                                       end_tangency[2]}, end_tension[0]},
+                                                                 100, Type::spline));              
+                }
+                else
+                {
+                    std::dynamic_pointer_cast<Caduq::Spline>(m_CurEntity)->Update(
+                                                                 m_Point_List.at(start_point_idx), 
+                                                                 Caduq::PointTangency{{start_tangency[0], start_tangency[1], 
+                                                                                       start_tangency[2]}, start_tension[0]},
+                                                                 m_Point_List.at(end_point_idx),
+                                                                 Caduq::PointTangency{{end_tangency[0], end_tangency[1],
+                                                                                       end_tangency[2]}, end_tension[0]});
+
+                }
+
+                ImGui::CloseCurrentPopup();
+                m_CurEntity = nullptr;
             }
             else
-            {
-                std::dynamic_pointer_cast<Caduq::Spline>(m_CurEntity)->Update(
-                                                             m_Point_List.at(start_point_idx), 
-                                                             Caduq::PointTangency{{start_tangency[0], start_tangency[1], 
-                                                                                   start_tangency[2]}, start_tension[0]},
-                                                             m_Point_List.at(end_point_idx),
-                                                             Caduq::PointTangency{{end_tangency[0], end_tangency[1],
-                                                                                   end_tangency[2]}, end_tension[0]});
-
-            }
-
-            ImGui::CloseCurrentPopup();
-            m_CurEntity = nullptr;
+                VZ_WARN("Select two different points to create a spline");
         }
         ImGui::EndPopup();
     }
