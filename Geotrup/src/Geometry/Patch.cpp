@@ -8,20 +8,24 @@ namespace Geometry
         : m_s0{ s0 }, m_s1{ s1 }, m_s2{ s2 }, m_s3{ s3 }
     {
     }
+
     // Interpolation functions
     // Curvature continuity between multiple patches
     Eigen::VectorXd Patch::F1(Eigen::VectorXd t)
     {
         return (10*t.array().pow(3) - 15*t.array().pow(4) + 6*t.array().pow(5)).matrix();
     }; 
+
     double Patch::F1(double t)
     {
         return 10*t*t*t - 15*t*t*t*t + 6*t*t*t*t*t;
     };
+
     Eigen::VectorXd Patch::F0(Eigen::VectorXd t)
     {
         return (1 - F1(t).array()).matrix();
     };
+
     double Patch::F0(double t)
     {
         return 1 - F1(t);
