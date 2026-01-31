@@ -10,7 +10,7 @@ namespace Caduq
 {
     Point::Point(double x, double y, double z, Type type, const std::string& name)
         : Entity{ name != "" ? name : "Point " + std::to_string(++s_IdGenerator), type }
-        , m_Id{ s_IdGenerator }, m_Point{ x, y, z }
+        , m_Id{ name != "" ? ++s_IdGenerator : s_IdGenerator }, m_Point{ x, y, z }
     {
     }
     Point::Point(Eigen::Vector3d pos, Type type, const std::string& name)
@@ -20,7 +20,11 @@ namespace Caduq
 
     void Point::Init()
     {
-        std::cout << m_Id << '\n';
+        UpdateGFX();
+    }
+
+    void Point::UpdateGFX()
+    {
         Geometry::Point p0 = m_Point;
 
         // Cast to float
@@ -48,11 +52,26 @@ namespace Caduq
         m_VertexArray->SetIndexBuffer(pointIndexBuffer);
         m_VertexArray->SetPrimitiveType(Vizir::POINTS);
         m_VertexArray->Unbind();
+
+        for (const auto& child : m_Children)
+        {
+            child->UpdateGFX();
+        }
     }
 
-    Geometry::Point Point::GetGeoPoint() const
+    void Point::Update(double x, double y, double z)
     {
-        return m_Point;
-    }
+        for (const auto& p : GetParents())
+        {
+            p->RemoveChild(shared_from_this());
+        }
 
+        ClearParents();
+
+        m_Point = {x, y, z};
+
+        Init();
+
+        VZ_INFO("Point modified");
+    }
 }

@@ -18,12 +18,15 @@ namespace Geometry
         Eigen::MatrixXd m_mesh{ 3, 10 };
 
         public:
+        Spline() = default;
         Spline(const SplinePoint& startPoint, const SplinePoint& endPoint);
         Eigen::MatrixXd Mesh(Eigen::ArrayXd u, const int MESH_SIZE);
 
         std::tuple<Eigen::MatrixXd, Eigen::VectorXi> GetFemMesh() const;
         struct Mesh GetGfxMesh() const;
         double GetLength() const;
+        SplinePoint GetStartPoint() const { return m_startPoint; };
+        SplinePoint GetEndPoint() const { return m_endPoint; };
     };
 }
 

@@ -46,27 +46,31 @@ namespace Caduq
         bool m_deleting { false };
 
         std::unordered_set<std::shared_ptr<Entity>, SharedPtrHash, SharedPtrComparator> m_Parents;
-        std::unordered_set<std::shared_ptr<Entity>, SharedPtrHash, SharedPtrComparator> m_Children;
 
     protected:
         Vizir::Ref<Vizir::VertexArray> m_VertexArray;
+        std::unordered_set<std::shared_ptr<Entity>, SharedPtrHash, SharedPtrComparator> m_Children;
 
     public:
         Entity(const std::string& name, Type type);
 
         virtual void Init() = 0;
+        virtual void UpdateGFX() = 0;
         void Visualize(Vizir::Ref<Vizir::Shader> shader, glm::mat4 transform);
         void RenderImGui(EntityManager& entityManager);
 
         void AddParent(const std::shared_ptr<Entity>& parent);
         void RemoveParent(const std::shared_ptr<Entity>& parent);
         bool HasParent(const std::shared_ptr<Entity>& parent) const;
+        void ClearParents() { m_Parents.clear(); };
 
         void AddChild(const std::shared_ptr<Entity>& child);
         void RemoveChild(const std::shared_ptr<Entity>& child);
         bool HasChild(const std::shared_ptr<Entity>& child) const;
+        void ClearChildren() { m_Children.clear(); };
 
         const std::string& GetName() { return m_Name; };
+        virtual int GetID() const = 0;
         Type GetType() { return m_Type; };
         bool GetDeletingStatus() { return m_deleting; };
         std::unordered_set<std::shared_ptr<Entity>, SharedPtrHash, SharedPtrComparator> GetParents() { return m_Parents; };

@@ -26,8 +26,11 @@ namespace Caduq
         Point(Eigen::Vector3d pos, Type type, const std::string& name = "");
 
         void Init() override;
+        void UpdateGFX() override;
+        void Update(double x, double y, double z);
 
-        Geometry::Point GetGeoPoint() const;
+        Geometry::Point GetGeoPoint() const { return m_Point; };
+        int GetID() const override { return m_Id; };
     };
 }
 #endif
