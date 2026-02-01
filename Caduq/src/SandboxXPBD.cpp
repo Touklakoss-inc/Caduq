@@ -1,8 +1,10 @@
 #include "SandboxXPBD.h"
 
 #include "Objects/Entity.h"
+#include "Vizir/Logging/Log.h"
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
 
+#include <cmath>
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -46,17 +48,30 @@ void SandboxXPBD::OnAttach()
     m_Shader = Vizir::Shader::Create("PointShader", vertexSrc, fragmentSrc);
 
 
-    m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(0.0f, 0.0f, 0.0f, Caduq::Type::point));
+    m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(0.0f, 0.0f, 0.0f, Caduq::Type::point, MAXFLOAT));
     m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(1.0f, 1.0f, 0.0f, Caduq::Type::point));
     m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(1.5f, 0.0f, 0.0f, Caduq::Type::point));
+    m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(3.5f, 0.0f, 0.0f, Caduq::Type::point));
+
+    m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(0), Caduq::PointTangency{{0, 0, 0}},
+                                                                  m_Entity_Manager.GetPoint(1), Caduq::PointTangency{{0, 0, 0}},
+                                                                  100, Caduq::Type::spline));              
+    m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(1), Caduq::PointTangency{{0, 0, 0}},
+                                                                  m_Entity_Manager.GetPoint(2), Caduq::PointTangency{{0, 0, 0}},
+                                                                  100, Caduq::Type::spline));              
+    m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(2), Caduq::PointTangency{{0, 0, 0}},
+                                                                  m_Entity_Manager.GetPoint(3), Caduq::PointTangency{{0, 0, 0}},
+                                                                  100, Caduq::Type::spline));              
 
     Vizir::RenderCommand::SetPointSize(m_PointSize);
-	  Vizir::RenderCommand::SetLineWidth(m_LineSize);
+    Vizir::RenderCommand::SetLineWidth(m_LineSize);
 }
 
 void SandboxXPBD::OnUpdate(Vizir::Timestep ts)
 {
 	m_CameraController.OnUpdate(ts);
+
+    m_PhyXManager.UpdatePhyX(m_Entity_Manager, ts.GetSeconds(), 5);
 
 	Vizir::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 	Vizir::RenderCommand::Clear();
@@ -68,6 +83,7 @@ void SandboxXPBD::OnUpdate(Vizir::Timestep ts)
     // Render points
     for (const auto& point : m_Entity_Manager.GetPointList()) //GetEntities return by value, is it good ?
     {
+        point->UpdateGFX();
         point->Visualize(m_Shader, m_Transform);
     }
 

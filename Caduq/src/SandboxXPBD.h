@@ -1,4 +1,5 @@
 #pragma once
+#include "Objects/PhyXManager.h"
 #include "Vizir.h"
 
 #include "Objects/EntityManager.h"
@@ -18,6 +19,7 @@ private:
 
 
     Caduq::EntityManager m_Entity_Manager {};
+    Caduq::PhyXManager m_PhyXManager {};
 
 	// Rendering 
 	Vizir::OrthographicCameraController m_CameraController;

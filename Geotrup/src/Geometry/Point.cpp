@@ -16,6 +16,12 @@ namespace Geometry
         m_y = y;
         m_z = z;
     }
+    void Point::SetPosition(Eigen::Vector3d pos)
+    {
+        m_x = pos.x();
+        m_y = pos.y();
+        m_z = pos.z();
+    }
 
     Eigen::Vector3d Point::GetPosition() const 
     { 
