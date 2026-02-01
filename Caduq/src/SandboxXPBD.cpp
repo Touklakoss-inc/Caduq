@@ -1,6 +1,8 @@
 #include "SandboxXPBD.h"
 
+#include "Eigen/Core"
 #include "Objects/Entity.h"
+#include "Objects/Point.h"
 #include "Vizir/Logging/Log.h"
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
 
@@ -48,10 +50,10 @@ void SandboxXPBD::OnAttach()
     m_Shader = Vizir::Shader::Create("PointShader", vertexSrc, fragmentSrc);
 
 
-    m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(0.0f, 0.0f, 0.0f, Caduq::Type::point, MAXFLOAT));
-    m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(1.0f, 1.0f, 0.0f, Caduq::Type::point));
-    m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(1.5f, 0.0f, 0.0f, Caduq::Type::point));
-    m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(3.5f, 0.0f, 0.0f, Caduq::Type::point));
+    m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(Eigen::Vector3d{0.0, 0.0, 0.0}, Caduq::Type::point, Caduq::Point::OptParam{.grounded=true}));
+    m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(Eigen::Vector3d{1.0, 1.0, 0.0}, Caduq::Type::point));
+    m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(Eigen::Vector3d{1.5, 0.0, 0.0}, Caduq::Type::point));
+    m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(Eigen::Vector3d{3.5, 0.0, 0.0}, Caduq::Type::point, Caduq::Point::OptParam{.grounded=true}));
 
     m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(0), Caduq::PointTangency{{0, 0, 0}},
                                                                   m_Entity_Manager.GetPoint(1), Caduq::PointTangency{{0, 0, 0}},

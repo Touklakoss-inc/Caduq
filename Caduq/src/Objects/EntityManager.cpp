@@ -136,7 +136,7 @@ namespace Caduq
         if (ImGui::Button("Ok"))
         {
             if (m_CurEntity == nullptr)
-                CreatePoint(std::make_shared<Caduq::Point>(coord[0], coord[1], coord[2], Type::point));
+                CreatePoint(std::make_shared<Caduq::Point>(Eigen::Vector3d{coord[0], coord[1], coord[2]}, Type::point));
             else
             {
                 std::dynamic_pointer_cast<Caduq::Point>(m_CurEntity)->Update(coord[0], coord[1], coord[2]);

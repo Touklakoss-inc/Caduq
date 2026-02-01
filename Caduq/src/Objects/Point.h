@@ -25,9 +25,16 @@ namespace Caduq
 
         void UpdateGFXBuffer(Eigen::MatrixXf vertices, Eigen::VectorX<uint32_t> indices, Vizir::PrimitiveType primitiveType=Vizir::POINTS);
 
+
     public:
-        Point(double x, double y, double z, Type type, double mass = 1.0, const std::string& name = "");
-        Point(Eigen::Vector3d pos, Type type, double mass = 1.0, const std::string& name = "");
+        struct OptParam
+        {
+            const std::string& name = "";
+            double mass = 1.0;
+            bool grounded = false;
+        };
+
+        Point(Eigen::Vector3d pos, Type type, OptParam oParam = { .name="", .mass=1.0, .grounded=false });
 
         void Init() override;
         void UpdateGFX() override;

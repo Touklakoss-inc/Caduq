@@ -10,12 +10,13 @@ namespace XPBD
     {
     private:
         Eigen::Vector3d m_Velocity { 0.0, 0.0, 0.0 };
-        double m_Mass { };
+        double m_Mass;
+        bool m_Grounded;
         Eigen::Vector3d m_LastPosition { };
 
     public:
         Point() = default;
-        Point(double mass, Eigen::Vector3d velocity = { 0.0, 0.0, 0.0 });
+        Point(double mass, bool grounded, Eigen::Vector3d velocity = { 0.0, 0.0, 0.0 });
 
         Eigen::Vector3d GetVelocity() { return m_Velocity; };
         void SetVelocity(Eigen::Vector3d velocity) { m_Velocity = velocity; };
@@ -24,6 +25,8 @@ namespace XPBD
 
         Eigen::Vector3d GetLastPosition() { return m_LastPosition; };
         void SetLastPosition(Eigen::Vector3d lastPosition) { m_LastPosition = lastPosition; };
+
+        bool IsGrounded() { return m_Grounded; };
     };
 }
 

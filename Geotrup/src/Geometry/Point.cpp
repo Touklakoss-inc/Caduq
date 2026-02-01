@@ -9,6 +9,10 @@ namespace Geometry
         : m_x{ x }, m_y{ y }, m_z{ z }
     {
     }
+    Point::Point(Eigen::Vector3d pos)
+        : m_x{ pos.x() }, m_y{ pos.y() }, m_z{ pos.z() }
+    {
+    }
 
     void Point::SetPosition(double x, double y, double z)
     {
