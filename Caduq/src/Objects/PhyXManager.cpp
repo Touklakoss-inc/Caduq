@@ -10,12 +10,11 @@ namespace Caduq
         double dts = static_cast<double>(dt)/static_cast<double>(nSubStep);
         for (ushort n = 0; n < nSubStep; n++)
         {
-            int i = 0;
             for (const auto& point : entityManager.GetPointList())
             {
-                if (i != 0)
+                auto& phyXPoint = point->GetPhyXPointRef(); 
+                if (!phyXPoint.IsGrounded())
                 {
-                    auto& phyXPoint = point->GetPhyXPointRef(); 
                     auto& geoPoint = point->GetGeoPointRef();
                     phyXPoint.SetVelocity(phyXPoint.GetVelocity() + dts*g);
 
@@ -23,23 +22,20 @@ namespace Caduq
 
                     geoPoint.SetPosition(geoPoint.GetPosition() + dts*phyXPoint.GetVelocity());
                 }
-                i++;
             }
 
             Attach(*entityManager.GetPoint(0), *entityManager.GetPoint(1), std::sqrt(2.0), 0.0, dts);
             Attach(*entityManager.GetPoint(1), *entityManager.GetPoint(2), std::sqrt(1.5), 0.0, dts);
             Attach(*entityManager.GetPoint(2), *entityManager.GetPoint(3), std::sqrt(2.0), 0.0, dts);
 
-            i = 0;
             for (const auto& point : entityManager.GetPointList())
             {
-                if (i != 0)
+                auto& phyXPoint = point->GetPhyXPointRef(); 
+                if (!phyXPoint.IsGrounded())
                 {
-                    auto& phyXPoint = point->GetPhyXPointRef(); 
                     auto& geoPoint = point->GetGeoPointRef();
                     phyXPoint.SetVelocity((geoPoint.GetPosition() - phyXPoint.GetLastPosition())/dts);
                 }
-                i++;
             }
         }
     }

@@ -10,15 +10,11 @@
 
 namespace Caduq
 {
-    Point::Point(double x, double y, double z, Type type, double mass, const std::string& name)
-        : Entity{ name != "" ? name : "Point " + std::to_string(++s_IdGenerator), type }
-        , m_Id{ name != "" ? ++s_IdGenerator : s_IdGenerator }
-        , m_Point{ x, y, z }
-        , m_PhyXPoint{ mass }
-    {
-    }
-    Point::Point(Eigen::Vector3d pos, Type type, double mass, const std::string& name)
-        : Point{ pos(0), pos(1), pos(2), type, mass, name }
+    Point::Point(Eigen::Vector3d pos, Type type, OptParam oP)
+        : Entity{ oP.name != "" ? oP.name : "Point " + std::to_string(++s_IdGenerator), type }
+        , m_Id{ oP.name != "" ? ++s_IdGenerator : s_IdGenerator }
+        , m_Point{ pos }
+        , m_PhyXPoint{ oP.grounded ? MAXFLOAT : oP.mass, oP.grounded }
     {
     }
 

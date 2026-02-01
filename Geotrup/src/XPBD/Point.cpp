@@ -2,8 +2,8 @@
 
 namespace XPBD
 {
-    Point::Point(double mass, Eigen::Vector3d velocity)
-        : m_Mass{ mass }, m_Velocity{ velocity }
+    Point::Point(double mass, bool grounded, Eigen::Vector3d velocity)
+        : m_Mass{ mass }, m_Grounded{ grounded }, m_Velocity{ velocity }
     {
     }
 }
