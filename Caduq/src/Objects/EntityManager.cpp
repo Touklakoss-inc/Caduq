@@ -12,10 +12,6 @@
 
 namespace Caduq 
 {
-    EntityManager::EntityManager()
-    {
-        // float m_PointPopupCoord[3] = { 0.0f, 0.0f, 0.0f };
-    }
     template<typename T> 
     void MyCombo(const char* name, std::vector<std::shared_ptr<T>> list, int& point_idx)
     {
@@ -97,30 +93,12 @@ namespace Caduq
 
         if (ImGui::BeginPopup("create_point_popup"))
             PointPopup();
-        else if (m_PointPopupOpened)
-        {
-            VZ_TRACE("Point popup closed");
-            m_CurEntity = nullptr;
-            m_PointPopupOpened = false;
-        }
 
         if (ImGui::BeginPopup("create_spline_popup"))
             SplinePopup(); 
-        else if (m_SplinePopupOpened)
-        {
-            VZ_TRACE("Spline popup closed");
-            m_CurEntity = nullptr;
-            m_SplinePopupOpened = false;
-        }
 
         if (ImGui::BeginPopup("create_patch_popup"))
             PatchPopup();
-        else if (m_PatchPopupOpened)
-        {
-            VZ_TRACE("Patch popup closed");
-            m_CurEntity = nullptr;
-            m_PatchPopupOpened = false;
-        }
     }
 
     void EntityManager::PointPopup()
@@ -349,21 +327,6 @@ namespace Caduq
         {
             m_Patch_List.erase(it);
         }
-    }
-
-    std::shared_ptr<Point>& EntityManager::GetPoint(int index)
-    {
-        return m_Point_List.at(index);
-    }
-
-    std::shared_ptr<Spline>& EntityManager::GetSpline(int index)
-    {
-        return m_Spline_List.at(index);
-    }
-
-    std::shared_ptr<Patch>& EntityManager::GetPatch(int index)
-    {
-        return m_Patch_List.at(index);
     }
 
     void EntityManager::SetSplinePopupParam(Geometry::SplinePoint startPoint, int startPointID, Geometry::SplinePoint endPoint, int endPointID)

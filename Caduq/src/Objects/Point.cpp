@@ -92,7 +92,7 @@ namespace Caduq
             if (ImGui::Button("Modify")) 
             {
                 Eigen::Vector3f vec = m_Point.GetPosition().cast<float>();
-                entityManager.SetPointPopupCoord(vec);
+                entityManager.SetPointPopupParam(vec);
 
                 entityManager.SetCurEntity(shared_from_this());
                 ImGui::OpenPopup(id);
