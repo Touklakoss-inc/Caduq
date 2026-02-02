@@ -117,10 +117,9 @@ namespace Caduq
             ImGui::SameLine();
             if (ImGui::Button("Modify")) 
             {
-                entityManager.PatchPopupOpened();
+                entityManager.SetPatchPopupParam(m_s0->GetID(), m_s1->GetID(), m_s2->GetID(), m_s3->GetID());
 
                 entityManager.SetCurEntity(shared_from_this());
-                entityManager.FirstPopupOpening();
                 ImGui::OpenPopup(id);
             }
 

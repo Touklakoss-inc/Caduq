@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "Entity.h"
+#include "Geometry/Geo.h"
 #include "Point.h"
 #include "Spline.h"
 #include "Patch.h"
@@ -38,7 +39,24 @@ namespace Caduq
         void DeleteSpline(const std::shared_ptr<Spline>& spline);
         void DeletePatch(const std::shared_ptr<Patch>& patch);
 
+        /* ImGui */
+        // Point
         float m_PointPopupCoord[3] { 0.0f, 0.0f, 0.0f };
+
+        // Spline
+        int start_point_idx = 0; // Here we store our selection data as an index.
+        float start_tangency[3] = { 0.0f, 0.0f, 0.0f };
+        float start_tension[1] = { 1.0f };
+
+        int end_point_idx = 0; // Here we store our selection data as an index.
+        float end_tangency[3] = { 0.0f, 0.0f, 0.0f };
+        float end_tension[1] = { 1.0f };
+
+        // Patch
+        int spline_1_idx = 0; // Here we store our selection data as an index.
+        int spline_2_idx = 0; // Here we store our selection data as an index.
+        int spline_3_idx = 0; // Here we store our selection data as an index.
+        int spline_4_idx = 0; // Here we store our selection data as an index.
 
         void PointPopup();
         void SplinePopup();
@@ -71,8 +89,11 @@ namespace Caduq
         std::shared_ptr<Spline>& GetSpline(int index);
         std::shared_ptr<Patch>& GetPatch(int index);
 
+        /* ImGui */
         void SetPointPopupCoord(Eigen::Vector3f coord) {
             for (int i = 0; i < 3; i++) m_PointPopupCoord[i] = coord[i]; };
+        void SetSplinePopupParam(Geometry::SplinePoint startPoint, int startPointID, Geometry::SplinePoint endPoint, int endPointID);
+        void SetPatchPopupParam(int spline1ID, int spline2ID, int spline3ID, int spline4ID);
     };
 }
 

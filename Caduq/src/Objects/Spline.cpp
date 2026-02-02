@@ -107,10 +107,9 @@ namespace Caduq
             ImGui::SameLine();
             if (ImGui::Button("Modify")) 
             {
-                entityManager.SplinePopupOpened();
+                entityManager.SetSplinePopupParam(m_Spline.GetStartPoint(), m_StartPoint->GetID(), m_Spline.GetEndPoint(), m_EndPoint->GetID());
 
                 entityManager.SetCurEntity(shared_from_this());
-                entityManager.FirstPopupOpening();
                 ImGui::OpenPopup(id);
             }
 
