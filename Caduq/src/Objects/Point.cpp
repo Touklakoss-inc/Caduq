@@ -1,5 +1,6 @@
 #include "Point.h"
 
+#include "EntityManager.h"
 #include "Vizir/Renderer/VertexArray.h"
 #include "XPBD/Point.h"
 #include <Eigen/Core>
@@ -78,5 +79,26 @@ namespace Caduq
         Init();
 
         VZ_INFO("Point modified");
+    }
+
+    void Point::RenderImGui(EntityManager& entityManager)
+    {
+        ImGuiID id = ImGui::GetID("create_point_popup");
+
+        if (ImGui::TreeNode(m_Name.data()))
+        {
+            ImGui::ColorEdit3("", glm::value_ptr(m_Color));
+            ImGui::SameLine();
+            if (ImGui::Button("Modify")) 
+            {
+                entityManager.PointPopupOpened();
+
+                entityManager.SetCurEntity(shared_from_this());
+                entityManager.FirstPopupOpening();
+                ImGui::OpenPopup(id);
+            }
+            Entity::RenderImGui(entityManager);
+            ImGui::TreePop();
+        }
     }
 }

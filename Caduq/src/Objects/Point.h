@@ -40,6 +40,8 @@ namespace Caduq
         void UpdateGFX() override;
         void Update(double x, double y, double z);
 
+        void RenderImGui(EntityManager& entityManager) override;
+
         Geometry::Point GetGeoPoint() const { return m_Point; };
         Geometry::Point& GetGeoPointRef() { return m_Point; };
         XPBD::Point& GetPhyXPointRef() { return m_PhyXPoint; };
