@@ -39,8 +39,8 @@ namespace Caduq
 
     void Spline::UpdateGFX()
     {
-        m_Spline = {Geometry::SplinePoint{ m_StartPoint->GetGeoPoint(), m_StartTangency.tangent, m_StartTangency.tension },
-                    Geometry::SplinePoint{ m_EndPoint->GetGeoPoint(), m_EndTangency.tangent, m_StartTangency.tension } };
+        m_Spline = {Geometry::SplinePoint{ *m_StartPoint->GetGeoPoint(), m_StartTangency.tangent, m_StartTangency.tension },
+                    Geometry::SplinePoint{ *m_EndPoint->GetGeoPoint(), m_EndTangency.tangent, m_StartTangency.tension } };
         // Create spline mesh
         Eigen::ArrayXd u{ Eigen::ArrayXd::LinSpaced(m_mesh_size, 0.0, 1.0) };
         Eigen::MatrixXd U0 = m_Spline.Mesh(u, m_mesh_size);

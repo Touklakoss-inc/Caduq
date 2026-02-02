@@ -1,6 +1,7 @@
 #ifndef CQ_POINT_H
 #define CQ_POINT_H
 
+#include <memory>
 #include <string>
 #include "Vizir.h"
 
@@ -20,8 +21,8 @@ namespace Caduq
         static inline int s_IdGenerator{ 0 };
         int m_Id{ };
 
-        Geometry::Point m_Point;
-        XPBD::Point m_PhyXPoint;
+        std::shared_ptr<Geometry::Point> m_GeoPoint;
+        std::shared_ptr<XPBD::Point> m_PhyXPoint;
 
         void UpdateGFXBuffer(Eigen::MatrixXf vertices, Eigen::VectorX<uint32_t> indices, Vizir::PrimitiveType primitiveType=Vizir::POINTS);
 
@@ -42,9 +43,8 @@ namespace Caduq
 
         void RenderImGui(EntityManager& entityManager) override;
 
-        Geometry::Point GetGeoPoint() const { return m_Point; };
-        Geometry::Point& GetGeoPointRef() { return m_Point; };
-        XPBD::Point& GetPhyXPointRef() { return m_PhyXPoint; };
+        const std::shared_ptr<Geometry::Point>& GetGeoPoint() const { return m_GeoPoint; };
+        const std::shared_ptr<XPBD::Point>& GetPhyXPoint() const { return m_PhyXPoint; };
         int GetID() const override { return m_Id; };
     };
 }
