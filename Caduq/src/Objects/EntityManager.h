@@ -4,13 +4,18 @@
 #include <vector>
 #include <memory>
 
+#include "Entity.h"
 #include "Point.h"
 #include "Spline.h"
 #include "Patch.h"
-#include "Entity.h"
 
 namespace Caduq 
 {
+    class Entity;
+    class Point;
+    class Spline;
+    class Patch;
+
     class EntityManager
     {
     private:

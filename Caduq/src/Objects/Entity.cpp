@@ -30,74 +30,101 @@ namespace Caduq
         m_VertexArray->Unbind();
     }
 
+    // void Entity::RenderImGui(EntityManager& entityManager)
+    // {
+    //     ImGuiID id = 0;
+    //     switch (m_Type)
+    //     {
+    //         case Type::point:
+    //             id = ImGui::GetID("create_point_popup");
+    //             break;
+    //         case Type::spline:
+    //             id = ImGui::GetID("create_spline_popup");
+    //             break;
+    //         case Type::patch:
+    //             id = ImGui::GetID("create_patch_popup");
+    //             break;
+    //         default:
+    //             VZ_ASSERT(false, "Wrong entity type");
+    //     }
+    //
+    //     if (ImGui::TreeNode(m_Name.data()))
+    //     {
+    //         ImGui::ColorEdit3("", glm::value_ptr(m_Color));
+    //         ImGui::SameLine();
+    //         if (ImGui::Button("Modify")) 
+    //         {
+    //             switch (m_Type)
+    //             {
+    //                 case Type::point:
+    //                     entityManager.PointPopupOpened();
+    //                     break;
+    //                 case Type::spline:
+    //                     entityManager.SplinePopupOpened();
+    //                     break;
+    //                 case Type::patch:
+    //                     entityManager.PatchPopupOpened();
+    //                     break;
+    //                 default:
+    //                     VZ_ASSERT(false, "Wrong entity type");
+    //             }
+    //
+    //             entityManager.SetCurEntity(shared_from_this());
+    //             entityManager.FirstPopupOpening();
+    //             ImGui::OpenPopup(id);
+    //         }
+    //         ImGui::SameLine();
+    //         if (ImGui::Button("Delete")) 
+    //             ImGui::OpenPopup("Delete?");
+    //
+    //         // Always center this window when appearing
+    //         ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+    //         ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+    //
+    //         if (ImGui::BeginPopupModal("Delete?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+    //         {
+    //             ImGui::Text("%s will be deleted.", m_Name.c_str());
+    //             ImGui::Separator();
+    //
+    //             if (ImGui::Button("OK", ImVec2(120, 0))) 
+    //             { 
+    //                 entityManager.DeleteEntity(shared_from_this());
+    //                 ImGui::CloseCurrentPopup();
+    //             }
+    //             ImGui::SetItemDefaultFocus();
+    //             ImGui::SameLine();
+    //             if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+    //             ImGui::EndPopup();
+    //         }
+    //
+    //         ImGui::TreePop();
+    //     }
+    // }
+
     void Entity::RenderImGui(EntityManager& entityManager)
     {
-        ImGuiID id = 0;
-        switch (m_Type)
+        ImGui::SameLine();
+        if (ImGui::Button("Delete")) 
+            ImGui::OpenPopup("Delete?");
+
+        // Always center this window when appearing
+        ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+        ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+        if (ImGui::BeginPopupModal("Delete?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
         {
-            case Type::point:
-                id = ImGui::GetID("create_point_popup");
-                break;
-            case Type::spline:
-                id = ImGui::GetID("create_spline_popup");
-                break;
-            case Type::patch:
-                id = ImGui::GetID("create_patch_popup");
-                break;
-            default:
-                VZ_ASSERT(false, "Wrong entity type");
-        }
+            ImGui::Text("%s will be deleted.", m_Name.c_str());
+            ImGui::Separator();
 
-        if (ImGui::TreeNode(m_Name.data()))
-        {
-            ImGui::ColorEdit3("", glm::value_ptr(m_Color));
-            ImGui::SameLine();
-            if (ImGui::Button("Modify")) 
-            {
-                switch (m_Type)
-                {
-                    case Type::point:
-                        entityManager.PointPopupOpened();
-                        break;
-                    case Type::spline:
-                        entityManager.SplinePopupOpened();
-                        break;
-                    case Type::patch:
-                        entityManager.PatchPopupOpened();
-                        break;
-                    default:
-                        VZ_ASSERT(false, "Wrong entity type");
-                }
-
-                entityManager.SetCurEntity(shared_from_this());
-                entityManager.FirstPopupOpening();
-                ImGui::OpenPopup(id);
+            if (ImGui::Button("OK", ImVec2(120, 0))) 
+            { 
+                entityManager.DeleteEntity(shared_from_this());
+                ImGui::CloseCurrentPopup();
             }
+            ImGui::SetItemDefaultFocus();
             ImGui::SameLine();
-            if (ImGui::Button("Delete")) 
-                ImGui::OpenPopup("Delete?");
-
-            // Always center this window when appearing
-            ImVec2 center = ImGui::GetMainViewport()->GetCenter();
-            ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-
-            if (ImGui::BeginPopupModal("Delete?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
-            {
-                ImGui::Text("%s will be deleted.", m_Name.c_str());
-                ImGui::Separator();
-
-                if (ImGui::Button("OK", ImVec2(120, 0))) 
-                { 
-                    entityManager.DeleteEntity(shared_from_this());
-                    ImGui::CloseCurrentPopup();
-                }
-                ImGui::SetItemDefaultFocus();
-                ImGui::SameLine();
-                if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
-                ImGui::EndPopup();
-            }
-
-            ImGui::TreePop();
+            if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+            ImGui::EndPopup();
         }
     }
 

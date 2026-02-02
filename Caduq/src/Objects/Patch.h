@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <tuple>
+#include "EntityManager.h"
 #include "Spline.h"
 #include "Geometry/Patch.h"
 
@@ -34,6 +35,8 @@ namespace Caduq
         void UpdateGFX() override;
         void Update(const std::shared_ptr<Spline>& s0, const std::shared_ptr<Spline>& s1, 
                     const std::shared_ptr<Spline>& s2, const std::shared_ptr<Spline>& s3);
+
+        void RenderImGui(EntityManager& entityManager) override;
 
         std::shared_ptr<Spline> GetSpline0() { return m_s0; };
         std::shared_ptr<Spline> GetSpline1() { return m_s1; };

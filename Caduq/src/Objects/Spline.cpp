@@ -7,6 +7,7 @@
 
 #include "Entity.h"
 #include "Geometry/Spline.h"
+#include "EntityManager.h"
 
 namespace Caduq
 {
@@ -94,5 +95,28 @@ namespace Caduq
         Init();
 
         VZ_INFO("Spline modified");
+    }
+
+    void Spline::RenderImGui(EntityManager& entityManager)
+    {
+        ImGuiID id = ImGui::GetID("create_spline_popup");
+
+        if (ImGui::TreeNode(m_Name.data()))
+        {
+            ImGui::ColorEdit3("", glm::value_ptr(m_Color));
+            ImGui::SameLine();
+            if (ImGui::Button("Modify")) 
+            {
+                entityManager.SplinePopupOpened();
+
+                entityManager.SetCurEntity(shared_from_this());
+                entityManager.FirstPopupOpening();
+                ImGui::OpenPopup(id);
+            }
+
+            Entity::RenderImGui(entityManager);
+
+            ImGui::TreePop();
+        }
     }
 }

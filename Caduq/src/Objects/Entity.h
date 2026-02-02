@@ -38,16 +38,15 @@ namespace Caduq
             }
         };
 
-        
+        std::unordered_set<std::shared_ptr<Entity>, SharedPtrHash, SharedPtrComparator> m_Parents;
+
+    protected:
         std::string m_Name {};
         glm::vec3 m_Color { 1.0f, 0.0f, 0.0f };
         float m_Size { 5.0f };
         Type m_Type { };
         bool m_deleting { false };
 
-        std::unordered_set<std::shared_ptr<Entity>, SharedPtrHash, SharedPtrComparator> m_Parents;
-
-    protected:
         Vizir::Ref<Vizir::VertexArray> m_VertexArray;
         std::unordered_set<std::shared_ptr<Entity>, SharedPtrHash, SharedPtrComparator> m_Children;
 
@@ -57,7 +56,7 @@ namespace Caduq
         virtual void Init() = 0;
         virtual void UpdateGFX() = 0;
         void Visualize(Vizir::Ref<Vizir::Shader> shader, glm::mat4 transform);
-        void RenderImGui(EntityManager& entityManager);
+        virtual void RenderImGui(EntityManager& entityManager);
 
         void AddParent(const std::shared_ptr<Entity>& parent);
         void RemoveParent(const std::shared_ptr<Entity>& parent);
