@@ -12,6 +12,10 @@
 
 namespace Caduq 
 {
+    EntityManager::EntityManager()
+    {
+        // float m_PointPopupCoord[3] = { 0.0f, 0.0f, 0.0f };
+    }
     template<typename T> 
     void MyCombo(const char* name, std::vector<std::shared_ptr<T>> list, int& point_idx)
     {
@@ -37,8 +41,11 @@ namespace Caduq
         // Point Creation
         if (ImGui::Button("Create Point"))
         {
-            m_PointPopupOpened = true;
-            FirstPopupOpening();
+            m_PointPopupCoord[0] = 0.0f;
+            m_PointPopupCoord[1] = 0.0f;
+            m_PointPopupCoord[2] = 0.0f;
+
+            m_CurEntity = nullptr;
             ImGui::OpenPopup("create_point_popup");
         }
 
@@ -101,27 +108,7 @@ namespace Caduq
 
     void EntityManager::PointPopup()
     {
-        static float coord[3] = { 0.0f, 0.0f, 0.0f };
-        if (m_FirstPopupOpening)
-        {
-            if (m_CurEntity != nullptr)
-            {
-                auto curPointPos = std::dynamic_pointer_cast<Caduq::Point>(m_CurEntity)->GetGeoPoint().GetPosition();
-
-                coord[0] = curPointPos[0];
-                coord[1] = curPointPos[1];
-                coord[2] = curPointPos[2];
-            }
-            else
-            {
-                coord[0] = 0.0f;
-                coord[1] = 0.0f;
-                coord[2] = 0.0f;
-            }
-            m_FirstPopupOpening = false;
-        }
-
-        ImGui::InputFloat2("", coord);
+        ImGui::InputFloat2("", m_PointPopupCoord);
 
         ImGui::Separator();
 
@@ -136,10 +123,10 @@ namespace Caduq
         if (ImGui::Button("Ok"))
         {
             if (m_CurEntity == nullptr)
-                CreatePoint(std::make_shared<Caduq::Point>(Eigen::Vector3d{coord[0], coord[1], coord[2]}, Type::point));
+                CreatePoint(std::make_shared<Caduq::Point>(Eigen::Vector3d{m_PointPopupCoord[0], m_PointPopupCoord[1], m_PointPopupCoord[2]}, Type::point));
             else
             {
-                std::dynamic_pointer_cast<Caduq::Point>(m_CurEntity)->Update(coord[0], coord[1], coord[2]);
+                std::dynamic_pointer_cast<Caduq::Point>(m_CurEntity)->Update(m_PointPopupCoord[0], m_PointPopupCoord[1], m_PointPopupCoord[2]);
 
                 ImGui::CloseCurrentPopup();
                 m_CurEntity = nullptr;

@@ -38,12 +38,14 @@ namespace Caduq
         void DeleteSpline(const std::shared_ptr<Spline>& spline);
         void DeletePatch(const std::shared_ptr<Patch>& patch);
 
+        float m_PointPopupCoord[3] { 0.0f, 0.0f, 0.0f };
+
         void PointPopup();
         void SplinePopup();
         void PatchPopup();
 
     public:
-        EntityManager() = default;
+        EntityManager();
 
         void RenderImGui();
 
@@ -68,6 +70,9 @@ namespace Caduq
         std::shared_ptr<Point>& GetPoint(int index);
         std::shared_ptr<Spline>& GetSpline(int index);
         std::shared_ptr<Patch>& GetPatch(int index);
+
+        void SetPointPopupCoord(Eigen::Vector3f coord) {
+            for (int i = 0; i < 3; i++) m_PointPopupCoord[i] = coord[i]; };
     };
 }
 

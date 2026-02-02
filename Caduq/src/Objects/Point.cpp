@@ -91,10 +91,10 @@ namespace Caduq
             ImGui::SameLine();
             if (ImGui::Button("Modify")) 
             {
-                entityManager.PointPopupOpened();
+                Eigen::Vector3f vec = m_Point.GetPosition().cast<float>();
+                entityManager.SetPointPopupCoord(vec);
 
                 entityManager.SetCurEntity(shared_from_this());
-                entityManager.FirstPopupOpening();
                 ImGui::OpenPopup(id);
             }
             Entity::RenderImGui(entityManager);
