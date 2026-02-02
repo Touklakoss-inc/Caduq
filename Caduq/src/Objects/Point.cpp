@@ -9,6 +9,7 @@
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <memory>
 #include <string>
 
 namespace Caduq
@@ -16,8 +17,8 @@ namespace Caduq
     Point::Point(Eigen::Vector3d pos, Type type, OptParam oP)
         : Entity{ oP.name != "" ? oP.name : "Point " + std::to_string(++s_IdGenerator), type }
         , m_Id{ oP.name != "" ? ++s_IdGenerator : s_IdGenerator }
-        , m_Point{ pos }
-        , m_PhyXPoint{ oP.mass, oP.grounded }
+        , m_GeoPoint{ std::make_shared<Geometry::Point>(pos) }
+        , m_PhyXPoint{ std::make_shared<XPBD::Point>(m_GeoPoint, oP.mass, oP.grounded) }
     {
     }
 
@@ -28,10 +29,8 @@ namespace Caduq
 
     void Point::UpdateGFX()
     {
-        Geometry::Point p0 = m_Point;
-
         // Cast to float
-        Eigen::Vector3f pointVertice = p0.GetPosition().cast<float>();
+        Eigen::Vector3f pointVertice = m_GeoPoint->GetPosition().cast<float>();
         Eigen::Vector<uint32_t, 1> pointIndice{ 0 };
 
         UpdateGFXBuffer(pointVertice, pointIndice);
@@ -76,7 +75,7 @@ namespace Caduq
 
         ClearParents();
 
-        m_Point = {x, y, z};
+        m_GeoPoint->SetPosition(x, y, z);
 
         Init();
 
@@ -93,7 +92,7 @@ namespace Caduq
             ImGui::SameLine();
             if (ImGui::Button("Modify")) 
             {
-                Eigen::Vector3f vec = m_Point.GetPosition().cast<float>();
+                Eigen::Vector3f vec = m_GeoPoint->GetPosition().cast<float>();
                 entityManager.SetPointPopupParam(vec);
 
                 entityManager.SetCurEntity(shared_from_this());
@@ -103,10 +102,10 @@ namespace Caduq
 
             if (PhyXManager::s_PhyXEnabled)
             {
-                ImGui::Checkbox("Grounded", &m_PhyXPoint.IsGroundedRef());
+                ImGui::Checkbox("Grounded", &m_PhyXPoint->IsGroundedRef());
 
-                if (!m_PhyXPoint.IsGrounded()) 
-                    ImGui::InputDouble("Mass [kg]", &m_PhyXPoint.GetMassRef());
+                if (!m_PhyXPoint->IsGrounded()) 
+                    ImGui::InputDouble("Mass [kg]", &m_PhyXPoint->GetMassRef());
             }
 
             ImGui::TreePop();

@@ -2,6 +2,7 @@
 
 #include "Eigen/Core"
 #include "Objects/Entity.h"
+#include "XPBD/JAttach.h"
 #include "Objects/PhyXManager.h"
 #include "Objects/Point.h"
 #include "Vizir/Logging/Log.h"
@@ -74,6 +75,16 @@ void SandboxXPBD::OnAttach()
                                                                 m_Entity_Manager.GetSpline(3),
                                                                 m_Entity_Manager.GetSpline(1), 
                                                                 10, Caduq::Type::patch));
+
+    m_PhyXManager.CreateJoint(std::make_shared<XPBD::JAttach>(m_Entity_Manager.GetPoint(0)->GetPhyXPoint(), 
+                                                              m_Entity_Manager.GetPoint(1)->GetPhyXPoint(), 
+                                                              std::sqrt(2.0), 0.0));
+    m_PhyXManager.CreateJoint(std::make_shared<XPBD::JAttach>(m_Entity_Manager.GetPoint(1)->GetPhyXPoint(), 
+                                                              m_Entity_Manager.GetPoint(2)->GetPhyXPoint(), 
+                                                              std::sqrt(1.25), 0.0));
+    m_PhyXManager.CreateJoint(std::make_shared<XPBD::JAttach>(m_Entity_Manager.GetPoint(2)->GetPhyXPoint(), 
+                                                              m_Entity_Manager.GetPoint(3)->GetPhyXPoint(), 
+                                                              std::sqrt(4.0), 0.0));
 
     Vizir::RenderCommand::SetPointSize(m_PointSize);
     Vizir::RenderCommand::SetLineWidth(m_LineSize);

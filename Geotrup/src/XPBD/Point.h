@@ -1,14 +1,16 @@
 #ifndef XPBD_POINT_H
 #define XPBD_POINT_H
 
-#include "Eigen/Core"
-#include <Eigen/Dense>
+#include "Geometry/Point.h"
+
+#include <memory>
 
 namespace XPBD
 {
     class Point
     {
     private:
+        std::shared_ptr<Geometry::Point> m_GeoPoint;
         Eigen::Vector3d m_Velocity { 0.0, 0.0, 0.0 };
         double m_Mass;
         bool m_Grounded;
@@ -16,7 +18,10 @@ namespace XPBD
 
     public:
         Point() = default;
-        Point(double mass, bool grounded, Eigen::Vector3d velocity = { 0.0, 0.0, 0.0 });
+        Point(const std::shared_ptr<Geometry::Point>& geoPoint, double mass, bool grounded = false, Eigen::Vector3d velocity = { 0.0, 0.0, 0.0 });
+
+
+        const std::shared_ptr<Geometry::Point>& GetGeoPoint() { return m_GeoPoint; };
 
         Eigen::Vector3d GetVelocity() { return m_Velocity; };
         void SetVelocity(Eigen::Vector3d velocity) { m_Velocity = velocity; };

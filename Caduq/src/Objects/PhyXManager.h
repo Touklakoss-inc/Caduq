@@ -4,9 +4,11 @@
 #include "Eigen/Core"
 #include "EntityManager.h"
 
-#include "Point.h"
+#include "XPBD/Joint.h"
 #include <Eigen/Dense>
 
+#include <memory>
+#include <vector>
 namespace Caduq
 {
     class PhyXManager
@@ -16,6 +18,8 @@ namespace Caduq
 
         bool m_TimeEnabled { false };
 
+        std::vector<std::shared_ptr<XPBD::Joint>> m_JointList { };
+
     public:
         static inline bool s_PhyXEnabled { false };
 
@@ -24,8 +28,7 @@ namespace Caduq
         void RenderImGui();
         void UpdatePhyX(EntityManager& entityManager, float dt, ushort nSubStep);
 
-        void ApplyLinearCorrection(Caduq::Point& p1, Caduq::Point& p2, Eigen::Vector3d dp, double alpha, double dts);
-        void Attach(Caduq::Point& p1, Caduq::Point& p2, double dRest, double alpha, double dts);
+        void CreateJoint(const std::shared_ptr<XPBD::Joint>& joint);
     };
 }
 

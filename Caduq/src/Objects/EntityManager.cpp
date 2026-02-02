@@ -1,14 +1,10 @@
 #include "EntityManager.h"
 
 #include <Eigen/Core>
-#include "Spline.h"
-#include "PhyXManager.h"
 #include "Vizir/Logging/Log.h"
-#include <cmath>
 #include <imgui/imgui.h>
 #include <memory>
 
-#include <string>
 #include <vector>
 #include <set>
 
