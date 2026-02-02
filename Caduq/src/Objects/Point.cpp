@@ -3,6 +3,8 @@
 #include "EntityManager.h"
 #include "Vizir/Renderer/VertexArray.h"
 #include "XPBD/Point.h"
+#include "PhyXManager.h"
+
 #include <Eigen/Core>
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
@@ -15,7 +17,7 @@ namespace Caduq
         : Entity{ oP.name != "" ? oP.name : "Point " + std::to_string(++s_IdGenerator), type }
         , m_Id{ oP.name != "" ? ++s_IdGenerator : s_IdGenerator }
         , m_Point{ pos }
-        , m_PhyXPoint{ oP.grounded ? MAXFLOAT : oP.mass, oP.grounded }
+        , m_PhyXPoint{ oP.mass, oP.grounded }
     {
     }
 
@@ -98,6 +100,15 @@ namespace Caduq
                 ImGui::OpenPopup(id);
             }
             Entity::RenderImGui(entityManager);
+
+            if (PhyXManager::s_PhyXEnabled)
+            {
+                ImGui::Checkbox("Grounded", &m_PhyXPoint.IsGroundedRef());
+
+                if (!m_PhyXPoint.IsGrounded()) 
+                    ImGui::InputDouble("Mass [kg]", &m_PhyXPoint.GetMassRef());
+            }
+
             ImGui::TreePop();
         }
     }

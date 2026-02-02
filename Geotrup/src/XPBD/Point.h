@@ -22,11 +22,14 @@ namespace XPBD
         void SetVelocity(Eigen::Vector3d velocity) { m_Velocity = velocity; };
 
         double GetMass() { return m_Mass; };
+        double& GetMassRef() { return m_Mass; };
+        void SetMass(double mass) { m_Mass = mass; };
 
         Eigen::Vector3d GetLastPosition() { return m_LastPosition; };
         void SetLastPosition(Eigen::Vector3d lastPosition) { m_LastPosition = lastPosition; };
 
         bool IsGrounded() { return m_Grounded; };
+        bool& IsGroundedRef() { return m_Grounded; };
     };
 }
 

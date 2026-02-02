@@ -2,6 +2,7 @@
 
 #include "Eigen/Core"
 #include "Objects/Entity.h"
+#include "Objects/PhyXManager.h"
 #include "Objects/Point.h"
 #include "Vizir/Logging/Log.h"
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
@@ -160,10 +161,15 @@ void SandboxXPBD::OnImGuiRender()
     {
         patch->RenderImGui(m_Entity_Manager);
     }
+    ImGui::End();
 
-    m_Entity_Manager.ClearEntityToDelete();
+    ImGui::Begin("PhyX");
+
+    m_PhyXManager.RenderImGui();
 
     ImGui::End();
+
+    m_Entity_Manager.ClearEntityToDelete();
     
     ImGui::ShowDemoWindow();
 }

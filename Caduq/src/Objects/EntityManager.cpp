@@ -1,7 +1,9 @@
 #include "EntityManager.h"
 
 #include <Eigen/Core>
+#include "PhyXManager.h"
 #include "Vizir/Logging/Log.h"
+#include <cmath>
 #include <imgui/imgui.h>
 #include <memory>
 
@@ -112,6 +114,7 @@ namespace Caduq
                 ImGui::CloseCurrentPopup();
                 m_CurEntity = nullptr;
             }
+
         }
         ImGui::EndPopup();
     }
