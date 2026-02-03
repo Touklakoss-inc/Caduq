@@ -146,6 +146,7 @@ group ""
         {
             "%{prj.name}/src",
             "%{IncludeDir.Eigen}",
+            "%{IncludeDir.ImGui}",
         }
 
         filter "system:windows"

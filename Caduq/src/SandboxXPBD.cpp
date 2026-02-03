@@ -66,15 +66,15 @@ void SandboxXPBD::OnAttach()
     m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(3), Caduq::PointTangency{{0, 0, 0}},
                                                                   m_Entity_Manager.GetPoint(2), Caduq::PointTangency{{0, 0, 0}},
                                                                   100, Caduq::Type::spline));              
-    m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(3), Caduq::PointTangency{{0, 0, 0}},
-                                                                  m_Entity_Manager.GetPoint(0), Caduq::PointTangency{{0, 0, 0}},
-                                                                  100, Caduq::Type::spline));              
+    // m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(3), Caduq::PointTangency{{0, 0, 0}},
+    //                                                               m_Entity_Manager.GetPoint(0), Caduq::PointTangency{{0, 0, 0}},
+    //                                                               100, Caduq::Type::spline));              
 
-    m_Entity_Manager.CreatePatch(std::make_shared<Caduq::Patch>(m_Entity_Manager.GetSpline(2),
-                                                                m_Entity_Manager.GetSpline(0),
-                                                                m_Entity_Manager.GetSpline(3),
-                                                                m_Entity_Manager.GetSpline(1), 
-                                                                10, Caduq::Type::patch));
+    // m_Entity_Manager.CreatePatch(std::make_shared<Caduq::Patch>(m_Entity_Manager.GetSpline(2),
+    //                                                             m_Entity_Manager.GetSpline(0),
+    //                                                             m_Entity_Manager.GetSpline(3),
+    //                                                             m_Entity_Manager.GetSpline(1), 
+    //                                                             10, Caduq::Type::patch));
 
     m_PhyXManager.CreateJoint(std::make_shared<XPBD::JAttach>(m_Entity_Manager.GetPoint(0)->GetPhyXPoint(), 
                                                               m_Entity_Manager.GetPoint(1)->GetPhyXPoint(), 
@@ -176,7 +176,15 @@ void SandboxXPBD::OnImGuiRender()
 
     ImGui::Begin("PhyX");
 
-    m_PhyXManager.RenderImGui();
+    m_PhyXManager.RenderImGui(m_Entity_Manager);
+
+    if (m_PhyXManager.s_PhyXEnabled)
+    {
+        for (const auto& joint : m_PhyXManager.GetJointList()) 
+        {
+            joint->RenderImGui();
+        }
+    }
 
     ImGui::End();
 

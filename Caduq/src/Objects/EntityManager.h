@@ -17,6 +17,9 @@ namespace Caduq
     class Spline;
     class Patch;
 
+    template<typename T> 
+    void MyCombo(const char* name, std::vector<std::shared_ptr<T>> list, int& point_idx);
+
     class EntityManager
     {
     private:
@@ -70,7 +73,7 @@ namespace Caduq
         void SetCurEntity(const std::shared_ptr<Entity>& curEntity) { m_CurEntity = curEntity; };
 
         // should it be returned by reference ?
-        const std::vector<std::shared_ptr<Point>>& GetPointList() { return m_Point_List; };
+        const std::vector<std::shared_ptr<Point>>& GetPointList() const { return m_Point_List; };
         const std::vector<std::shared_ptr<Spline>>& GetSplineList() { return m_Spline_List; };
         const std::vector<std::shared_ptr<Patch>>& GetPatchList() { return m_Patch_List; };
 

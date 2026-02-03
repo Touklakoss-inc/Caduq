@@ -1,7 +1,14 @@
 #include "Joint.h"
 
+#include <imgui.h>
+#include <string>
 namespace XPBD
 {
+    Joint::Joint()
+        : m_Name{ "Joint" + std::to_string(++s_IdGenerator)}, m_Id{ s_IdGenerator }
+    {
+    }
+
     void Joint::ApplyLinearCorrection(Point& p1, Point& p2, Eigen::Vector3d dp, double alpha, double dts)
     {
         double C = dp.norm();
@@ -30,5 +37,32 @@ namespace XPBD
         n.normalize();
 
         ApplyLinearCorrection(p1, p2, -(d-dRest)*n, alpha, dts);
+    }
+
+    void Joint::RenderImGui()
+    {
+        // ImGui::SameLine();
+        if (ImGui::Button("Delete")) 
+            ImGui::OpenPopup("Delete?");
+
+        // Always center this window when appearing
+        ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+        ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+        if (ImGui::BeginPopupModal("Delete?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            ImGui::Text("This joint will be deleted.");
+            ImGui::Separator();
+
+            if (ImGui::Button("OK", ImVec2(120, 0))) 
+            { 
+                // entityManager.DeleteEntity(shared_from_this());
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::SetItemDefaultFocus();
+            ImGui::SameLine();
+            if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+            ImGui::EndPopup();
+        }
     }
 }

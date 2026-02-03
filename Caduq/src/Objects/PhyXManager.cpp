@@ -2,22 +2,14 @@
 
 #include <Eigen/Core>
 #include "EntityManager.h"
+#include "XPBD/JAttach.h"
+#include "XPBD/Joint.h"
+#include "XPBD/Point.h"
 #include <imgui/imgui.h>
 
+#include <memory>
 namespace Caduq
 {
-    void PhyXManager::RenderImGui()
-    {
-        ImGui::Checkbox("Enable PhyX", &s_PhyXEnabled);
-
-        ImGui::Separator();
-
-        if (s_PhyXEnabled)
-        {
-            ImGui::Checkbox("Enable Time", &m_TimeEnabled);
-        }
-    }
-
     void PhyXManager::UpdatePhyX(EntityManager& entityManager, float dt, ushort nSubStep)
     {
         if (!s_PhyXEnabled || !m_TimeEnabled)
@@ -81,5 +73,67 @@ namespace Caduq
         }
 
         m_JointsToDelete.clear();
+    }
+
+    void PhyXManager::RenderImGui(const EntityManager& entityManager)
+    {
+        ImGui::Checkbox("Enable PhyX", &s_PhyXEnabled);
+
+        if (s_PhyXEnabled)
+        {
+            ImGui::SameLine();
+            ImGui::Checkbox("Enable Time", &m_TimeEnabled);
+
+            ImGui::Separator();
+
+            if (ImGui::Button("Attach"))
+            {
+                ImGui::OpenPopup("create_attach_joint");
+            }
+
+            if (ImGui::BeginPopup("create_attach_joint"))
+                AttachPopup(entityManager);
+
+        }
+    }
+
+    void PhyXManager::AttachPopup(const EntityManager& entityManager)
+    {
+        static int start_point_idx = 0;
+        MyCombo("Start Point", entityManager.GetPointList(), start_point_idx);
+
+        ImGui::Separator();
+
+        static int end_point_idx = 0;
+        MyCombo("End Point", entityManager.GetPointList(), end_point_idx);
+
+        ImGui::Separator();
+
+        static double d_rest[1] = { 0.0 };
+        ImGui::InputDouble("Distance", &d_rest[0]);
+
+        ImGui::Separator();
+
+        if (ImGui::Button("Cancel"))
+        {
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::SameLine();
+
+        if (ImGui::Button("Ok"))
+        {
+            // Check if all 4 selected splines are different
+            if (start_point_idx != end_point_idx)
+            {
+                CreateJoint(std::make_shared<XPBD::JAttach>(entityManager.GetPointList().at(start_point_idx)->GetPhyXPoint(),
+                                                            entityManager.GetPointList().at(end_point_idx)->GetPhyXPoint(),
+                                                            d_rest[0], 0.0));
+                ImGui::CloseCurrentPopup();
+            }
+            else
+                VZ_WARN("Select two different points to create an attach joint");
+        }
+        ImGui::EndPopup();
     }
 }
