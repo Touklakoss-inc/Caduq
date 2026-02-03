@@ -1,6 +1,8 @@
 #include "JAttach.h"
 
+#include "XPBD/Joint.h"
 #include <memory>
+#include <imgui.h>
 namespace XPBD
 {
     JAttach::JAttach(const std::shared_ptr<Point>& p1, const std::shared_ptr<Point>& p2, double dRest, double alpha)
@@ -30,5 +32,15 @@ namespace XPBD
         n.normalize();
 
         ApplyLinearCorrection(*m_P1, *m_P2, -(d-m_DRest)*n, m_Alpha, dts);
+    }
+
+    void JAttach::RenderImGui()
+    {
+        if (ImGui::TreeNode(m_Name.data()))
+        {
+            Joint::RenderImGui();
+
+            ImGui::TreePop();
+        }
     }
 }

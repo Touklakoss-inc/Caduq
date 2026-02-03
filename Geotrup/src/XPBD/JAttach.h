@@ -21,6 +21,8 @@ namespace XPBD
         void Init() override;
         void Delete() override;
         void ApplyConstraints(double dts) override;
+
+        void RenderImGui() override;
     };
 }
 
