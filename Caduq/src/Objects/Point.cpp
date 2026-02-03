@@ -1,6 +1,7 @@
 #include "Point.h"
 
 #include "EntityManager.h"
+#include "Vizir/Logging/Log.h"
 #include "Vizir/Renderer/VertexArray.h"
 #include "XPBD/Point.h"
 #include "PhyXManager.h"
@@ -80,6 +81,17 @@ namespace Caduq
         Init();
 
         VZ_INFO("Point modified");
+    }
+
+    void Point::Delete()
+    {
+        for (const auto& pj : m_PhyXPoint->GetParentJoints())
+        {
+            PhyXManager::AddJointToDelete(pj);
+        }
+
+        m_PhyXPoint->Delete();
+        Entity::Delete();
     }
 
     void Point::RenderImGui(EntityManager& entityManager)

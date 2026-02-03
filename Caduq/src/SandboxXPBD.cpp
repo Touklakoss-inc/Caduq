@@ -181,6 +181,7 @@ void SandboxXPBD::OnImGuiRender()
     ImGui::End();
 
     m_Entity_Manager.ClearEntityToDelete();
+    m_PhyXManager.ClearJointsToDelete();
     
     ImGui::ShowDemoWindow();
 }

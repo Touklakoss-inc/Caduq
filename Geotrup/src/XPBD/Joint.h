@@ -5,7 +5,7 @@
 
 namespace XPBD
 {
-    class Joint
+    class Joint : public std::enable_shared_from_this<Joint>
     {
     protected:
         void ApplyLinearCorrection(Point& p1, Point& p2, Eigen::Vector3d dp, double alpha, double dts);
@@ -14,7 +14,10 @@ namespace XPBD
 
     public:
         Joint() = default;
+        ~Joint() { std::cout << "Joint deleted" << '\n'; };
 
+        virtual void Init() = 0;
+        virtual void Delete() = 0;
         virtual void ApplyConstraints(double dts) = 0;
     };
 }

@@ -40,6 +40,7 @@ namespace Caduq
         void Init() override;
         void UpdateGFX() override;
         void Update(double x, double y, double z);
+        void Delete() override;
 
         void RenderImGui(EntityManager& entityManager) override;
 

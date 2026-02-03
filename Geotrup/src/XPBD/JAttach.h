@@ -18,6 +18,8 @@ namespace XPBD
     public:
         JAttach(const std::shared_ptr<Point>& p1, const std::shared_ptr<Point>& p2, double dRest, double alpha);
 
+        void Init() override;
+        void Delete() override;
         void ApplyConstraints(double dts) override;
     };
 }
