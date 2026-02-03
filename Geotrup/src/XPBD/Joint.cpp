@@ -31,5 +31,4 @@ namespace XPBD
 
         ApplyLinearCorrection(p1, p2, -(d-dRest)*n, alpha, dts);
     }
-
 }

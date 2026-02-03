@@ -8,6 +8,21 @@ namespace XPBD
     {
     }
 
+    void JAttach::Init()
+    {
+        m_P1->AddParentJoint(shared_from_this());
+        m_P2->AddParentJoint(shared_from_this());
+    }
+
+    void JAttach::Delete()
+    {
+        m_P1->RemoveParentJoint(shared_from_this());
+        m_P2->RemoveParentJoint(shared_from_this());
+
+        m_P1 = nullptr;
+        m_P2 = nullptr;
+    }
+
     void JAttach::ApplyConstraints(double dts)
     {
         Eigen::Vector3d n = m_P2->GetGeoPoint()->GetPosition() - m_P1->GetGeoPoint()->GetPosition(); 

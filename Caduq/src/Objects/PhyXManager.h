@@ -20,6 +20,8 @@ namespace Caduq
 
         std::vector<std::shared_ptr<XPBD::Joint>> m_JointList { };
 
+        static inline std::vector<std::shared_ptr<XPBD::Joint>> m_JointsToDelete { };
+
     public:
         static inline bool s_PhyXEnabled { false };
 
@@ -29,6 +31,9 @@ namespace Caduq
         void UpdatePhyX(EntityManager& entityManager, float dt, ushort nSubStep);
 
         void CreateJoint(const std::shared_ptr<XPBD::Joint>& joint);
+
+        static void AddJointToDelete(const std::shared_ptr<XPBD::Joint>& joint) { m_JointsToDelete.push_back(joint); };
+        void ClearJointsToDelete();
     };
 }
 

@@ -63,6 +63,23 @@ namespace Caduq
 
     void PhyXManager::CreateJoint(const std::shared_ptr<XPBD::Joint>& joint)
     {
+        joint->Init();
         m_JointList.push_back(joint); 
+    }
+
+    void PhyXManager::ClearJointsToDelete()
+    {
+        for (const auto& joint : m_JointsToDelete)
+        {
+            joint->Delete();
+
+            auto it = std::find(m_JointList.begin(), m_JointList.end(), joint);
+            if (it != m_JointList.end())
+            {
+                m_JointList.erase(it);
+            }
+        }
+
+        m_JointsToDelete.clear();
     }
 }
