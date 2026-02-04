@@ -251,7 +251,6 @@ namespace Caduq
     void EntityManager::CreatePoint(const std::shared_ptr<Point>& point)
     {
         m_Point_List.push_back(point); // push_back make a copy of the shared pointer
-        // Add phyxpoint to phyxpoint list in phyxmanager -> get a ref or pointer on it in entitymanager
         m_PhyXManager->AddPhyXPointToList(point->GetPhyXPoint());
         point->Init();
         VZ_INFO("Point created");

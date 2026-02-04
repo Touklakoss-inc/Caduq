@@ -1,15 +1,14 @@
 #ifndef PHYXMANAGER_H
 #define PHYXMANAGER_H
 
-#include "Eigen/Core"
-
-#include "XPBD/Joint.h"
+#include "Point.h"
 #include <Eigen/Dense>
 
 #include <memory>
 #include <vector>
 namespace XPBD
 {
+    class Joint;
     class PhyXManager
     {
     private:

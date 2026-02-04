@@ -4,6 +4,7 @@
 #include "Joint.h"
 #include "Point.h"
 
+#include "XPBD/PhyXManager.h"
 #include <memory>
 namespace XPBD
 {
@@ -22,7 +23,7 @@ namespace XPBD
         void Delete() override;
         void ApplyConstraints(double dts) override;
 
-        void RenderImGui() override;
+        void RenderImGui(const PhyXManager& phyXManager) override;
     };
 }
 
