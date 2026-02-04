@@ -3,7 +3,6 @@
 #include "Eigen/Core"
 #include "Objects/Entity.h"
 #include "XPBD/JAttach.h"
-#include "Objects/PhyXManager.h"
 #include "Objects/Point.h"
 #include "Vizir/Logging/Log.h"
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
@@ -51,6 +50,8 @@ void SandboxXPBD::OnAttach()
 
     m_Shader = Vizir::Shader::Create("PointShader", vertexSrc, fragmentSrc);
 
+    m_PhyXManager = m_Entity_Manager.GetPhyXManager();
+
 
     m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(Eigen::Vector3d{0.0, 0.0, 0.0}, Caduq::Type::point, Caduq::Point::OptParam{.grounded=true}));
     m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(Eigen::Vector3d{1.0, 1.0, 0.0}, Caduq::Type::point));
@@ -76,13 +77,13 @@ void SandboxXPBD::OnAttach()
     //                                                             m_Entity_Manager.GetSpline(1), 
     //                                                             10, Caduq::Type::patch));
 
-    m_PhyXManager.CreateJoint(std::make_shared<XPBD::JAttach>(m_Entity_Manager.GetPoint(0)->GetPhyXPoint(), 
+    m_PhyXManager->CreateJoint(std::make_shared<XPBD::JAttach>(m_Entity_Manager.GetPoint(0)->GetPhyXPoint(), 
                                                               m_Entity_Manager.GetPoint(1)->GetPhyXPoint(), 
                                                               std::sqrt(2.0), 0.0));
-    m_PhyXManager.CreateJoint(std::make_shared<XPBD::JAttach>(m_Entity_Manager.GetPoint(1)->GetPhyXPoint(), 
+    m_PhyXManager->CreateJoint(std::make_shared<XPBD::JAttach>(m_Entity_Manager.GetPoint(1)->GetPhyXPoint(), 
                                                               m_Entity_Manager.GetPoint(2)->GetPhyXPoint(), 
                                                               std::sqrt(1.25), 0.0));
-    m_PhyXManager.CreateJoint(std::make_shared<XPBD::JAttach>(m_Entity_Manager.GetPoint(2)->GetPhyXPoint(), 
+    m_PhyXManager->CreateJoint(std::make_shared<XPBD::JAttach>(m_Entity_Manager.GetPoint(2)->GetPhyXPoint(), 
                                                               m_Entity_Manager.GetPoint(3)->GetPhyXPoint(), 
                                                               std::sqrt(4.0), 0.0));
 
@@ -94,7 +95,7 @@ void SandboxXPBD::OnUpdate(Vizir::Timestep ts)
 {
 	m_CameraController.OnUpdate(ts);
 
-    m_PhyXManager.UpdatePhyX(m_Entity_Manager, ts.GetSeconds(), 5);
+    m_PhyXManager->UpdatePhyX(ts.GetSeconds(), 5);
 
 	Vizir::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 	Vizir::RenderCommand::Clear();
@@ -176,11 +177,11 @@ void SandboxXPBD::OnImGuiRender()
 
     ImGui::Begin("PhyX");
 
-    m_PhyXManager.RenderImGui(m_Entity_Manager);
+    m_PhyXManager->RenderImGui();
 
-    if (m_PhyXManager.s_PhyXEnabled)
+    if (m_PhyXManager->s_PhyXEnabled)
     {
-        for (const auto& joint : m_PhyXManager.GetJointList()) 
+        for (const auto& joint : m_PhyXManager->GetJointList()) 
         {
             joint->RenderImGui();
         }
@@ -189,7 +190,7 @@ void SandboxXPBD::OnImGuiRender()
     ImGui::End();
 
     m_Entity_Manager.ClearEntityToDelete();
-    m_PhyXManager.ClearJointsToDelete();
+    m_PhyXManager->ClearJointsToDelete();
     
     ImGui::ShowDemoWindow();
 }

@@ -6,6 +6,7 @@
 
 #include "Entity.h"
 #include "Geometry/Geo.h"
+#include "XPBD/PhyXManager.h"
 #include "Point.h"
 #include "Spline.h"
 #include "Patch.h"
@@ -17,12 +18,12 @@ namespace Caduq
     class Spline;
     class Patch;
 
-    template<typename T> 
-    void MyCombo(const char* name, std::vector<std::shared_ptr<T>> list, int& point_idx);
-
     class EntityManager
     {
     private:
+
+        std::shared_ptr<XPBD::PhyXManager> m_PhyXManager;
+
         std::vector<std::shared_ptr<Point>> m_Point_List;
         std::vector<std::shared_ptr<Spline>> m_Spline_List;
         std::vector<std::shared_ptr<Patch>> m_Patch_List;
@@ -59,7 +60,8 @@ namespace Caduq
         void PatchPopup();
 
     public:
-        EntityManager() = default;
+        EntityManager();
+        const auto& GetPhyXManager() { return m_PhyXManager; };
 
         void RenderImGui();
 

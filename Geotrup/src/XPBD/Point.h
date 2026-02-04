@@ -18,11 +18,13 @@ namespace XPBD
         bool m_Grounded;
         Eigen::Vector3d m_LastPosition { };
 
+        std::string m_Name;
+
         std::vector<std::shared_ptr<Joint>> m_ParentJoints { };
 
     public:
         Point() = default;
-        Point(const std::shared_ptr<Geometry::Point>& geoPoint, double mass, bool grounded = false, Eigen::Vector3d velocity = { 0.0, 0.0, 0.0 });
+        Point(const std::shared_ptr<Geometry::Point>& geoPoint, double mass, const std::string& name, bool grounded = false, Eigen::Vector3d velocity = { 0.0, 0.0, 0.0 });
         ~Point() { std::cout << "PhyXPoint deleted" << '\n'; };
 
         void Delete();
@@ -46,6 +48,8 @@ namespace XPBD
         void RemoveParentJoint(const std::shared_ptr<Joint>& joint);
 
         const auto& GetParentJoints() { return m_ParentJoints; };
+
+        const std::string& GetName() { return m_Name; };
     };
 }
 

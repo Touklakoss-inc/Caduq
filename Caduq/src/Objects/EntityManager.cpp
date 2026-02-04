@@ -1,6 +1,7 @@
 #include "EntityManager.h"
 
 #include <Eigen/Core>
+#include "XPBD/PhyXManager.h"
 #include "Vizir/Logging/Log.h"
 #include <imgui/imgui.h>
 #include <memory>
@@ -29,7 +30,11 @@ namespace Caduq
             ImGui::EndCombo();
         }
     }
-    
+
+    EntityManager::EntityManager()
+        : m_PhyXManager{ std::make_shared<XPBD::PhyXManager>() }
+    {
+    }
     void EntityManager::RenderImGui()
     {
         // Point Creation
@@ -246,6 +251,8 @@ namespace Caduq
     void EntityManager::CreatePoint(const std::shared_ptr<Point>& point)
     {
         m_Point_List.push_back(point); // push_back make a copy of the shared pointer
+        // Add phyxpoint to phyxpoint list in phyxmanager -> get a ref or pointer on it in entitymanager
+        m_PhyXManager->AddPhyXPointToList(point->GetPhyXPoint());
         point->Init();
         VZ_INFO("Point created");
     }
@@ -299,6 +306,7 @@ namespace Caduq
 
     void EntityManager::DeletePoint(const std::shared_ptr<Point>& point)
     {
+        m_PhyXManager->RemovePhyXPointFromList(point->GetPhyXPoint());
         point->Delete();
 
         auto it = std::find(m_Point_List.begin(), m_Point_List.end(), point);

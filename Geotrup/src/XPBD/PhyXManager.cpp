@@ -1,16 +1,35 @@
 #include "PhyXManager.h"
 
 #include <Eigen/Core>
-#include "EntityManager.h"
 #include "XPBD/JAttach.h"
 #include "XPBD/Joint.h"
 #include "XPBD/Point.h"
-#include <imgui/imgui.h>
+#include <imgui.h>
 
 #include <memory>
-namespace Caduq
+namespace XPBD
 {
-    void PhyXManager::UpdatePhyX(EntityManager& entityManager, float dt, ushort nSubStep)
+    template<typename T> 
+    void MyCombo(const char* name, std::vector<std::shared_ptr<T>> list, int& point_idx)
+    {
+        const auto combo_preview_value = list[point_idx];  // Pass in the preview value visible before opening the combo (it could be anything)
+        if (ImGui::BeginCombo(name, combo_preview_value->GetName().data()))
+        {
+            for (int n = 0; n < list.size(); n++)
+            {
+                const bool is_selected = (point_idx == n);
+                if (ImGui::Selectable(list[n]->GetName().data(), is_selected))
+                    point_idx = n;
+
+                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
+    }
+
+    void PhyXManager::UpdatePhyX(float dt, ushort nSubStep)
     {
         if (!s_PhyXEnabled || !m_TimeEnabled)
             return;
@@ -18,12 +37,11 @@ namespace Caduq
         double dts = static_cast<double>(dt)/static_cast<double>(nSubStep);
         for (ushort n = 0; n < nSubStep; n++)
         {
-            for (const auto& point : entityManager.GetPointList())
+            for (const auto& phyXPoint : m_PhyXPointList)
             {
-                auto& phyXPoint = point->GetPhyXPoint(); 
                 if (!phyXPoint->IsGrounded())
                 {
-                    auto& geoPoint = point->GetGeoPoint();
+                    auto& geoPoint = phyXPoint->GetGeoPoint();
                     phyXPoint->SetVelocity(phyXPoint->GetVelocity() + dts*g);
 
                     phyXPoint->SetLastPosition(geoPoint->GetPosition());
@@ -41,19 +59,18 @@ namespace Caduq
             // Attach(*entityManager.GetPoint(1), *entityManager.GetPoint(2), std::sqrt(1.25), 0.0, dts);
             // Attach(*entityManager.GetPoint(2), *entityManager.GetPoint(3), std::sqrt(4.0), 0.0, dts);
 
-            for (const auto& point : entityManager.GetPointList())
+            for (const auto& phyXPoint : m_PhyXPointList)
             {
-                auto& phyXPoint = point->GetPhyXPoint(); 
                 if (!phyXPoint->IsGrounded())
                 {
-                    auto& geoPoint = point->GetGeoPoint();
+                    auto& geoPoint = phyXPoint->GetGeoPoint();
                     phyXPoint->SetVelocity((geoPoint->GetPosition() - phyXPoint->GetLastPosition())/dts);
                 }
             }
         }
     }
 
-    void PhyXManager::CreateJoint(const std::shared_ptr<XPBD::Joint>& joint)
+    void PhyXManager::CreateJoint(const std::shared_ptr<Joint>& joint)
     {
         joint->Init();
         m_JointList.push_back(joint); 
@@ -75,7 +92,16 @@ namespace Caduq
         m_JointsToDelete.clear();
     }
 
-    void PhyXManager::RenderImGui(const EntityManager& entityManager)
+    void PhyXManager::RemovePhyXPointFromList(const std::shared_ptr<Point>& phyXPoint)
+    {
+        auto it = std::find(m_PhyXPointList.begin(), m_PhyXPointList.end(), phyXPoint);
+        if (it != m_PhyXPointList.end())
+        {
+            m_PhyXPointList.erase(it);
+        }
+    }
+
+    void PhyXManager::RenderImGui()
     {
         ImGui::Checkbox("Enable PhyX", &s_PhyXEnabled);
 
@@ -92,20 +118,20 @@ namespace Caduq
             }
 
             if (ImGui::BeginPopup("create_attach_joint"))
-                AttachPopup(entityManager);
+                AttachPopup();
 
         }
     }
 
-    void PhyXManager::AttachPopup(const EntityManager& entityManager)
+    void PhyXManager::AttachPopup()
     {
         static int start_point_idx = 0;
-        MyCombo("Start Point", entityManager.GetPointList(), start_point_idx);
+        MyCombo("Start Point", m_PhyXPointList, start_point_idx);
 
         ImGui::Separator();
 
         static int end_point_idx = 0;
-        MyCombo("End Point", entityManager.GetPointList(), end_point_idx);
+        MyCombo("End Point", m_PhyXPointList, end_point_idx);
 
         ImGui::Separator();
 
@@ -126,13 +152,13 @@ namespace Caduq
             // Check if all 4 selected splines are different
             if (start_point_idx != end_point_idx)
             {
-                CreateJoint(std::make_shared<XPBD::JAttach>(entityManager.GetPointList().at(start_point_idx)->GetPhyXPoint(),
-                                                            entityManager.GetPointList().at(end_point_idx)->GetPhyXPoint(),
+                CreateJoint(std::make_shared<JAttach>(m_PhyXPointList.at(start_point_idx),
+                                                            m_PhyXPointList.at(end_point_idx),
                                                             d_rest[0], 0.0));
                 ImGui::CloseCurrentPopup();
             }
             else
-                VZ_WARN("Select two different points to create an attach joint");
+                std::cout << "Select two different points to create an attach joint" << '\n';
         }
         ImGui::EndPopup();
     }
