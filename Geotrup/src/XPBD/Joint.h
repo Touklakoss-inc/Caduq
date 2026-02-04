@@ -2,6 +2,7 @@
 #define JOINT_H
 
 #include "Point.h"
+#include "PhyXManager.h"
 
 namespace XPBD
 {
@@ -23,7 +24,7 @@ namespace XPBD
         virtual void Init() = 0;
         virtual void Delete() = 0;
         virtual void ApplyConstraints(double dts) = 0;
-        virtual void RenderImGui() = 0;
+        virtual void RenderImGui(const PhyXManager& phyXManager) = 0;
     };
 }
 

@@ -1,6 +1,7 @@
 #include "JAttach.h"
 
 #include "XPBD/Joint.h"
+#include "XPBD/PhyXManager.h"
 #include <memory>
 #include <imgui.h>
 namespace XPBD
@@ -34,11 +35,11 @@ namespace XPBD
         ApplyLinearCorrection(*m_P1, *m_P2, -(d-m_DRest)*n, m_Alpha, dts);
     }
 
-    void JAttach::RenderImGui()
+    void JAttach::RenderImGui(const PhyXManager& phyXManager)
     {
         if (ImGui::TreeNode(m_Name.data()))
         {
-            Joint::RenderImGui();
+            Joint::RenderImGui(phyXManager);
 
             ImGui::TreePop();
         }

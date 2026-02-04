@@ -1,5 +1,6 @@
 #include "Joint.h"
 
+#include "XPBD/PhyXManager.h"
 #include <imgui.h>
 #include <string>
 namespace XPBD
@@ -39,7 +40,7 @@ namespace XPBD
         ApplyLinearCorrection(p1, p2, -(d-dRest)*n, alpha, dts);
     }
 
-    void Joint::RenderImGui()
+    void Joint::RenderImGui(const PhyXManager& phyXManager)
     {
         // ImGui::SameLine();
         if (ImGui::Button("Delete")) 
@@ -56,9 +57,11 @@ namespace XPBD
 
             if (ImGui::Button("OK", ImVec2(120, 0))) 
             { 
-                // entityManager.DeleteEntity(shared_from_this());
+                phyXManager.AddJointToDelete(shared_from_this());
+
                 ImGui::CloseCurrentPopup();
             }
+
             ImGui::SetItemDefaultFocus();
             ImGui::SameLine();
             if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }

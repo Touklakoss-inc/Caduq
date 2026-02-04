@@ -183,7 +183,7 @@ void SandboxXPBD::OnImGuiRender()
     {
         for (const auto& joint : m_PhyXManager->GetJointList()) 
         {
-            joint->RenderImGui();
+            joint->RenderImGui(*m_PhyXManager);
         }
     }
 
