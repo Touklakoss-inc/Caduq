@@ -18,6 +18,11 @@ IncludeDir["ImGui"] = "Vizir/vendor/imgui"
 IncludeDir["glm"] = "Vizir/vendor/glm"
 IncludeDir["stb_image"] = "Vizir/vendor/stb_image"
 IncludeDir["Eigen"] = "Vizir/vendor/Eigen"
+IncludeDir["spdlog"] = "Vizir/vendor/spdlog/include"
+
+-- Configuration for whole workspace
+externalanglebrackets ("on")
+externalwarnings "Off"
 
 group "Dependencies"
     warnings ("off")
@@ -34,9 +39,6 @@ group ""
         cppdialect "C++20"
         staticruntime "on"
 
-        externalanglebrackets ("on")
-        externalwarnings "Off"
-
         targetdir ("bin/" .. outputdir .. "/%{prj.name}")
         objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
@@ -45,8 +47,11 @@ group ""
 
         files
         {
+            -- Internal files
             "%{prj.name}/src/**.h",
             "%{prj.name}/src/**.cpp",
+
+            -- External files
             "%{prj.name}/vendor/stb_image/**.h",
             "%{prj.name}/vendor/stb_image/**.cpp",
             "%{prj.name}/vendor/glm/glm/**.hpp",
@@ -60,31 +65,34 @@ group ""
 
         includedirs
         {
+            -- Internal files
             "%{prj.name}/src",
             "%{prj.name}/src/Vizir",
-            "%{prj.name}/vendor/spdlog/include",
+
+            -- External files
             "%{IncludeDir.GLFW}",
             "%{IncludeDir.glad}",
             "%{IncludeDir.ImGui}",
             "%{IncludeDir.glm}",
-            "%{IncludeDir.Eigen}",
-            "%{IncludeDir.stb_image}"
+            "%{IncludeDir.stb_image}",
+            "%{IncludeDir.spdlog}"
         }
+
         links 
         { 
             "opengl32.lib"
         }
 
-        filter "system:windows"
-            systemversion "latest"
-
             defines
             {
-                "VZ_PLATFORM_WINDOWS",
                 "VZ_BUILD_DLL",
                 "GLFW_INCLUDE_NONE",
                 "VZ_ENABLE_ASSERT",
             }
+
+        filter "system:windows"
+            systemversion "latest"
+
             links 
             { 
                 "GLFW",
@@ -94,13 +102,6 @@ group ""
 
         filter { "system:linux", "action:gmake" }
             buildoptions { "-fpermissive"}
-            defines
-            {
-                "VZ_PLATFORM_LINUX",
-                "VZ_BUILD_DLL",
-                "GLFW_INCLUDE_NONE",
-                "VZ_ENABLE_ASSERT",
-            }
         
         filter "configurations:Debug"
             defines "VZ_DEBUG"
@@ -124,9 +125,6 @@ group ""
         cppdialect "C++20"
         staticruntime "on"
 
-        externalanglebrackets ("on")
-        externalwarnings "Off"
-
         targetdir ("bin/" .. outputdir .. "/%{prj.name}")
         objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
@@ -134,7 +132,6 @@ group ""
         {
             "%{prj.name}/src/**.h",
             "%{prj.name}/src/**.cpp",
-            "%{prj.name}/vendor/Eigne/Eigen/**"
         }
 
         defines
@@ -144,7 +141,10 @@ group ""
 
         includedirs
         {
+            -- Internal files
             "%{prj.name}/src",
+
+            -- External files
             "%{IncludeDir.Eigen}",
             "%{IncludeDir.ImGui}",
         }
@@ -152,19 +152,9 @@ group ""
         filter "system:windows"
             systemversion "latest"
 
-            defines
-            {
-
-            }
-
         filter { "system:linux", "action:gmake" }
             buildoptions { "-fpermissive"}
 
-            defines
-            {
-
-            }
-        
         filter "configurations:Debug"
             defines "VZ_DEBUG"
             runtime "Debug"
@@ -187,9 +177,6 @@ group ""
         cppdialect "C++20"
         staticruntime "on"
 
-        externalanglebrackets ("on")
-        externalwarnings "Off"
-
         targetdir ("bin/" .. outputdir .. "/%{prj.name}")
         objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
@@ -201,12 +188,14 @@ group ""
 
         includedirs
         {
-            "Vizir/vendor/spdlog/include",
+            -- External files
             "Vizir/src",
-            "Vizir/vendor",
             "Geotrup/src",
+
+            "%{IncludeDir.ImGui}",
             "%{IncludeDir.glm}",
-            "%{IncludeDir.Eigen}"
+            "%{IncludeDir.Eigen}",
+            "%{IncludeDir.spdlog}"
         }
 
         links
@@ -218,18 +207,8 @@ group ""
         filter "system:windows"
             systemversion "latest"
 
-            defines
-            {
-
-            }
-
         filter { "system:linux", "action:gmake" }
             buildoptions { "-fpermissive"}
-
-            defines
-            {
-
-            }
 
             links 
             { 

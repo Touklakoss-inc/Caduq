@@ -1,6 +1,6 @@
 #include "LayerManager.h"
 
-#include <imgui/imgui.h>
+#include <imgui.h>
 
 // --- Layers ---
 #include "SandboxXPBD.h"

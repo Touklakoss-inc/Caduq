@@ -5,7 +5,7 @@
 #include "EntityManager.h"
 
 #include <Eigen/Core>
-#include <imgui/imgui.h>
+#include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
 namespace Caduq

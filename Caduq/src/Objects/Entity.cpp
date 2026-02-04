@@ -6,7 +6,7 @@
 
 #include <memory>
 #include <string>
-#include <imgui/imgui.h>
+#include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
 namespace Caduq 
