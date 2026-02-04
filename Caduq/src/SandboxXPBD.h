@@ -1,9 +1,10 @@
 #pragma once
-#include "Objects/PhyXManager.h"
+#include "XPBD/PhyXManager.h"
 #include "Vizir.h"
 
 #include "Objects/EntityManager.h"
 
+#include <memory>
 class SandboxXPBD : public Vizir::Layer
 {
 public:
@@ -19,7 +20,7 @@ private:
 
 
     Caduq::EntityManager m_Entity_Manager {};
-    Caduq::PhyXManager m_PhyXManager {};
+    std::shared_ptr<XPBD::PhyXManager> m_PhyXManager {};
 
 	// Rendering 
 	Vizir::OrthographicCameraController m_CameraController;
