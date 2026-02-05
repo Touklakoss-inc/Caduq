@@ -24,7 +24,9 @@ namespace XPBD
         virtual void Init() = 0;
         virtual void Delete() = 0;
         virtual void ApplyConstraints(double dts) = 0;
-        virtual void RenderImGui(const PhyXManager& phyXManager) = 0;
+        virtual void RenderImGui(PhyXManager& phyXManager) = 0;
+
+        int GetID() { return m_Id; };
     };
 }
 

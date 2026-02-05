@@ -40,9 +40,9 @@ namespace XPBD
         ApplyLinearCorrection(p1, p2, -(d-dRest)*n, alpha, dts);
     }
 
-    void Joint::RenderImGui(const PhyXManager& phyXManager)
+    void Joint::RenderImGui(PhyXManager& phyXManager)
     {
-        // ImGui::SameLine();
+        ImGui::SameLine();
         if (ImGui::Button("Delete")) 
             ImGui::OpenPopup("Delete?");
 

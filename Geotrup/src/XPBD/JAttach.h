@@ -20,10 +20,11 @@ namespace XPBD
         JAttach(const std::shared_ptr<Point>& p1, const std::shared_ptr<Point>& p2, double dRest, double alpha);
 
         void Init() override;
+        void Update(const std::shared_ptr<Point>& p1, const std::shared_ptr<Point>& p2, double dRest, double alpha);
         void Delete() override;
         void ApplyConstraints(double dts) override;
 
-        void RenderImGui(const PhyXManager& phyXManager) override;
+        void RenderImGui(PhyXManager& phyXManager) override;
     };
 }
 
