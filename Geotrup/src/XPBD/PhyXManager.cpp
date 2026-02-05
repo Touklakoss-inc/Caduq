@@ -114,10 +114,16 @@ namespace XPBD
 
             if (ImGui::Button("Attach"))
             {
-                ImGui::OpenPopup("create_attach_joint");
+                start_point_idx = 0;
+                end_point_idx = 0;
+                d_rest[0] = 0.0;
+
+                ImGui::OpenPopup("create_attach_popup");
             }
 
-            if (ImGui::BeginPopup("create_attach_joint"))
+            ImGui::Separator();
+
+            if (ImGui::BeginPopup("create_attach_popup"))
                 AttachPopup();
 
         }
@@ -125,17 +131,9 @@ namespace XPBD
 
     void PhyXManager::AttachPopup()
     {
-        static int start_point_idx = 0;
         MyCombo("Start Point", m_PhyXPointList, start_point_idx);
-
-        ImGui::Separator();
-
-        static int end_point_idx = 0;
         MyCombo("End Point", m_PhyXPointList, end_point_idx);
 
-        ImGui::Separator();
-
-        static double d_rest[1] = { 0.0 };
         ImGui::InputDouble("Distance", &d_rest[0]);
 
         ImGui::Separator();
@@ -152,14 +150,38 @@ namespace XPBD
             // Check if all 4 selected splines are different
             if (start_point_idx != end_point_idx)
             {
-                CreateJoint(std::make_shared<JAttach>(m_PhyXPointList.at(start_point_idx),
-                                                            m_PhyXPointList.at(end_point_idx),
-                                                            d_rest[0], 0.0));
+                if (m_CurJoint == nullptr)
+                {
+                    CreateJoint(std::make_shared<JAttach>(m_PhyXPointList.at(start_point_idx),
+                                                          m_PhyXPointList.at(end_point_idx),
+                                                          d_rest[0], 0.0));
+                }
+                else
+                {
+                    std::dynamic_pointer_cast<JAttach>(m_CurJoint)->Update(m_PhyXPointList.at(start_point_idx),
+                                                       m_PhyXPointList.at(end_point_idx),
+                                                       d_rest[0], 0.0);
+                }
+                m_CurJoint = nullptr;
+
                 ImGui::CloseCurrentPopup();
             }
             else
                 std::cout << "Select two different points to create an attach joint" << '\n';
         }
         ImGui::EndPopup();
+    }
+
+    void PhyXManager::SetAttachPopupParam(int startPointID, int endPointID, double dist)
+    {
+        d_rest[0] = dist;
+        for (int i = 0; i < m_PhyXPointList.size(); i++)
+        {
+            auto curPointID = m_PhyXPointList.at(i)->GetID();
+            if (curPointID == startPointID)
+                start_point_idx = i;
+            else if (curPointID == endPointID)
+                end_point_idx = i;
+        }
     }
 }

@@ -20,9 +20,15 @@ namespace XPBD
 
         std::vector<std::shared_ptr<Joint>> m_JointList { };
         static inline std::vector<std::shared_ptr<Joint>> m_JointsToDelete { };
+        std::shared_ptr<Joint> m_CurJoint { nullptr };
 
         // ImGui function
         void AttachPopup();
+
+        // Attach popup parameters
+        int start_point_idx { 0 };
+        int end_point_idx { 0 };
+        double d_rest[1] { 0.0 };
     public:
         static inline bool s_PhyXEnabled { false };
 
@@ -34,12 +40,15 @@ namespace XPBD
         static void AddJointToDelete(const std::shared_ptr<Joint>& joint) { m_JointsToDelete.push_back(joint); };
         void ClearJointsToDelete();
 
-        void RenderImGui();
+        void SetCurJoint(const std::shared_ptr<Joint>& joint) { m_CurJoint = joint; };
 
         const auto& GetJointList() { return m_JointList; };
 
         void AddPhyXPointToList(const auto& phyXPoint) { m_PhyXPointList.push_back(phyXPoint); };
         void RemovePhyXPointFromList(const std::shared_ptr<Point>& phyXPoint);
+
+        void RenderImGui();
+        void SetAttachPopupParam(int start_idx, int end_idx, double dist);
     };
 }
 

@@ -19,7 +19,7 @@ namespace Caduq
         : Entity{ oP.name != "" ? oP.name : "Point " + std::to_string(++s_IdGenerator), type }
         , m_Id{ oP.name != "" ? ++s_IdGenerator : s_IdGenerator }
         , m_GeoPoint{ std::make_shared<Geometry::Point>(pos) }
-        , m_PhyXPoint{ std::make_shared<XPBD::Point>(m_GeoPoint, oP.mass, m_Name, oP.grounded) }
+        , m_PhyXPoint{ std::make_shared<XPBD::Point>(m_GeoPoint, oP.mass, m_Name, m_Id, oP.grounded) }
     {
     }
 
