@@ -5,6 +5,8 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <memory>
+#include "Entity.h"
+#include "EntityManager.h"
 #include "Geometry/Patch.h"
 
 #include "Vizir/Logging/Log.h"
@@ -103,5 +105,27 @@ namespace Caduq
         Init();
 
         VZ_INFO("Patch modified");
+    }
+
+    void Patch::RenderImGui(EntityManager& entityManager)
+    {
+        ImGuiID id = ImGui::GetID("create_patch_popup");
+
+        if (ImGui::TreeNode(m_Name.data()))
+        {
+            ImGui::ColorEdit3("", glm::value_ptr(m_Color));
+            ImGui::SameLine();
+            if (ImGui::Button("Modify")) 
+            {
+                entityManager.SetPatchPopupParam(m_s0->GetID(), m_s1->GetID(), m_s2->GetID(), m_s3->GetID());
+
+                entityManager.SetCurEntity(shared_from_this());
+                ImGui::OpenPopup(id);
+            }
+
+            Entity::RenderImGui(entityManager);
+
+            ImGui::TreePop();
+        }
     }
 }

@@ -42,6 +42,8 @@ namespace Caduq
         void Update(const std::shared_ptr<Point>& startPoint, PointTangency startTangency, 
                     const std::shared_ptr<Point>& endPoint, PointTangency endTangency);
 
+        void RenderImGui(EntityManager& entityManager) override;
+
         Geometry::Spline GetGeoSpline() const { return m_Spline; };
         const std::shared_ptr<Point>& GetStartPoint() const { return m_StartPoint; };
         const std::shared_ptr<Point>& GetEndPoint() const { return m_EndPoint; };

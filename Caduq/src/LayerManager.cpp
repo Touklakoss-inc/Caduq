@@ -3,13 +3,16 @@
 #include <imgui/imgui.h>
 
 // --- Layers ---
+#include "SandboxXPBD.h"
 #include "SandboxCaduq.h"
 #include "SandboxTexture.h"
 #include "SandboxLayout.h"
 #include "SandboxFramebuffer.h"
 
+#include "SandboxXPBD.h"
 void LayerManager::OnAttach()
 {
+  RegisterLayer(std::make_shared<SandboxXPBD>());
   RegisterLayer(std::make_shared<SandboxCaduq>());
   RegisterLayer(std::make_shared<SandboxTexture>());
   RegisterLayer(std::make_shared<SandboxLayout>());

@@ -7,6 +7,7 @@
 
 #include "Entity.h"
 #include "Geometry/Spline.h"
+#include "EntityManager.h"
 
 namespace Caduq
 {
@@ -38,8 +39,8 @@ namespace Caduq
 
     void Spline::UpdateGFX()
     {
-        m_Spline = {Geometry::SplinePoint{ m_StartPoint->GetGeoPoint(), m_StartTangency.tangent, m_StartTangency.tension },
-                    Geometry::SplinePoint{ m_EndPoint->GetGeoPoint(), m_EndTangency.tangent, m_StartTangency.tension } };
+        m_Spline = {Geometry::SplinePoint{ *m_StartPoint->GetGeoPoint(), m_StartTangency.tangent, m_StartTangency.tension },
+                    Geometry::SplinePoint{ *m_EndPoint->GetGeoPoint(), m_EndTangency.tangent, m_StartTangency.tension } };
         // Create spline mesh
         Eigen::ArrayXd u{ Eigen::ArrayXd::LinSpaced(m_mesh_size, 0.0, 1.0) };
         Eigen::MatrixXd U0 = m_Spline.Mesh(u, m_mesh_size);
@@ -94,5 +95,27 @@ namespace Caduq
         Init();
 
         VZ_INFO("Spline modified");
+    }
+
+    void Spline::RenderImGui(EntityManager& entityManager)
+    {
+        ImGuiID id = ImGui::GetID("create_spline_popup");
+
+        if (ImGui::TreeNode(m_Name.data()))
+        {
+            ImGui::ColorEdit3("", glm::value_ptr(m_Color));
+            ImGui::SameLine();
+            if (ImGui::Button("Modify")) 
+            {
+                entityManager.SetSplinePopupParam(m_Spline.GetStartPoint(), m_StartPoint->GetID(), m_Spline.GetEndPoint(), m_EndPoint->GetID());
+
+                entityManager.SetCurEntity(shared_from_this());
+                ImGui::OpenPopup(id);
+            }
+
+            Entity::RenderImGui(entityManager);
+
+            ImGui::TreePop();
+        }
     }
 }
