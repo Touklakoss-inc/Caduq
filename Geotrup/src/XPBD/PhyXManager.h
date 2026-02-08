@@ -26,11 +26,11 @@ namespace XPBD
         void AttachPopup();
 
         // Attach popup parameters
-        int start_point_idx { 0 };
-        int end_point_idx { 0 };
-        double d_rest[1] { 0.0 };
+        int m_GuiStartPointID { 0 };
+        int m_GuiEndPointID { 0 };
+        double m_GuiDistRest[1] { 0.0 };
 
-        int sub_steps { 500 };
+        int m_GuiSubSteps { 500 };
     public:
         static inline bool s_PhyXEnabled { false };
 

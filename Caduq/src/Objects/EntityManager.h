@@ -38,22 +38,22 @@ namespace Caduq
 
         /* ImGui */
         // Point
-        float m_PointPopupCoord[3] { 0.0f, 0.0f, 0.0f };
+        float m_GuiPointPopupCoord[3] { 0.0f, 0.0f, 0.0f };
 
         // Spline
-        int start_point_idx = 0; // Here we store our selection data as an index.
-        float start_tangency[3] = { 0.0f, 0.0f, 0.0f };
-        float start_tension[1] = { 1.0f };
+        int m_GuiStartPointID = 0; // Here we store our selection data as an index.
+        float m_GuiStartTangent[3] = { 0.0f, 0.0f, 0.0f };
+        float m_GuiStartTension[1] = { 1.0f };
 
-        int end_point_idx = 0; // Here we store our selection data as an index.
-        float end_tangency[3] = { 0.0f, 0.0f, 0.0f };
-        float end_tension[1] = { 1.0f };
+        int m_GuiEndPointID = 0; // Here we store our selection data as an index.
+        float m_GuiEndTangent[3] = { 0.0f, 0.0f, 0.0f };
+        float m_GuiEndTension[1] = { 1.0f };
 
         // Patch
-        int spline_1_idx = 0; // Here we store our selection data as an index.
-        int spline_2_idx = 0; // Here we store our selection data as an index.
-        int spline_3_idx = 0; // Here we store our selection data as an index.
-        int spline_4_idx = 0; // Here we store our selection data as an index.
+        int m_GuiSpline1ID = 0; // Here we store our selection data as an index.
+        int m_GuiSpline2ID = 0; // Here we store our selection data as an index.
+        int m_GuiSpline3ID = 0; // Here we store our selection data as an index.
+        int m_GuiSpline4ID = 0; // Here we store our selection data as an index.
 
         void PointPopup();
         void SplinePopup();
@@ -85,7 +85,7 @@ namespace Caduq
 
         /* ImGui */
         void SetPointPopupParam(Eigen::Vector3f coord) {
-            for (int i = 0; i < 3; i++) m_PointPopupCoord[i] = coord[i]; };
+            for (int i = 0; i < 3; i++) m_GuiPointPopupCoord[i] = coord[i]; };
         void SetSplinePopupParam(Geometry::SplinePoint startPoint, int startPointID, Geometry::SplinePoint endPoint, int endPointID);
         void SetPatchPopupParam(int spline1ID, int spline2ID, int spline3ID, int spline4ID);
     };

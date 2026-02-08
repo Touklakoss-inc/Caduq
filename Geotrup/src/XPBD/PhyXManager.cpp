@@ -7,7 +7,6 @@
 #include <imgui.h>
 
 #include <memory>
-#include <string>
 namespace XPBD
 {
     template<typename T> 
@@ -35,8 +34,8 @@ namespace XPBD
         if (!s_PhyXEnabled || !m_TimeEnabled)
             return;
 
-        double dts = static_cast<double>(dt)/static_cast<double>(sub_steps);
-        for (int n = 0; n < sub_steps; n++)
+        double dts = static_cast<double>(dt)/static_cast<double>(m_GuiSubSteps);
+        for (int n = 0; n < m_GuiSubSteps; n++)
         {
             for (const auto& phyXPoint : m_PhyXPointList)
             {
@@ -55,10 +54,6 @@ namespace XPBD
             {
                 joint->ApplyConstraints(dts);
             }
-
-            // Attach(*entityManager.GetPoint(0), *entityManager.GetPoint(1), std::sqrt(2.0), 0.0, dts);
-            // Attach(*entityManager.GetPoint(1), *entityManager.GetPoint(2), std::sqrt(1.25), 0.0, dts);
-            // Attach(*entityManager.GetPoint(2), *entityManager.GetPoint(3), std::sqrt(4.0), 0.0, dts);
 
             for (const auto& phyXPoint : m_PhyXPointList)
             {
@@ -115,15 +110,15 @@ namespace XPBD
 
             float framerate = ImGui::GetIO().Framerate;
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / framerate, framerate);
-            ImGui::InputInt("PhyX substeps", &sub_steps);
+            ImGui::InputInt("PhyX substeps", &m_GuiSubSteps);
 
             ImGui::Separator();
 
             if (ImGui::Button("Attach"))
             {
-                start_point_idx = 0;
-                end_point_idx = 0;
-                d_rest[0] = 0.0;
+                m_GuiStartPointID = 0;
+                m_GuiEndPointID = 0;
+                m_GuiDistRest[0] = 0.0;
 
                 ImGui::OpenPopup("create_attach_popup");
             }
@@ -138,10 +133,10 @@ namespace XPBD
 
     void PhyXManager::AttachPopup()
     {
-        MyCombo("Start Point", m_PhyXPointList, start_point_idx);
-        MyCombo("End Point", m_PhyXPointList, end_point_idx);
+        MyCombo("Start Point", m_PhyXPointList, m_GuiStartPointID);
+        MyCombo("End Point", m_PhyXPointList, m_GuiEndPointID);
 
-        ImGui::InputDouble("Distance", &d_rest[0]);
+        ImGui::InputDouble("Distance", &m_GuiDistRest[0]);
 
         ImGui::Separator();
 
@@ -155,19 +150,19 @@ namespace XPBD
         if (ImGui::Button("Ok"))
         {
             // Check if all 4 selected splines are different
-            if (start_point_idx != end_point_idx)
+            if (m_GuiStartPointID != m_GuiEndPointID)
             {
                 if (m_CurJoint == nullptr)
                 {
-                    CreateJoint(std::make_shared<JAttach>(m_PhyXPointList.at(start_point_idx),
-                                                          m_PhyXPointList.at(end_point_idx),
-                                                          d_rest[0], 0.0));
+                    CreateJoint(std::make_shared<JAttach>(m_PhyXPointList.at(m_GuiStartPointID),
+                                                          m_PhyXPointList.at(m_GuiEndPointID),
+                                                          m_GuiDistRest[0], 0.0));
                 }
                 else
                 {
-                    std::dynamic_pointer_cast<JAttach>(m_CurJoint)->Update(m_PhyXPointList.at(start_point_idx),
-                                                       m_PhyXPointList.at(end_point_idx),
-                                                       d_rest[0], 0.0);
+                    std::dynamic_pointer_cast<JAttach>(m_CurJoint)->Update(m_PhyXPointList.at(m_GuiStartPointID),
+                                                       m_PhyXPointList.at(m_GuiEndPointID),
+                                                       m_GuiDistRest[0], 0.0);
                 }
                 m_CurJoint = nullptr;
 
@@ -181,14 +176,14 @@ namespace XPBD
 
     void PhyXManager::SetAttachPopupParam(int startPointID, int endPointID, double dist)
     {
-        d_rest[0] = dist;
+        m_GuiDistRest[0] = dist;
         for (int i = 0; i < m_PhyXPointList.size(); i++)
         {
             auto curPointID = m_PhyXPointList.at(i)->GetID();
             if (curPointID == startPointID)
-                start_point_idx = i;
+                m_GuiStartPointID = i;
             else if (curPointID == endPointID)
-                end_point_idx = i;
+                m_GuiEndPointID = i;
         }
     }
 }
