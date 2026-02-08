@@ -50,6 +50,7 @@ void SandboxCaduq::OnAttach()
     m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(Eigen::Vector3d{3.0, 0.0, 1.0}, Caduq::Type::point));
     m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(Eigen::Vector3d{3.0, 4.0, 0.0}, Caduq::Type::point));
     m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(Eigen::Vector3d{0.0, 4.0, 1.0}, Caduq::Type::point));
+    m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(Eigen::Vector3d{5.0, 2.0, 0.0}, Caduq::Type::point));
 
     m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(0), Caduq::PointTangency{{1, 0, 0}},
                                                                   m_Entity_Manager.GetPoint(1), Caduq::PointTangency{{1, 0, 0}},
@@ -84,7 +85,7 @@ void SandboxCaduq::OnAttach()
                                                                 10, Caduq::Type::patch));
 
     Vizir::RenderCommand::SetPointSize(m_PointSize);
-	  Vizir::RenderCommand::SetLineWidth(m_LineSize);
+	Vizir::RenderCommand::SetLineWidth(m_LineSize);
 }
 
 void SandboxCaduq::OnUpdate(Vizir::Timestep ts)

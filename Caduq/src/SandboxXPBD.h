@@ -8,7 +8,7 @@
 class SandboxXPBD : public Vizir::Layer
 {
 public:
-	SandboxXPBD() : Layer("Sandbox - Caduq Geometry Test"), m_CameraController(1280.0f / 720.0f, true)
+	SandboxXPBD() : Layer("Sandbox - Caduq PhyX Test"), m_CameraController(1280.0f / 720.0f, true)
 	{ }
 
 	virtual void OnAttach() override;
