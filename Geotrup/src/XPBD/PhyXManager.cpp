@@ -36,7 +36,7 @@ namespace XPBD
             return;
 
         double dts = static_cast<double>(dt)/static_cast<double>(sub_steps);
-        for (ushort n = 0; n < sub_steps; n++)
+        for (int n = 0; n < sub_steps; n++)
         {
             for (const auto& phyXPoint : m_PhyXPointList)
             {

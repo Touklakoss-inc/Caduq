@@ -30,7 +30,7 @@ namespace Caduq
     public:
         struct OptParam
         {
-            const std::string& name = "";
+            std::string name = "";
             double mass = 1.0;
             bool grounded = false;
         };
