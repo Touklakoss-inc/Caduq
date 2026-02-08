@@ -1,6 +1,7 @@
 #include "EntityManager.h"
 
 #include <Eigen/Core>
+#include "Spline.h"
 #include "Vizir/Logging/Log.h"
 #include <imgui/imgui.h>
 #include <memory>
@@ -51,10 +52,21 @@ namespace Caduq
         }
 
         ImGui::SameLine();
-        // Patch Creation
-        if (ImGui::Button("Create Patch"))
+        // Patch4 Creation
+        if (ImGui::Button("Create Patch4"))
         {
             m_PatchPopupOpened = true;
+            m_CreatePatch4 = true;
+            FirstPopupOpening();
+            ImGui::OpenPopup("create_patch_popup");
+        }
+
+        ImGui::SameLine();
+        // Patch3 Creation
+        if (ImGui::Button("Create Patch3"))
+        {
+            m_PatchPopupOpened = true;
+            m_CreatePatch4 = false;
             FirstPopupOpening();
             ImGui::OpenPopup("create_patch_popup");
         }
@@ -269,8 +281,13 @@ namespace Caduq
                         spline_2_idx = i;
                     if (curSplineID == curPatch->GetSpline2()->GetID())
                         spline_3_idx = i;
-                    if (curSplineID == curPatch->GetSpline3()->GetID())
-                        spline_4_idx = i;
+                    if (curPatch->GetSpline3() != nullptr)
+                    {
+                        if (curSplineID == curPatch->GetSpline3()->GetID())
+                            spline_4_idx = i;
+                    }
+                    else
+                        spline_4_idx = -1;
                 }
             }
             else
@@ -278,7 +295,10 @@ namespace Caduq
                 spline_1_idx = 0;
                 spline_2_idx = 0;
                 spline_3_idx = 0;
-                spline_4_idx = 0;
+                if (m_CreatePatch4)
+                    spline_4_idx = 0;
+                else
+                    spline_4_idx = -1;
             }
             m_FirstPopupOpening = false;
         }
@@ -289,7 +309,8 @@ namespace Caduq
         ImGui::Separator();
 
         MyCombo("Third Spline", m_Spline_List, spline_3_idx);
-        MyCombo("Fourth Spline", m_Spline_List, spline_4_idx);
+        if (spline_4_idx != -1)
+            MyCombo("Fourth Spline", m_Spline_List, spline_4_idx);
 
         ImGui::Separator();
 
@@ -307,12 +328,15 @@ namespace Caduq
             std::set<int> indexes = { spline_1_idx, spline_2_idx, spline_3_idx, spline_4_idx };
             if (indexes.size() == 4)
             {
+                std::shared_ptr<Caduq::Spline> spline4 { nullptr };
+                if (spline_4_idx != -1)
+                    spline4 = m_Spline_List.at(spline_4_idx);
                 if (m_CurEntity == nullptr)
                 {
                     CreatePatch(std::make_shared<Caduq::Patch>(m_Spline_List.at(spline_1_idx),
                                                                m_Spline_List.at(spline_2_idx),
                                                                m_Spline_List.at(spline_3_idx),
-                                                               m_Spline_List.at(spline_4_idx),
+                                                               spline4,
                                                                10, Type::patch));
                 }
                 else
@@ -321,7 +345,7 @@ namespace Caduq
                     std::dynamic_pointer_cast<Caduq::Patch>(m_CurEntity)->Update(m_Spline_List.at(spline_1_idx),
                                                                                  m_Spline_List.at(spline_2_idx),
                                                                                  m_Spline_List.at(spline_3_idx),
-                                                                                 m_Spline_List.at(spline_4_idx));
+                                                                                 spline4);
                 }
 
                 ImGui::CloseCurrentPopup();
