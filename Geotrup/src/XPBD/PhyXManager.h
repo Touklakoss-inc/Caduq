@@ -29,12 +29,14 @@ namespace XPBD
         int start_point_idx { 0 };
         int end_point_idx { 0 };
         double d_rest[1] { 0.0 };
+
+        int sub_steps { 500 };
     public:
         static inline bool s_PhyXEnabled { false };
 
         PhyXManager() = default;
 
-        void UpdatePhyX(float dt, ushort nSubStep);
+        void UpdatePhyX(float dt);
 
         void CreateJoint(const std::shared_ptr<Joint>& joint);
         static void AddJointToDelete(const std::shared_ptr<Joint>& joint) { m_JointsToDelete.push_back(joint); };

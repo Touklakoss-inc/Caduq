@@ -7,6 +7,7 @@
 #include <imgui.h>
 
 #include <memory>
+#include <string>
 namespace XPBD
 {
     template<typename T> 
@@ -29,13 +30,13 @@ namespace XPBD
         }
     }
 
-    void PhyXManager::UpdatePhyX(float dt, ushort nSubStep)
+    void PhyXManager::UpdatePhyX(float dt)
     {
         if (!s_PhyXEnabled || !m_TimeEnabled)
             return;
 
-        double dts = static_cast<double>(dt)/static_cast<double>(nSubStep);
-        for (ushort n = 0; n < nSubStep; n++)
+        double dts = static_cast<double>(dt)/static_cast<double>(sub_steps);
+        for (ushort n = 0; n < sub_steps; n++)
         {
             for (const auto& phyXPoint : m_PhyXPointList)
             {
@@ -109,6 +110,12 @@ namespace XPBD
         {
             ImGui::SameLine();
             ImGui::Checkbox("Enable Time", &m_TimeEnabled);
+
+            ImGui::Separator();
+
+            float framerate = ImGui::GetIO().Framerate;
+            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / framerate, framerate);
+            ImGui::InputInt("PhyX substeps", &sub_steps);
 
             ImGui::Separator();
 

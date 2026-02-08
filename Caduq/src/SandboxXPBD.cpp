@@ -95,7 +95,7 @@ void SandboxXPBD::OnUpdate(Vizir::Timestep ts)
 {
 	m_CameraController.OnUpdate(ts);
 
-    m_PhyXManager->UpdatePhyX(ts.GetSeconds(), 5);
+    m_PhyXManager->UpdatePhyX(ts.GetSeconds());
 
 	Vizir::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 	Vizir::RenderCommand::Clear();
