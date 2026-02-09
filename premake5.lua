@@ -93,6 +93,11 @@ group ""
         filter "system:windows"
             systemversion "latest"
 
+            defines
+            {
+                "VZ_PLATFORM_WINDOWS"
+            }
+
             links 
             { 
                 "GLFW",
@@ -229,5 +234,57 @@ group ""
 
         filter "configurations:Dist"
             defines "VZ_DIST"
+            runtime "Release"
+            optimize "on"
+
+    project "Bob"
+        location "Bob"
+        kind "StaticLib"
+        language "C++"
+        cppdialect "C++20"
+        staticruntime "on"
+
+        targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+        objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+        files
+        {
+            "%{prj.name}/src/**.h",
+            "%{prj.name}/src/**.cpp"
+        }
+
+        includedirs
+        {
+            -- Internal files
+            "%{prj.name}/src",
+
+            -- External files
+            "%{IncludeDir.spdlog}"
+        }
+
+        defines
+        {
+            "BOB_BUILD_DLL",
+        }
+
+        filter "system:windows"
+            systemversion "latest"
+
+ 
+        filter { "system:linux", "action:gmake" }
+            buildoptions { "-fpermissive"}
+        
+        filter "configurations:Debug"
+            defines "BOB_DEBUG"
+            runtime "Debug"
+            symbols "on"
+
+        filter "configurations:Release"
+            defines "BOB_RELEASE"
+            runtime "Release"
+            optimize "on"
+
+        filter "configurations:Dist"
+            defines "BOB_DIST"
             runtime "Release"
             optimize "on"
