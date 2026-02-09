@@ -1,10 +1,11 @@
 #pragma once
+
+#include "Objects/EntityManager.h"
 #include "XPBD/PhyXManager.h"
 #include "Vizir.h"
 
-#include "Objects/EntityManager.h"
-
 #include <memory>
+
 class SandboxXPBD : public Vizir::Layer
 {
 public:

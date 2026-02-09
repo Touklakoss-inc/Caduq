@@ -1,14 +1,13 @@
 #include "Entity.h"
 
-#include "Vizir/Core/Core.h"
+#include "EntityManager.h"
 #include "Vizir/Logging/Log.h"
+#include "Vizir/Platform/OpenGL/OpenGLShader.h"
+
 #include <memory>
 #include <string>
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
-#include "Vizir/Platform/OpenGL/OpenGLShader.h"
-
-#include "EntityManager.h"
 
 namespace Caduq 
 {

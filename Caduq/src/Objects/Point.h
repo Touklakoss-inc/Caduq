@@ -3,12 +3,9 @@
 
 #include <memory>
 #include <string>
-#include "Vizir.h"
-
 #include <Eigen/Dense>
 
 #include "Geometry/Point.h"
-#include "Vizir/Renderer/VertexArray.h"
 #include "XPBD/Point.h"
 #include "Entity.h"
 
@@ -30,7 +27,7 @@ namespace Caduq
     public:
         struct OptParam
         {
-            const std::string& name = "";
+            std::string name = "";
             double mass = 1.0;
             bool grounded = false;
         };

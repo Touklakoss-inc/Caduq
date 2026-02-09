@@ -1,15 +1,13 @@
 #include "Patch.h"
 
+#include "EntityManager.h"
+#include "Vizir/Logging/Log.h"
+
 #include <Eigen/Core>
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
-
 #include <memory>
-#include "Entity.h"
-#include "EntityManager.h"
-#include "Geometry/Patch.h"
 
-#include "Vizir/Logging/Log.h"
 namespace Caduq
 {
     Patch::Patch(const std::shared_ptr<Spline>& s0, const std::shared_ptr<Spline>& s1, 

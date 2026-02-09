@@ -1,13 +1,11 @@
 #ifndef CQ_PATCH_H
 #define CQ_PATCH_H
 
-#include <Vizir.h>
-
-#include <memory>
-#include <tuple>
-#include "EntityManager.h"
+#include "Entity.h"
 #include "Spline.h"
 #include "Geometry/Patch.h"
+
+#include <memory>
 
 namespace Caduq
 {
