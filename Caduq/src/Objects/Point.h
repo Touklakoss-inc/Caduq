@@ -21,9 +21,6 @@ namespace Caduq
         std::shared_ptr<Geometry::Point> m_GeoPoint;
         std::shared_ptr<XPBD::Point> m_PhyXPoint;
 
-        void UpdateGFXBuffer(Eigen::MatrixXf vertices, Eigen::VectorX<uint32_t> indices, Vizir::PrimitiveType primitiveType=Vizir::POINTS);
-
-
     public:
         struct OptParam
         {

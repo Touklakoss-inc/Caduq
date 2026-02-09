@@ -50,27 +50,7 @@ namespace Caduq
         Eigen::MatrixXf splineVertices = mesh.nodes.cast<float>();
         Eigen::VectorX<uint32_t> splineIndices = mesh.elts;
 
-        // Copy data
-        // Vertex Buffer
-        Vizir::Ref<Vizir::VertexBuffer> splinesVertexBuffer;
-        splinesVertexBuffer.reset(Vizir::VertexBuffer::Create(splineVertices.data(), static_cast<uint32_t>(splineVertices.size()) * sizeof(float)));
-
-        Vizir::BufferLayout splinesLayout = {
-            { Vizir::ShaderDataType::Float3, "v_position"},
-        };
-        splinesVertexBuffer->SetLayout(splinesLayout);
-
-        // Index buffer
-        Vizir::Ref<Vizir::IndexBuffer> splinesIndexBuffer;
-        splinesIndexBuffer.reset(Vizir::IndexBuffer::Create(splineIndices.data(), static_cast<uint32_t>(splineIndices.size())));
-
-        // Vertex array
-        m_VertexArray = Vizir::VertexArray::Create();
-        m_VertexArray->Bind();
-        m_VertexArray->SetVertexBuffer(splinesVertexBuffer);
-        m_VertexArray->SetIndexBuffer(splinesIndexBuffer);
-        m_VertexArray->SetPrimitiveType(Vizir::LINE_STRIP);
-        m_VertexArray->Unbind();
+        UpdateGFXBuffer(splineVertices, splineIndices, Vizir::LINE_STRIP);
 
         for (const auto& child : m_Children)
         {

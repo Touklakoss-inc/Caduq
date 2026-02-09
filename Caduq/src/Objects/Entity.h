@@ -7,6 +7,7 @@
 #include <memory>
 #include <string>
 #include <unordered_set>
+#include <Eigen/Dense>
 
 namespace Caduq 
 {
@@ -49,6 +50,8 @@ namespace Caduq
 
         Vizir::Ref<Vizir::VertexArray> m_VertexArray;
         std::unordered_set<std::shared_ptr<Entity>, SharedPtrHash, SharedPtrComparator> m_Children;
+
+        void UpdateGFXBuffer(Eigen::MatrixXf vertices, Eigen::VectorX<uint32_t> indices, Vizir::PrimitiveType primitiveType);
 
     public:
         Entity(const std::string& name, Type type);

@@ -58,26 +58,7 @@ namespace Caduq
         Eigen::MatrixXf patchVertices = mesh.nodes.cast<float>();
         Eigen::VectorX<uint32_t> patchIndices = mesh.elts.cast<uint32_t>();
 
-        // Vertex Buffer
-        Vizir::Ref<Vizir::VertexBuffer> patchVertexBuffer;
-        patchVertexBuffer.reset(Vizir::VertexBuffer::Create(patchVertices.data(), static_cast<uint32_t>(patchVertices.size()) * sizeof(float)));
-
-        Vizir::BufferLayout patchLayout = {
-            { Vizir::ShaderDataType::Float3, "v_position"},
-        };
-        patchVertexBuffer->SetLayout(patchLayout);
-
-        // Index buffer
-        Vizir::Ref<Vizir::IndexBuffer> patchIndexBuffer;
-        patchIndexBuffer.reset(Vizir::IndexBuffer::Create(patchIndices.data(), static_cast<uint32_t>(patchIndices.size())));
-
-        // Vertex array
-        m_VertexArray = Vizir::VertexArray::Create();
-        m_VertexArray->Bind();
-        m_VertexArray->SetVertexBuffer(patchVertexBuffer);
-        m_VertexArray->SetIndexBuffer(patchIndexBuffer);
-        m_VertexArray->SetPrimitiveType(Vizir::TRIANGLES);
-        m_VertexArray->Unbind();
+        UpdateGFXBuffer(patchVertices, patchIndices, Vizir::TRIANGLES);
 
         for (const auto& child : m_Children)
         {

@@ -32,37 +32,12 @@ namespace Caduq
         Eigen::Vector3f pointVertice = m_GeoPoint->GetPosition().cast<float>();
         Eigen::Vector<uint32_t, 1> pointIndice{ 0 };
 
-        UpdateGFXBuffer(pointVertice, pointIndice);
+        UpdateGFXBuffer(pointVertice, pointIndice, Vizir::POINTS);
 
         for (const auto& child : m_Children)
         {
             child->UpdateGFX();
         }
-    }
-
-    void Point::UpdateGFXBuffer(Eigen::MatrixXf vertices, Eigen::VectorX<uint32_t> indices, Vizir::PrimitiveType primitiveType)
-    {
-        // Visualization buffer
-        // Vertex Buffer
-        Vizir::Ref<Vizir::VertexBuffer> pointsVertexBuffer;
-        pointsVertexBuffer.reset(Vizir::VertexBuffer::Create(vertices.data(), static_cast<uint32_t>(vertices.size()) * sizeof(float)));
-
-        Vizir::BufferLayout pointsLayout = {
-            { Vizir::ShaderDataType::Float3, "v_position"},
-        };
-        pointsVertexBuffer->SetLayout(pointsLayout);
-
-        // Index buffer
-        Vizir::Ref<Vizir::IndexBuffer> pointIndexBuffer;
-        pointIndexBuffer.reset(Vizir::IndexBuffer::Create(indices.data(), static_cast<uint32_t>(indices.size())));
-
-        // Vertex array
-        m_VertexArray = Vizir::VertexArray::Create();        
-        m_VertexArray->Bind();
-        m_VertexArray->SetVertexBuffer(pointsVertexBuffer);
-        m_VertexArray->SetIndexBuffer(pointIndexBuffer);
-        m_VertexArray->SetPrimitiveType(primitiveType);
-        m_VertexArray->Unbind();
     }
 
     void Point::Update(double x, double y, double z)
