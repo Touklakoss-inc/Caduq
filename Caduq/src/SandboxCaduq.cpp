@@ -46,41 +46,41 @@ void SandboxCaduq::OnAttach()
     m_Shader = Vizir::Shader::Create("PointShader", vertexSrc, fragmentSrc);
 
 
-    m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(Eigen::Vector3d{0.0, 0.0, 0.0}, Caduq::Type::point));
-    m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(Eigen::Vector3d{3.0, 0.0, 1.0}, Caduq::Type::point));
-    m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(Eigen::Vector3d{3.0, 4.0, 0.0}, Caduq::Type::point));
-    m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(Eigen::Vector3d{0.0, 4.0, 1.0}, Caduq::Type::point));
-    m_Entity_Manager.CreatePoint(std::make_shared<Caduq::Point>(Eigen::Vector3d{5.0, 2.0, 0.0}, Caduq::Type::point));
+    m_Entity_Manager.CreateEntity(std::make_shared<Caduq::Point>(Eigen::Vector3d{0.0, 0.0, 0.0}, Caduq::Type::point));
+    m_Entity_Manager.CreateEntity(std::make_shared<Caduq::Point>(Eigen::Vector3d{3.0, 0.0, 1.0}, Caduq::Type::point));
+    m_Entity_Manager.CreateEntity(std::make_shared<Caduq::Point>(Eigen::Vector3d{3.0, 4.0, 0.0}, Caduq::Type::point));
+    m_Entity_Manager.CreateEntity(std::make_shared<Caduq::Point>(Eigen::Vector3d{0.0, 4.0, 1.0}, Caduq::Type::point));
+    m_Entity_Manager.CreateEntity(std::make_shared<Caduq::Point>(Eigen::Vector3d{5.0, 2.0, 0.0}, Caduq::Type::point));
 
-    m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(0), Caduq::PointTangency{{1, 0, 0}},
-                                                                  m_Entity_Manager.GetPoint(1), Caduq::PointTangency{{1, 0, 0}},
+    m_Entity_Manager.CreateEntity(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(0).lock(), Caduq::PointTangency{{1, 0, 0}},
+                                                                  m_Entity_Manager.GetPoint(1).lock(), Caduq::PointTangency{{1, 0, 0}},
                                                                   100, Caduq::Type::spline));              
-    m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(2), Caduq::PointTangency{{0, -1, 0}},
-                                                                  m_Entity_Manager.GetPoint(1), Caduq::PointTangency{{0, -1, 0}},
+    m_Entity_Manager.CreateEntity(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(2).lock(), Caduq::PointTangency{{0, -1, 0}},
+                                                                  m_Entity_Manager.GetPoint(1).lock(), Caduq::PointTangency{{0, -1, 0}},
                                                                   10, Caduq::Type::spline));             
-    m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(3), Caduq::PointTangency{{1, 0, 0}},
-                                                                  m_Entity_Manager.GetPoint(2), Caduq::PointTangency{{1, 0, 0}},
+    m_Entity_Manager.CreateEntity(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(3).lock(), Caduq::PointTangency{{1, 0, 0}},
+                                                                  m_Entity_Manager.GetPoint(2).lock(), Caduq::PointTangency{{1, 0, 0}},
                                                                   10, Caduq::Type::spline));              
-    m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(3), Caduq::PointTangency{{0, -1, 0}},
-                                                                  m_Entity_Manager.GetPoint(0), Caduq::PointTangency{{0, -1, 0}},
+    m_Entity_Manager.CreateEntity(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(3).lock(), Caduq::PointTangency{{0, -1, 0}},
+                                                                  m_Entity_Manager.GetPoint(0).lock(), Caduq::PointTangency{{0, -1, 0}},
                                                                   10, Caduq::Type::spline));
 
-    m_Entity_Manager.CreatePatch(std::make_shared<Caduq::Patch>(m_Entity_Manager.GetSpline(2),
-                                                                m_Entity_Manager.GetSpline(0),
-                                                                m_Entity_Manager.GetSpline(3),
-                                                                m_Entity_Manager.GetSpline(1), 
+    m_Entity_Manager.CreateEntity(std::make_shared<Caduq::Patch>(m_Entity_Manager.GetSpline(2).lock(),
+                                                                m_Entity_Manager.GetSpline(0).lock(),
+                                                                m_Entity_Manager.GetSpline(3).lock(),
+                                                                m_Entity_Manager.GetSpline(1).lock(), 
                                                                 10, Caduq::Type::patch));
 
-    m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(1), Caduq::PointTangency{{1, 0, 0}},
-                                                                  m_Entity_Manager.GetPoint(4), Caduq::PointTangency{{1, 1, 0}},
+    m_Entity_Manager.CreateEntity(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(1).lock(), Caduq::PointTangency{{1, 0, 0}},
+                                                                  m_Entity_Manager.GetPoint(4).lock(), Caduq::PointTangency{{1, 1, 0}},
                                                                   10, Caduq::Type::spline));
-    m_Entity_Manager.CreateSpline(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(2), Caduq::PointTangency{{1, 0, 0}},
-                                                                  m_Entity_Manager.GetPoint(4), Caduq::PointTangency{{1, -1, 0}},
+    m_Entity_Manager.CreateEntity(std::make_shared<Caduq::Spline>(m_Entity_Manager.GetPoint(2).lock(), Caduq::PointTangency{{1, 0, 0}},
+                                                                  m_Entity_Manager.GetPoint(4).lock(), Caduq::PointTangency{{1, -1, 0}},
                                                                   10, Caduq::Type::spline));
 
-    m_Entity_Manager.CreatePatch(std::make_shared<Caduq::Patch>(m_Entity_Manager.GetSpline(5),
-                                                                m_Entity_Manager.GetSpline(4),
-                                                                m_Entity_Manager.GetSpline(1),
+    m_Entity_Manager.CreateEntity(std::make_shared<Caduq::Patch>(m_Entity_Manager.GetSpline(5).lock(),
+                                                                m_Entity_Manager.GetSpline(4).lock(),
+                                                                m_Entity_Manager.GetSpline(1).lock(),
                                                                 nullptr, 
                                                                 10, Caduq::Type::patch));
 
@@ -99,20 +99,9 @@ void SandboxCaduq::OnUpdate(Vizir::Timestep ts)
 
     std::dynamic_pointer_cast<Vizir::OpenGLShader>(m_Shader)->Bind();
 
-    // Render points
-    for (const auto& point : m_Entity_Manager.GetPointList()) //GetEntities return by value, is it good ?
+    for (const auto& entity : m_Entity_Manager.GetEntityList()) //GetEntities return by value, is it good ?
     {
-        point->Visualize(m_Shader, m_Transform);
-    }
-
-    for (const auto& spline : m_Entity_Manager.GetSplineList()) //GetEntities return by value, is it good ?
-    {
-        spline->Visualize(m_Shader, m_Transform);
-    }
-
-    for (const auto& patch : m_Entity_Manager.GetPatchList()) //GetEntities return by value, is it good ?
-    {
-        patch->Visualize(m_Shader, m_Transform);
+        entity->Visualize(m_Shader, m_Transform);
     }
 
     std::dynamic_pointer_cast<Vizir::OpenGLShader>(m_Shader)->Unbind();
@@ -153,19 +142,9 @@ void SandboxCaduq::OnImGuiRender()
 
     ImGui::Separator();
 
-    for (const auto& point : m_Entity_Manager.GetPointList()) 
+    for (const auto& entity : m_Entity_Manager.GetEntityList()) 
     {
-        point->RenderImGui(m_Entity_Manager);
-    }
-
-    for (const auto& spline : m_Entity_Manager.GetSplineList()) 
-    {
-        spline->RenderImGui(m_Entity_Manager);
-    }
-
-    for (const auto& patch : m_Entity_Manager.GetPatchList()) 
-    {
-        patch->RenderImGui(m_Entity_Manager);
+        entity->RenderImGui(m_Entity_Manager);
     }
 
     m_Entity_Manager.ClearEntityToDelete();

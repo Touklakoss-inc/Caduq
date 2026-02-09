@@ -24,17 +24,14 @@ namespace Caduq
 
         std::shared_ptr<XPBD::PhyXManager> m_PhyXManager;
 
-        std::vector<std::shared_ptr<Point>> m_Point_List;
-        std::vector<std::shared_ptr<Spline>> m_Spline_List;
-        std::vector<std::shared_ptr<Patch>> m_Patch_List;
+        std::vector<std::weak_ptr<Point>> m_PointList;
+        std::vector<std::weak_ptr<Spline>> m_SplineList;
+        std::vector<std::weak_ptr<Patch>> m_PatchList;
 
+        std::vector<std::shared_ptr<Entity>> m_EntityList;
         std::vector<std::shared_ptr<Entity>> m_EntityToDelete;
 
         std::shared_ptr<Entity> m_CurEntity { nullptr };
-
-        void DeletePoint(const std::shared_ptr<Point>& point);
-        void DeleteSpline(const std::shared_ptr<Spline>& spline);
-        void DeletePatch(const std::shared_ptr<Patch>& patch);
 
         /* ImGui */
         // Point
@@ -59,15 +56,16 @@ namespace Caduq
         void SplinePopup();
         void PatchPopup();
 
+        template<typename T> 
+        void CleanWeakPtrList(std::vector<std::weak_ptr<T>>& list);
+
     public:
         EntityManager();
         const auto& GetPhyXManager() { return m_PhyXManager; };
 
         void RenderImGui();
 
-        void CreatePoint(const std::shared_ptr<Point>& point);
-        void CreateSpline(const std::shared_ptr<Spline>& spline);
-        void CreatePatch(const std::shared_ptr<Patch>& patch);
+        void CreateEntity(const std::shared_ptr<Entity>& entity);
 
         void DeleteEntity(const std::shared_ptr<Entity>& entity);
         void ClearEntityToDelete();
@@ -75,13 +73,12 @@ namespace Caduq
         void SetCurEntity(const std::shared_ptr<Entity>& curEntity) { m_CurEntity = curEntity; };
 
         // should it be returned by reference ?
-        const std::vector<std::shared_ptr<Point>>& GetPointList() const { return m_Point_List; };
-        const std::vector<std::shared_ptr<Spline>>& GetSplineList() { return m_Spline_List; };
-        const std::vector<std::shared_ptr<Patch>>& GetPatchList() { return m_Patch_List; };
+        const std::vector<std::shared_ptr<Entity>>& GetEntityList() { return m_EntityList; };
 
-        std::shared_ptr<Point>& GetPoint(int index) { return m_Point_List.at(index); };
-        std::shared_ptr<Spline>& GetSpline(int index) { return m_Spline_List.at(index); };
-        std::shared_ptr<Patch>& GetPatch(int index) { return m_Patch_List.at(index); };
+        std::shared_ptr<Entity>& GetEntity(int index) { return m_EntityList.at(index); };
+        std::weak_ptr<Point>& GetPoint(int index) { return m_PointList.at(index); };
+        std::weak_ptr<Spline>& GetSpline(int index) { return m_SplineList.at(index); };
+        std::weak_ptr<Patch>& GetPatch(int index) { return m_PatchList.at(index); };
 
         /* ImGui */
         void SetPointPopupParam(Eigen::Vector3f coord) {
