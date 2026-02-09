@@ -1,17 +1,17 @@
 #include "SandboxXPBD.h"
 
-#include "Eigen/Core"
-#include "Objects/Entity.h"
 #include "XPBD/JAttach.h"
+#include "Objects/Entity.h"
 #include "Objects/Point.h"
-#include "Vizir/Logging/Log.h"
+#include "Objects/Point.h"
+#include "Objects/Spline.h"
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
 
 #include <cmath>
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
-
 #include <memory>
+
 void SandboxXPBD::OnAttach()
 {
 	Vizir::RenderCommand::EnablePrimitiveRestart();

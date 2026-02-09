@@ -3,12 +3,9 @@
 
 #include <memory>
 #include <string>
-#include "Vizir.h"
-
 #include <Eigen/Dense>
 
 #include "Geometry/Point.h"
-#include "Vizir/Renderer/VertexArray.h"
 #include "XPBD/Point.h"
 #include "Entity.h"
 

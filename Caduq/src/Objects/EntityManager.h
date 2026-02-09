@@ -4,12 +4,8 @@
 #include <vector>
 #include <memory>
 
-#include "Entity.h"
 #include "Geometry/Geo.h"
 #include "XPBD/PhyXManager.h"
-#include "Point.h"
-#include "Spline.h"
-#include "Patch.h"
 
 namespace Caduq 
 {

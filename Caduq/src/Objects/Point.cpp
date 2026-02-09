@@ -1,10 +1,8 @@
 #include "Point.h"
 
 #include "EntityManager.h"
-#include "Vizir/Logging/Log.h"
-#include "Vizir/Renderer/VertexArray.h"
-#include "XPBD/Point.h"
 #include "XPBD/PhyXManager.h"
+#include "Vizir/Logging/Log.h"
 
 #include <Eigen/Core>
 #include <imgui/imgui.h>

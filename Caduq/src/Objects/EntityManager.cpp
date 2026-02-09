@@ -1,15 +1,13 @@
 #include "EntityManager.h"
 
-#include <Eigen/Core>
+#include "Vizir/Logging/Log.h"
 #include "Entity.h"
 #include "Point.h"
-#include "XPBD/PhyXManager.h"
-#include "Vizir/Logging/Log.h"
-#include <algorithm>
-#include <imgui/imgui.h>
-#include <memory>
+#include "Spline.h"
+#include "Patch.h"
 
-#include <vector>
+#include <Eigen/Core>
+#include <imgui/imgui.h>
 #include <set>
 
 namespace Caduq 

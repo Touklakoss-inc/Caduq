@@ -1,12 +1,15 @@
 #include "SandboxCaduq.h"
 
 #include "Objects/Entity.h"
+#include "Objects/Point.h"
+#include "Objects/Spline.h"
+#include "Objects/Patch.h"
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
 
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
-
 #include <memory>
+
 void SandboxCaduq::OnAttach()
 {
 	Vizir::RenderCommand::EnablePrimitiveRestart();

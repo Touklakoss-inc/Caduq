@@ -1,6 +1,6 @@
 #pragma once
-#include "Vizir.h"
 
+#include "Vizir.h"
 #include "Objects/EntityManager.h"
 
 class SandboxCaduq : public Vizir::Layer

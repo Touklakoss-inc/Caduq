@@ -1,11 +1,11 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-#include <glm/fwd.hpp>
 #include "Vizir.h"
+
+#include <glm/fwd.hpp>
 #include <memory>
 #include <string>
-
 #include <unordered_set>
 
 namespace Caduq 

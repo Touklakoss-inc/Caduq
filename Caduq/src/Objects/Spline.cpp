@@ -1,13 +1,12 @@
 #include "Spline.h"
 
+#include "Point.h"
+#include "Geometry/Spline.h"
+#include "EntityManager.h"
+
 #include <Eigen/Core>
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
-#include "Point.h"
-
-#include "Entity.h"
-#include "Geometry/Spline.h"
-#include "EntityManager.h"
 
 namespace Caduq
 {
