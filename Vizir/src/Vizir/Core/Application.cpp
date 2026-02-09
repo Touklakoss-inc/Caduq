@@ -19,11 +19,11 @@ namespace Vizir
 
 	Application::Application()
 	{
-		VZ_PROFILE_FUNC();
-		VZ_CORE_ASSERT(!s_Instance, "Another application has already be created !")
+		BOB_PROFILE_FUNC();
+		VZ_ASSERT(!s_Instance, "Another application has already be created !")
 		s_Instance = this;
 
-		Log::Init();
+		RegisterLogger();
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
 
@@ -35,7 +35,7 @@ namespace Vizir
 
 	void Application::OnEvent(Event& e)
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowClosedEvent>(BIND_EVENT_FN(Application::OnWindowClose));
@@ -52,7 +52,7 @@ namespace Vizir
 
 	void Application::ProcessLayerOps()
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		while (!m_LayerOpQueue.empty())
 		{
@@ -74,7 +74,7 @@ namespace Vizir
 				m_LayerStack.PushOverlay(layerOp.layer);
 				break;
 			default :
-				VZ_CORE_ERROR("Layer operation Type {} was not recognized", (int)layerOp.type);
+				VZ_ERROR("Layer operation Type {} was not recognized", (int)layerOp.type);
 			}
 		}
 	}
@@ -87,7 +87,7 @@ namespace Vizir
 
 	bool Application::OnWindowResize(WindowResizedEvent& e)
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		if (e.GetWidth() == 0 || e.GetHeight() == 0)
 		{
@@ -103,35 +103,35 @@ namespace Vizir
 
 	void Vizir::Application::PushOverlay(const Ref<Layer>& overlay)
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		EnqueueLayerOp({ LayerOp::PushOverlay, overlay });
 	}
 
 	void Application::PushLayer(const Ref<Layer>& layer)
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		EnqueueLayerOp({ LayerOp::PushLayer, layer });
 	}
 
 	void Application::PopOverlay(const Ref<Layer>& overlay)
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		EnqueueLayerOp({ LayerOp::PopOverlay, overlay });
 	}
 
 	void Application::PopLayer(const Ref<Layer>& layer)
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		EnqueueLayerOp({ LayerOp::PopLayer, layer });
 	}
 
 	void Application::Run()
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		while (m_Running)
 		{
@@ -145,7 +145,7 @@ namespace Vizir
 			if (!m_Minimized)
 			{
 				{
-					VZ_PROFILE_SCOPE("LayerStack Update")
+					BOB_PROFILE_SCOPE("LayerStack Update")
 					for (auto layer : m_LayerStack)
 					{
 						layer->OnUpdate(timestep);
@@ -153,7 +153,7 @@ namespace Vizir
 				}
 
 				{
-					VZ_PROFILE_SCOPE("ImGui LayerStack Update")
+					BOB_PROFILE_SCOPE("ImGui LayerStack Update")
 
 					m_ImGuiLayer->Begin();
 					for (auto layer : m_LayerStack)

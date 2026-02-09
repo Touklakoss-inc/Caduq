@@ -11,10 +11,10 @@ namespace Vizir
 		switch (Renderer::GetAPI())
 		{
 			case RendererAPI::API::OpenGL:		return std::make_shared<OpenGLShader>(filepath);
-			case RendererAPI::API::None:		VZ_CORE_ASSERT(false, "RendererAPI::None is not currently supported");  return nullptr;
+			case RendererAPI::API::None:		VZ_ASSERT(false, "RendererAPI::None is not currently supported");  return nullptr;
 		}
 
-		VZ_CORE_ASSERT(false, "Unknown Render API");
+		VZ_ASSERT(false, "Unknown Render API");
 		return nullptr;
 	}
 
@@ -23,16 +23,16 @@ namespace Vizir
 		switch (Renderer::GetAPI())
 		{
 			case RendererAPI::API::OpenGL:		return std::make_shared<OpenGLShader>(name, vertexSrc, fragmentSrc);
-			case RendererAPI::API::None:		VZ_CORE_ASSERT(false, "RendererAPI::None is not currently supported");  return nullptr;
+			case RendererAPI::API::None:		VZ_ASSERT(false, "RendererAPI::None is not currently supported");  return nullptr;
 		}
 
-		VZ_CORE_ASSERT(false, "Unknown Render API");
+		VZ_ASSERT(false, "Unknown Render API");
 		return nullptr;
 	}
 
 	void ShaderLibrary::Add(const std::string& name, const Ref<Shader>& shader)
 	{
-		VZ_CORE_ASSERT(!Exists(name), "Shader already exists!");
+		VZ_ASSERT(!Exists(name), "Shader already exists!");
 		m_Shaders[name] = shader;
 	}
 
@@ -58,7 +58,7 @@ namespace Vizir
 
 	Ref<Shader> ShaderLibrary::Get(const std::string& name)
 	{
-		VZ_CORE_ASSERT(Exists(name), "Shader not found");
+		VZ_ASSERT(Exists(name), "Shader not found");
 		return m_Shaders[name];
 	}
 

@@ -8,21 +8,21 @@ namespace Vizir
 	Vizir::OpenGLFramebuffer::OpenGLFramebuffer(FramebufferSpecifications specs)
 		: m_Specifications(specs)
 	{
-		VZ_PROFILE_FUNC();
+		BOB_PROFILE_FUNC();
 
 		Init();
 	}
 
 	Vizir::OpenGLFramebuffer::~OpenGLFramebuffer()
 	{
-		VZ_PROFILE_FUNC();
+		BOB_PROFILE_FUNC();
 
 		glDeleteFramebuffers(1, &m_RendererID);
 	}
 
 	void Vizir::OpenGLFramebuffer::Bind()
 	{
-		VZ_PROFILE_FUNC();
+		BOB_PROFILE_FUNC();
 
 		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
 		glViewport(0, 0, m_Specifications.width, m_Specifications.height);
@@ -30,14 +30,14 @@ namespace Vizir
 
 	void Vizir::OpenGLFramebuffer::Unbind()
 	{
-		VZ_PROFILE_FUNC();
+		BOB_PROFILE_FUNC();
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 	void OpenGLFramebuffer::Resize(uint32_t width, uint32_t height)
 	{
-		VZ_PROFILE_FUNC();
+		BOB_PROFILE_FUNC();
 
 		m_Specifications.width = width;
 		m_Specifications.height = height;
@@ -48,20 +48,20 @@ namespace Vizir
 
 	void OpenGLFramebuffer::Init()
 	{
-		VZ_PROFILE_FUNC();
+		BOB_PROFILE_FUNC();
 
 		glCreateFramebuffers(1, &m_RendererID);
 		Bind();
 		GenerateAttachments();
 
-		VZ_CORE_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is not complete!");
+		VZ_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is not complete!");
 
 		Unbind();
 	}
 
 	void OpenGLFramebuffer::Cleanup()
 	{
-		VZ_PROFILE_FUNC();
+		BOB_PROFILE_FUNC();
 
 		glDeleteFramebuffers(1, &m_RendererID);
 		// Textures are disposed automatically
@@ -69,7 +69,7 @@ namespace Vizir
 
 	void OpenGLFramebuffer::GenerateAttachments()
 	{
-		VZ_PROFILE_FUNC();
+		BOB_PROFILE_FUNC();
 
 		// Create color attachement
 		m_ColorAttachment = Texture2D::Create(m_Specifications.width, m_Specifications.height, TextureFormat::R8G8B8A8, TextureType::UINT);

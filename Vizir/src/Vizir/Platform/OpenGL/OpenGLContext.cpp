@@ -9,22 +9,22 @@ namespace Vizir
 	OpenGLContext::OpenGLContext(GLFWwindow* windowHandle)
 		: m_WindowHandle(windowHandle)
 	{
-		VZ_CORE_ASSERT(windowHandle, "Window handle is null!");
+		VZ_ASSERT(windowHandle, "Window handle is null!");
 	}
 	void OpenGLContext::Init()
 	{
 		glfwMakeContextCurrent(m_WindowHandle);
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		VZ_CORE_ASSERT(status, "Failed to initialize Glad!");
+		VZ_ASSERT(status, "Failed to initialize Glad!");
 
 		const char* vendor = (const char*)glGetString(GL_VENDOR);
 		const char* renderer = (const char*)glGetString(GL_RENDERER);
 		const char* version = (const char*)glGetString(GL_VERSION);
 		
-		VZ_CORE_INFO("OpenGL Infos:");
-		VZ_CORE_INFO("	- Vendor:   {0}", vendor);
-		VZ_CORE_INFO("	- Renderer: {0}", renderer);
-		VZ_CORE_INFO("	- Version:  {0}", version);
+		VZ_INFO("OpenGL Infos:");
+		VZ_INFO("	- Vendor:   {0}", vendor);
+		VZ_INFO("	- Renderer: {0}", renderer);
+		VZ_INFO("	- Version:  {0}", version);
 
 		#ifdef VZ_ENABLE_ASSERTS
 				int versionMajor;
@@ -32,13 +32,13 @@ namespace Vizir
 				glGetIntegerv(GL_MAJOR_VERSION, &versionMajor);
 				glGetIntegerv(GL_MINOR_VERSION, &versionMinor);
 
-				VZ_CORE_ASSERT(versionMajor > 4 || (versionMajor == 4 && versionMinor >= 5), "Hazel requires at least OpenGL version 4.5!");
+				VZ_ASSERT(versionMajor > 4 || (versionMajor == 4 && versionMinor >= 5), "Hazel requires at least OpenGL version 4.5!");
 		#endif
 	}
 
 	void OpenGLContext::SwapBuffers()
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 		glfwSwapBuffers(m_WindowHandle);
 	}
 }

@@ -18,5 +18,5 @@
 	#include <Windows.h>
 #endif
 
-#include "Vizir/Logging/Log.h"
-#include "Vizir/Debug/Instrumentor.h"
+#include "Vizir/Core/Core.h"
+#include "Vizir/Core/BobIntegration.h"

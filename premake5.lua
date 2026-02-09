@@ -69,6 +69,8 @@ group ""
             "%{prj.name}/src",
             "%{prj.name}/src/Vizir",
 
+            "Bob/src",
+
             -- External files
             "%{IncludeDir.GLFW}",
             "%{IncludeDir.glad}",
@@ -80,15 +82,16 @@ group ""
 
         links 
         { 
+            "Bob",
             "opengl32.lib"
         }
 
-            defines
-            {
-                "VZ_BUILD_DLL",
-                "GLFW_INCLUDE_NONE",
-                "VZ_ENABLE_ASSERT",
-            }
+        defines
+        {
+            "VZ_BUILD_DLL",
+            "GLFW_INCLUDE_NONE",
+            "VZ_ENABLE_ASSERT",
+        }
 
         filter "system:windows"
             systemversion "latest"
@@ -159,7 +162,7 @@ group ""
 
         filter { "system:linux", "action:gmake" }
             buildoptions { "-fpermissive"}
-
+        
         filter "configurations:Debug"
             defines "VZ_DEBUG"
             runtime "Debug"
@@ -193,9 +196,12 @@ group ""
 
         includedirs
         {
+            "Caduq/src",
+
             -- External files
             "Vizir/src",
             "Geotrup/src",
+            "Bob/src",
 
             "%{IncludeDir.ImGui}",
             "%{IncludeDir.glm}",

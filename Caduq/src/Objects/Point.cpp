@@ -2,7 +2,7 @@
 
 #include "EntityManager.h"
 #include "XPBD/PhyXManager.h"
-#include "Vizir/Logging/Log.h"
+#include "BobIntegration.h"
 
 #include <Eigen/Core>
 #include <imgui.h>
@@ -78,7 +78,7 @@ namespace Caduq
 
         Init();
 
-        VZ_INFO("Point modified");
+        CQ_INFO("Point modified");
     }
 
     void Point::Delete()

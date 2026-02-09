@@ -21,7 +21,7 @@ namespace Vizir
 
 	void ImGuiLayer::OnAttach()
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
@@ -55,7 +55,7 @@ namespace Vizir
 	}
 	void ImGuiLayer::OnDetach()
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
@@ -68,7 +68,7 @@ namespace Vizir
 
 	void ImGuiLayer::Begin()
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
@@ -77,7 +77,7 @@ namespace Vizir
 
 	void ImGuiLayer::End()
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		ImGuiIO& io = ImGui::GetIO();
 

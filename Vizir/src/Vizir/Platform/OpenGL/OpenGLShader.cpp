@@ -19,13 +19,13 @@ namespace Vizir
 		if (type == "fragment")
 			return GL_FRAGMENT_SHADER;
 
-		VZ_CORE_ASSERT(false, "Unknown shader type");
+		VZ_ASSERT(false, "Unknown shader type");
 		return 0;
 	}
 
 	OpenGLShader::OpenGLShader(const std::string& filepath)
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		std::string source = ReadFile(filepath);
 		auto shaderSources = PreProcess(source);
@@ -42,7 +42,7 @@ namespace Vizir
 	OpenGLShader::OpenGLShader(const std::string name, const std::string& vertexSrc, const std::string& fragmentSrc)
 		: m_Name(name)
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		std::unordered_map<GLenum, std::string> sources;
 		sources[GL_VERTEX_SHADER] = vertexSrc;
@@ -52,7 +52,7 @@ namespace Vizir
 
 	OpenGLShader::~OpenGLShader()
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		glDeleteProgram(m_RendererID);
 	}
@@ -72,7 +72,7 @@ namespace Vizir
 		}
 		else
 		{
-			VZ_CORE_ERROR("Could not open file '{0}'", filepath);
+			VZ_ERROR("Could not open file '{0}'", filepath);
 		}
 
 		return result;
@@ -80,7 +80,7 @@ namespace Vizir
 
 	std::unordered_map<GLenum, std::string> OpenGLShader::PreProcess(const std::string& source)
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		std::unordered_map<GLenum, std::string> shaderSources;
 
@@ -90,13 +90,13 @@ namespace Vizir
 		while (pos != source.npos)
 		{
 			size_t eol = source.find_first_of("\r\n", pos);
-			VZ_CORE_ASSERT(eol != source.npos, "Synthax error");
+			VZ_ASSERT(eol != source.npos, "Synthax error");
 			size_t begin = pos + typeTokenLength + 1; // There must be only one space between #type and vertex/fragment
 			std::string type = source.substr(begin, eol - begin);
-			VZ_CORE_ASSERT(ShaderTypeFromString(type), "Invalide shader type specified");
+			VZ_ASSERT(ShaderTypeFromString(type), "Invalide shader type specified");
 
 			size_t nextLinePos = source.find_first_of("\r\n", eol);
-			VZ_CORE_ASSERT(nextLinePos != std::string::npos, "Synthax error");
+			VZ_ASSERT(nextLinePos != std::string::npos, "Synthax error");
 			pos = source.find(typeToken, nextLinePos);
 
 			shaderSources[ShaderTypeFromString(type)] = (pos == std::string::npos) ? source.substr(nextLinePos) : source.substr(nextLinePos, pos - nextLinePos);
@@ -107,11 +107,11 @@ namespace Vizir
 
 	void OpenGLShader::Compile(std::unordered_map<GLenum, std::string>& shaderSources)
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		// Get a program object.
 		uint32_t program = glCreateProgram();
-		VZ_CORE_ASSERT(shaderSources.size() <= 2, "We only support 2 shaders for now");
+		VZ_ASSERT(shaderSources.size() <= 2, "We only support 2 shaders for now");
 		std::array<GLenum, 2> glShaderIds;
 		int glShaderIDIndex = 0;
 
@@ -143,8 +143,8 @@ namespace Vizir
 				glDeleteShader(shader);
 
 				// Use the infoLog as you see fit.
-				VZ_CORE_ERROR("{0}", infoLog.data());
-				VZ_CORE_ASSERT(false, "Shader compilation failure");
+				VZ_ERROR("{0}", infoLog.data());
+				VZ_ASSERT(false, "Shader compilation failure");
 
 				// In this simple program, we'll just leave
 				return;
@@ -177,8 +177,8 @@ namespace Vizir
 				glDeleteShader(id);
 
 			// Use the infoLog as you see fit.
-			VZ_CORE_ERROR("{0}", infoLog.data());
-			VZ_CORE_ASSERT(false, "Shader linking failed");
+			VZ_ERROR("{0}", infoLog.data());
+			VZ_ASSERT(false, "Shader linking failed");
 
 			// In this simple program, we'll just leave
 			return;
@@ -194,49 +194,49 @@ namespace Vizir
 
 	void OpenGLShader::Bind() const
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		glUseProgram(m_RendererID);
 	}
 
 	void OpenGLShader::Unbind() const
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		glUseProgram(0);
 	}
 
 	void OpenGLShader::SetInt(const char* name, int value)
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		UploadUniformInt(name, value);
 	}
 
 	void OpenGLShader::SetFloat(const char* name, float value)
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 			UploadUniformFloat(name, value);
 	}
 
 	void OpenGLShader::SetFloat3(const char* name, const glm::vec3& value)
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		UploadUniformFloat3(name, value);
 	}
 
 	void OpenGLShader::SetFloat4(const char* name, const glm::vec4& value)
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		UploadUniformFloat4(name, value);
 	}
 
 	void OpenGLShader::SetMat4(const char* name, const glm::mat4& mat)
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		UploadUniformMat4(name, mat);
 	}

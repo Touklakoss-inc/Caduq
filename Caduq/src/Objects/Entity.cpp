@@ -1,7 +1,7 @@
 #include "Entity.h"
 
 #include "EntityManager.h"
-#include "Vizir/Logging/Log.h"
+#include "BobIntegration.h"
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
 
 #include <memory>
@@ -17,7 +17,7 @@ namespace Caduq
     }
     Entity::~Entity()
     {
-        VZ_INFO(m_Name + " object successfully deleted.");
+        CQ_INFO(m_Name + " object successfully deleted.");
     }
 
     void Entity::Visualize(Vizir::Ref<Vizir::Shader> shader, glm::mat4 transform)
@@ -61,7 +61,7 @@ namespace Caduq
         auto status = m_Parents.insert(parent);
         if (!status.second)
         {
-            VZ_WARN(parent->GetName() + " is already the parent of " + m_Name);
+            CQ_WARN(parent->GetName() + " is already the parent of " + m_Name);
         }
     }
 
@@ -80,7 +80,7 @@ namespace Caduq
         auto status = m_Children.insert(child);
         if (!status.second)
         {
-            VZ_WARN(child->GetName() + " has already the child " + m_Name);
+            CQ_WARN(child->GetName() + " has already the child " + m_Name);
         }
     }
 
@@ -103,7 +103,7 @@ namespace Caduq
             if (!p->GetDeletingStatus())
             {
                 p->RemoveChild(shared_from_this());
-                VZ_WARN(m_Name + " removed from " + p->m_Name);
+                CQ_WARN(m_Name + " removed from " + p->m_Name);
             }
         }
 

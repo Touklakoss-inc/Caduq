@@ -25,7 +25,7 @@ namespace Vizir
 		}
 
 		
-		VZ_CORE_ASSERT(false, "Unknown ShaderDataType !");
+		VZ_ASSERT(false, "Unknown ShaderDataType !");
 		return 0;
 	}
 
@@ -58,7 +58,7 @@ namespace Vizir
 				case ShaderDataType::Bool:		return 1;
 			}
 
-			VZ_CORE_ASSERT(false, "Unknown ShaderDataType !");
+			VZ_ASSERT(false, "Unknown ShaderDataType !");
 			return 0;
 		}
 	};

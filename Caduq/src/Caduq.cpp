@@ -2,12 +2,15 @@
 
 #include "Vizir/Core/EntryPoint.h"
 
+#include "BobIntegration.h"
+
 // ---- Layers ----
 #include "LayerManager.h"
 
 
 GameApplication::GameApplication()
 {
+	Caduq::RegisterLogger();
 	PushOverlay(std::make_shared<LayerManager>());
 }
 
