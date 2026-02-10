@@ -21,7 +21,7 @@ void LayerManager::OnAttach()
   RegisterLayer(std::make_shared<SandboxFramebuffer>());
 
 
-  PushLayer(m_RegisteredLayers[0]);
+  PushLayer(m_RegisteredLayers[1]);
 }
 
 void LayerManager::OnUpdate(Vizir::Timestep ts)

@@ -4,11 +4,15 @@
 #include "Objects/Point.h"
 #include "Objects/Spline.h"
 #include "Objects/Patch.h"
+#include "Objects/Frame.h"
+#include "Vizir/Logging/Log.h"
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
 
 #include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <memory>
+#include <Eigen/Dense>
+#include <Eigen/Geometry>
 
 void SandboxCaduq::OnAttach()
 {
@@ -86,6 +90,12 @@ void SandboxCaduq::OnAttach()
                                                                 m_Entity_Manager.GetSpline(1).lock(),
                                                                 nullptr, 
                                                                 10, Caduq::Type::patch));
+
+    auto frame1 = std::make_shared<Caduq::Frame>(Caduq::Transform::Identity(), Caduq::Type::frame);
+    m_Entity_Manager.CreateEntity(frame1);
+    frame1->Translate(Eigen::Vector3d{-1.0, -1.0, 0.0});
+    frame1->RotateLocal(Eigen::Quaterniond{Eigen::AngleAxisd(0.25*M_PI, Eigen::Vector3d::UnitZ())});
+    frame1->Translate(Eigen::Vector3d{-1.0, 0.0, 0.0});
 
     Vizir::RenderCommand::SetPointSize(m_PointSize);
 	Vizir::RenderCommand::SetLineWidth(m_LineSize);

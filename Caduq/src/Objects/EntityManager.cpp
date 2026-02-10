@@ -295,6 +295,7 @@ namespace Caduq
         {
             if (entity->GetType() == Type::point)
                 m_PhyXManager->RemovePhyXPointFromList(std::dynamic_pointer_cast<Point>(entity)->GetPhyXPoint());
+
             entity->Delete();
 
             auto it = std::find(m_EntityList.begin(), m_EntityList.end(), entity);
@@ -313,7 +314,7 @@ namespace Caduq
         CleanWeakPtrList(m_PatchList);
     }
 
-    template<typename T> 
+    template<typename T>
     void EntityManager::CleanWeakPtrList(std::vector<std::weak_ptr<T>>& list)
     {
         list.erase(std::remove_if(list.begin(), list.end(), [](const std::weak_ptr<T>& l) { return l.expired(); }), list.end());

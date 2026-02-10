@@ -1,13 +1,13 @@
 #ifndef CQ_POINT_H
 #define CQ_POINT_H
 
-#include <memory>
-#include <string>
-#include <Eigen/Dense>
-
 #include "Geometry/Point.h"
 #include "XPBD/Point.h"
 #include "Entity.h"
+
+#include <memory>
+#include <string>
+#include <Eigen/Dense>
 
 namespace Caduq
 {

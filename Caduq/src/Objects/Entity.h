@@ -13,6 +13,7 @@ namespace Caduq
 {
     enum class Type
     {
+        frame,
         point,
         spline,
         patch
