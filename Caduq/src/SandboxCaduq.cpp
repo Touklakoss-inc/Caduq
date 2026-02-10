@@ -5,7 +5,6 @@
 #include "Objects/Spline.h"
 #include "Objects/Patch.h"
 #include "Objects/Frame.h"
-#include "Vizir/Logging/Log.h"
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
 
 #include <imgui.h>

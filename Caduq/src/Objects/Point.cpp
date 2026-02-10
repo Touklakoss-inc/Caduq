@@ -78,7 +78,7 @@ namespace Caduq
             if (ImGui::Button("Modify")) 
             {
                 Eigen::Vector3f vec = m_GeoPoint->GetPosition().cast<float>();
-                entityManager.SetPointPopupParam(vec);
+                SetPopupParam(vec);
 
                 entityManager.SetCurEntity(shared_from_this());
                 ImGui::OpenPopup(id);
@@ -95,5 +95,35 @@ namespace Caduq
 
             ImGui::TreePop();
         }
+    }
+
+    void Point::Popup(EntityManager& entityManager)
+    {
+        ImGui::InputFloat2("", m_GuiPointPopupCoord);
+
+        ImGui::Separator();
+
+        if (ImGui::Button("Cancel"))
+        {
+            ImGui::CloseCurrentPopup();
+            entityManager.SetCurEntity(nullptr);
+        }
+
+        ImGui::SameLine();
+
+        if (ImGui::Button("Ok"))
+        {
+            if (entityManager.GetCurEntity() == nullptr)
+                entityManager.CreateEntity(std::make_shared<Caduq::Point>(Eigen::Vector3d{m_GuiPointPopupCoord[0], m_GuiPointPopupCoord[1], m_GuiPointPopupCoord[2]}, Type::point));
+            else
+            {
+                std::dynamic_pointer_cast<Caduq::Point>(entityManager.GetCurEntity())->Update(m_GuiPointPopupCoord[0], m_GuiPointPopupCoord[1], m_GuiPointPopupCoord[2]);
+
+                ImGui::CloseCurrentPopup();
+                entityManager.SetCurEntity(nullptr);
+            }
+
+        }
+        ImGui::EndPopup();
     }
 }

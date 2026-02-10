@@ -22,8 +22,6 @@ namespace Caduq
         Eigen::Vector3d m_Y;
         Eigen::Vector3d m_Z;
 
-        Eigen::Vector3d m_Zero { Eigen::Vector3d::Zero() };
-
         void UpdateFrame();
 
     public:

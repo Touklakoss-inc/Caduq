@@ -1,10 +1,9 @@
 #include "Frame.h"
 
 #include "EntityManager.h"
-#include "Vizir/Logging/Log.h"
 
 #include <Eigen/Core>
-#include <imgui/imgui.h>
+#include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
 #include <string>

@@ -31,11 +31,20 @@ namespace Caduq
 
         Geometry::Spline m_Spline{ };
 
+        /* ImGui */
+        static inline int m_GuiStartPointID = 0; // Here we store our selection data as an index.
+        static inline float m_GuiStartTangent[3] = { 0.0f, 0.0f, 0.0f };
+        static inline float m_GuiStartTension[1] = { 1.0f };
+
+        static inline int m_GuiEndPointID = 0; // Here we store our selection data as an index.
+        static inline float m_GuiEndTangent[3] = { 0.0f, 0.0f, 0.0f };
+        static inline float m_GuiEndTension[1] = { 1.0f };
+
     public:
         Spline(const std::shared_ptr<Point>& startPoint, PointTangency startTangency, 
                const std::shared_ptr<Point>& endPoint, PointTangency endTangency,
                int mesh_size, Type type, const std::string& name = "");
-        ~Spline();
+        ~Spline() override = default;
 
         void Init() override;
         void UpdateGFX() override;
@@ -43,6 +52,8 @@ namespace Caduq
                     const std::shared_ptr<Point>& endPoint, PointTangency endTangency);
 
         void RenderImGui(EntityManager& entityManager) override;
+        static void SplinePopup(EntityManager& entityManager);
+        static void SetPopupParam(EntityManager& entityManager, Geometry::SplinePoint startPoint, int startPointID, Geometry::SplinePoint endPoint, int endPointID);
 
         Geometry::Spline GetGeoSpline() const { return m_Spline; };
         const std::shared_ptr<Point>& GetStartPoint() const { return m_StartPoint; };

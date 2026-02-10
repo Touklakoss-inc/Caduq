@@ -2,11 +2,13 @@
 
 #include "EntityManager.h"
 #include "BobIntegration.h"
+#include "MyImGui.h"
 
 #include <Eigen/Core>
 #include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <memory>
+#include <set>
 
 namespace Caduq
 {
@@ -96,7 +98,10 @@ namespace Caduq
             ImGui::SameLine();
             if (ImGui::Button("Modify")) 
             {
-                entityManager.SetPatchPopupParam(m_s0->GetID(), m_s1->GetID(), m_s2->GetID(), m_s3->GetID());
+                if (m_s3 != nullptr)
+                    SetPopupParam(entityManager, m_s0->GetID(), m_s1->GetID(), m_s2->GetID(), m_s3->GetID());
+                else
+                    SetPopupParam(entityManager, m_s0->GetID(), m_s1->GetID(), m_s2->GetID(), -1);
 
                 entityManager.SetCurEntity(shared_from_this());
                 ImGui::OpenPopup(id);
@@ -106,5 +111,83 @@ namespace Caduq
 
             ImGui::TreePop();
         }
+    }
+
+    void Patch::PatchPopup(EntityManager& entityManager)
+    {
+        MyCombo("First Spline", entityManager.GetSplineList(), m_GuiSpline1ID);
+        MyCombo("Second Spline", entityManager.GetSplineList(), m_GuiSpline2ID);
+
+        ImGui::Separator();
+
+        MyCombo("Third Spline", entityManager.GetSplineList(), m_GuiSpline3ID);
+        if (m_GuiSpline4ID != -1)
+            MyCombo("Fourth Spline", entityManager.GetSplineList(), m_GuiSpline4ID);
+
+        ImGui::Separator();
+
+        if (ImGui::Button("Cancel"))
+        {
+            ImGui::CloseCurrentPopup();
+            entityManager.SetCurEntity(nullptr);
+        }
+
+        ImGui::SameLine();
+
+        if (ImGui::Button("Ok"))
+        {
+            // Check if all 4 selected splines are different
+            std::set<int> indexes = { m_GuiSpline1ID, m_GuiSpline2ID, m_GuiSpline3ID, m_GuiSpline4ID };
+            if (indexes.size() == 4)
+            {
+                std::shared_ptr<Caduq::Spline> spline4 { nullptr };
+                if (m_GuiSpline4ID != -1)
+                    spline4 = entityManager.GetSpline(m_GuiSpline4ID).lock();
+                if (entityManager.GetCurEntity() == nullptr)
+                {
+                    entityManager.CreateEntity(std::make_shared<Caduq::Patch>(entityManager.GetSpline(m_GuiSpline1ID).lock(),
+                                                               entityManager.GetSpline(m_GuiSpline2ID).lock(),
+                                                               entityManager.GetSpline(m_GuiSpline3ID).lock(),
+                                                               spline4,
+                                                               10, Type::patch));
+                }
+                else
+                {
+                    std::dynamic_pointer_cast<Caduq::Patch>(entityManager.GetCurEntity())->Update(entityManager.GetSpline(m_GuiSpline1ID).lock(),
+                                                                                 entityManager.GetSpline(m_GuiSpline2ID).lock(),
+                                                                                 entityManager.GetSpline(m_GuiSpline3ID).lock(),
+                                                                                 spline4);
+                }
+
+                ImGui::CloseCurrentPopup();
+                entityManager.SetCurEntity(nullptr);
+            }
+            else
+                VZ_WARN("Select four different splines to create a patch");
+        }
+        ImGui::EndPopup();
+    }
+
+    void Patch::SetPopupParam(EntityManager& entityManager, int spline1ID, int spline2ID, int spline3ID, int spline4ID)
+    {
+        for (int i = 0; i < entityManager.GetSplineList().size(); i++)
+        {
+            auto curSplineID = entityManager.GetSpline(i).lock()->GetID();
+
+            if (curSplineID == spline1ID)
+                m_GuiSpline1ID = i;
+
+            if (curSplineID == spline2ID)
+                m_GuiSpline2ID = i;
+
+            if (curSplineID == spline3ID)
+                m_GuiSpline3ID = i;
+
+            if (curSplineID == spline4ID)
+                m_GuiSpline4ID = i;
+        }
+
+        if (spline4ID == -1)
+            m_GuiSpline4ID = -1;
     }
 }
