@@ -223,6 +223,7 @@ group ""
 
             links 
             { 
+				"Bob",
                 "GLFW",
                 "glad",
                 "ImGui",
@@ -293,4 +294,5 @@ group ""
         filter "configurations:Dist"
             defines "BOB_DIST"
             runtime "Release"
+
             optimize "on"
