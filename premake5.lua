@@ -223,6 +223,7 @@ group ""
 
             links 
             { 
+				"Bob",
                 "GLFW",
                 "glad",
                 "ImGui",
