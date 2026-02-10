@@ -32,7 +32,7 @@ namespace Vizir
 
 	void Renderer2D::Init()
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		RenderCommand::Init();
 
@@ -75,14 +75,14 @@ namespace Vizir
 
 	void Renderer2D::OnWindowResize(uint32_t width, uint32_t height)
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		RenderCommand::SetViewPort(0, 0, width, height);
 	}
 
 	void Renderer2D::BeginScene(OrthographicCamera& camera)
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		s_Data->TextureShader->Bind();
 		s_Data->TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
@@ -97,7 +97,7 @@ namespace Vizir
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		s_Data->TextureShader->SetFloat4("u_Color", color);
 		s_Data->TextureShader->SetFloat("u_TilingFactor", 1.0f);
@@ -118,7 +118,7 @@ namespace Vizir
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D> texture, float tilingFactor, const glm::vec4& color)
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		s_Data->TextureShader->SetFloat4("u_Color", color);
 		s_Data->TextureShader->SetFloat("u_TilingFactor", tilingFactor);
@@ -138,7 +138,7 @@ namespace Vizir
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color)
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		s_Data->TextureShader->SetFloat4("u_Color", color);
 		s_Data->TextureShader->SetFloat("u_TilingFactor", 1.0f);
@@ -161,7 +161,7 @@ namespace Vizir
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D> texture, float tilingFactor, const glm::vec4& color)
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		s_Data->TextureShader->SetFloat4("u_Color", color);
 		s_Data->TextureShader->SetFloat("u_TilingFactor", tilingFactor);

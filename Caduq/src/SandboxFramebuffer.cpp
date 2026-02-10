@@ -3,7 +3,7 @@
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
 #include "Vizir/Renderer/Shader.h"
 
-#include <imgui/imgui.h>
+#include <imgui.h>
 #include <glm/ext.hpp>
 
 

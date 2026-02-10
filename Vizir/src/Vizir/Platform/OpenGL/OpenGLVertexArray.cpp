@@ -25,7 +25,7 @@ namespace Vizir
 			return GL_BOOL;
 		}
 
-		VZ_CORE_ASSERT(false, "Unknown ShaderDataType !");
+		VZ_ASSERT(false, "Unknown ShaderDataType !");
 		return GL_NONE;
 	}
 
@@ -43,19 +43,19 @@ namespace Vizir
 		case PrimitiveType::TRIANGLE_FAN:			return GL_TRIANGLE_FAN;
 		}
 
-		VZ_CORE_ASSERT(false, "Unknown PrimitiveType !");
+		VZ_ASSERT(false, "Unknown PrimitiveType !");
 		return GL_NONE;
 	}
 
 	OpenGLVertexArray::OpenGLVertexArray()
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		glCreateVertexArrays(1, &m_RendererID);
 	}
 	void OpenGLVertexArray::Bind() const
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		glBindVertexArray(m_RendererID);
 	}
@@ -67,9 +67,9 @@ namespace Vizir
 
 	void OpenGLVertexArray::SetVertexBuffer(const Ref<VertexBuffer>& vertexBuffer)
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
-		VZ_CORE_ASSERT(vertexBuffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout!");
+		VZ_ASSERT(vertexBuffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout!");
 		vertexBuffer->Bind();
 		const auto& layout = vertexBuffer->GetLayout();
 		int index = 0;
@@ -85,7 +85,7 @@ namespace Vizir
 
 	void OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer)
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		glBindVertexArray(m_RendererID);
 		indexBuffer->Bind();
@@ -94,7 +94,7 @@ namespace Vizir
 	}
 	void OpenGLVertexArray::SetPrimitiveType(PrimitiveType primitiveType)
 	{
-		VZ_PROFILE_FUNC()
+		BOB_PROFILE_FUNC()
 
 		m_PrimitiveType = PrimitiveTypeToOpenGLBaseType(primitiveType);
 	}

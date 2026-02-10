@@ -2,10 +2,10 @@
 
 #include "EntityManager.h"
 #include "XPBD/PhyXManager.h"
-#include "Vizir/Logging/Log.h"
+#include "BobIntegration.h"
 
 #include <Eigen/Core>
-#include <imgui/imgui.h>
+#include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
 #include <memory>
@@ -78,7 +78,7 @@ namespace Caduq
 
         Init();
 
-        VZ_INFO("Point modified");
+        CQ_INFO("Point modified");
     }
 
     void Point::Delete()

@@ -3,9 +3,10 @@
 #include "Point.h"
 #include "Geometry/Spline.h"
 #include "EntityManager.h"
+#include "BobIntegration.h"
 
 #include <Eigen/Core>
-#include <imgui/imgui.h>
+#include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
 namespace Caduq
@@ -93,7 +94,7 @@ namespace Caduq
         m_EndTangency = endTangency;
         Init();
 
-        VZ_INFO("Spline modified");
+        CQ_INFO("Spline modified");
     }
 
     void Spline::RenderImGui(EntityManager& entityManager)

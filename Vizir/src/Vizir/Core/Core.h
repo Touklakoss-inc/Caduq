@@ -72,27 +72,6 @@
 	#error Judas Engine only supports Windows and Linux!
 #endif // End of DLL support
 
-#ifdef VZ_DEBUG
-	#define VZ_ENABLE_ASSERTS
-#else
-#endif
-
-#ifdef VZ_ENABLE_ASSERTS
-    #ifdef VZ_PLATFORM_WINDOWS
-        #define VZ_ASSERT(x, ...) { if(!(x)) { VZ_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
-        #define VZ_CORE_ASSERT(x, ...) { if(!(x)) { VZ_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
-    #elif defined(VZ_PLATFORM_LINUX)
-        #include <signal.h>
-        #define VZ_ASSERT(x, ...) { if(!(x)) { VZ_ERROR("Assertion Failed: {0}", __VA_ARGS__); raise(SIGTRAP); } }
-        #define VZ_CORE_ASSERT(x, ...) { if(!(x)) { VZ_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); raise(SIGTRAP); } }
-    #else
-        #error Platform not regognize
-    #endif
-#else
-	#define VZ_ASSERT(x, ...)
-	#define VZ_CORE_ASSERT(x, ...)
-#endif
-
 #define BIT(x) (1 << x)
 
 #define BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)

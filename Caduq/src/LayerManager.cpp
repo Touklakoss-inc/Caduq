@@ -1,6 +1,8 @@
 #include "LayerManager.h"
 
-#include <imgui/imgui.h>
+#include <imgui.h>
+#include "BobIntegration.h"
+
 
 // --- Layers ---
 #include "SandboxXPBD.h"
@@ -97,24 +99,24 @@ void LayerManager::RegisterOverlay(const Vizir::Ref<Layer>& overlay)
 
 void LayerManager::PopLayer(const Vizir::Ref<Layer> layer)
 {
-  VZ_TRACE("--- Popping layer {} ---", layer->GetName().c_str());
+  CQ_TRACE("--- Popping layer {} ---", layer->GetName().c_str());
   Vizir::Application::Get().PopLayer(layer);
 }
 
 void LayerManager::PushLayer(const Vizir::Ref<Layer> layer)
 {
-  VZ_TRACE("--- Pushing layer {} ---", layer->GetName().c_str());
+  CQ_TRACE("--- Pushing layer {} ---", layer->GetName().c_str());
   Vizir::Application::Get().PushLayer(layer);
 }
 
 void LayerManager::PopOverlay(const Vizir::Ref<Layer> overlay)
 {
-  VZ_TRACE("--- Pushing overlay {} ---", overlay->GetName().c_str());
+  CQ_TRACE("--- Pushing overlay {} ---", overlay->GetName().c_str());
   Vizir::Application::Get().PushOverlay(overlay);
 }
 
 void LayerManager::PushOverlay(const Vizir::Ref<Layer> overlay)
 {
-  VZ_TRACE("--- Popping overlay {} ---", overlay->GetName().c_str());
+  CQ_TRACE("--- Popping overlay {} ---", overlay->GetName().c_str());
   Vizir::Application::Get().PopOverlay(overlay);
 }

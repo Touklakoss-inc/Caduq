@@ -12,11 +12,10 @@ namespace Vizir
 		switch (Renderer::GetAPI())
 		{
 			case RendererAPI::API::OpenGL:	return new OpenGLVertexBuffer(vertices, size);
-			case RendererAPI::API::None:		
-				VZ_CORE_ASSERT(false, "RendererAPI::None is not currently supported");  return nullptr;
+			case RendererAPI::API::None:		VZ_ASSERT(false, "RendererAPI::None is not currently supported");  return nullptr;
 		}
 
-		VZ_CORE_ASSERT(false, "Unknown Render API");
+		VZ_ASSERT(false, "Unknown Render API");
 		return nullptr;
 	}
 	IndexBuffer* IndexBuffer::Create(uint32_t* indices, uint32_t count)
@@ -24,10 +23,10 @@ namespace Vizir
 		switch (Renderer::GetAPI())
 		{
 			case RendererAPI::API::OpenGL:	return new OpenGLIndexBuffer(indices, count);
-			case RendererAPI::API::None:		VZ_CORE_ASSERT(false, "RendererAPI::None is not currently supported"); return nullptr;
+			case RendererAPI::API::None:		VZ_ASSERT(false, "RendererAPI::None is not currently supported"); return nullptr;
 		}
 
-		VZ_CORE_ASSERT(false, "Unknown Render API");
+		VZ_ASSERT(false, "Unknown Render API");
 		return nullptr;
 	}
 }

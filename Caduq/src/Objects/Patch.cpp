@@ -1,10 +1,10 @@
 #include "Patch.h"
 
 #include "EntityManager.h"
-#include "Vizir/Logging/Log.h"
+#include "BobIntegration.h"
 
 #include <Eigen/Core>
-#include <imgui/imgui.h>
+#include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <memory>
 
@@ -102,7 +102,7 @@ namespace Caduq
 
         Init();
 
-        VZ_INFO("Patch modified");
+        CQ_INFO("Patch modified");
     }
 
     void Patch::RenderImGui(EntityManager& entityManager)

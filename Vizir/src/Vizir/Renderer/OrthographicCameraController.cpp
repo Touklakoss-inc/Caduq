@@ -16,7 +16,7 @@ namespace Vizir
 
     void OrthographicCameraController::OnUpdate(Timestep ts)
     {
-        VZ_PROFILE_FUNC()
+        BOB_PROFILE_FUNC()
 
         if (Input::IsKeyPressed(VZ_KEY_W))
             m_CameraPosition.y -= m_CameraTranslationSpeed * ts;

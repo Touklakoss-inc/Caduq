@@ -1,13 +1,13 @@
 #include "EntityManager.h"
 
-#include "Vizir/Logging/Log.h"
+#include "BobIntegration.h"
 #include "Entity.h"
 #include "Point.h"
 #include "Spline.h"
 #include "Patch.h"
 
 #include <Eigen/Core>
-#include <imgui/imgui.h>
+#include <imgui.h>
 #include <set>
 
 namespace Caduq 
@@ -69,7 +69,7 @@ namespace Caduq
             if (!m_PointList.empty())
                 ImGui::OpenPopup("create_spline_popup");
             else
-                VZ_WARN("You need to create some points first");
+                CQ_WARN("You need to create some points first");
         }
 
         ImGui::SameLine();
@@ -85,7 +85,7 @@ namespace Caduq
             if (!m_SplineList.empty())
                 ImGui::OpenPopup("create_patch_popup");
             else
-                VZ_WARN("You need to create some splines first");
+                CQ_WARN("You need to create some splines first");
         }
 
         ImGui::SameLine();
@@ -101,7 +101,7 @@ namespace Caduq
             if (!m_SplineList.empty())
                 ImGui::OpenPopup("create_patch_popup");
             else
-                VZ_WARN("You need to create some splines first");
+                CQ_WARN("You need to create some splines first");
         }
 
         if (ImGui::BeginPopup("create_point_popup"))
@@ -197,7 +197,7 @@ namespace Caduq
                 m_CurEntity = nullptr;
             }
             else
-                VZ_WARN("Select two different points to create a spline");
+                CQ_WARN("Select two different points to create a spline");
         }
         ImGui::EndPopup();
     }
@@ -242,7 +242,7 @@ namespace Caduq
                 }
                 else
                 {
-                    VZ_TRACE(m_CurEntity->GetName());
+                    CQ_TRACE(m_CurEntity->GetName());
                     std::dynamic_pointer_cast<Caduq::Patch>(m_CurEntity)->Update(m_SplineList.at(m_GuiSpline1ID).lock(),
                                                                                  m_SplineList.at(m_GuiSpline2ID).lock(),
                                                                                  m_SplineList.at(m_GuiSpline3ID).lock(),
@@ -253,7 +253,7 @@ namespace Caduq
                 m_CurEntity = nullptr;
             }
             else
-                VZ_WARN("Select four different splines to create a patch");
+                CQ_WARN("Select four different splines to create a patch");
         }
         ImGui::EndPopup();
     }
@@ -276,7 +276,7 @@ namespace Caduq
         }
 
         entity->Init();
-        VZ_INFO(entity->GetName() + " created");
+        CQ_INFO(entity->GetName() + " created");
     }
 
     // /!\ recursive function, maybe change ?
@@ -303,7 +303,7 @@ namespace Caduq
                 m_EntityList.erase(it);
             }
 
-            VZ_WARN(entity->GetName() + " removed from list");
+            CQ_WARN(entity->GetName() + " removed from list");
         }
 
         m_EntityToDelete.clear();

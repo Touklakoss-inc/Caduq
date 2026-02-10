@@ -6,7 +6,6 @@
 
 #include "Vizir/Core/Application.h"
 #include "Vizir/Layers/Layer.h"
-#include "Vizir/Logging/Log.h"
 
 #include "Vizir/Core/Timestep.h"
 

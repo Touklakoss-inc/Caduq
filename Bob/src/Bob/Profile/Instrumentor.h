@@ -139,19 +139,19 @@ namespace Vizir
   };
 }
 
-#define VZ_PROFILE 1
-#if VZ_PROFILE
-    #define VZ_PROFILE_SESSION_BEGIN(name, filepath) ::Vizir::Instrumentor::Get().BeginSession(name, filepath)
-    #define VZ_PROFILE_SESSION_END() ::Vizir::Instrumentor::Get().EndSession()
-    #define VZ_PROFILE_SCOPE(name) ::Vizir::InstrumentationTimer timer##__LINE__(name);
-    #ifdef VZ_PLATFORM_WINDOWS
-        #define VZ_PROFILE_FUNC() VZ_PROFILE_SCOPE(__FUNCSIG__)
-    #elif defined(VZ_PLATFORM_LINUX)
-        #define VZ_PROFILE_FUNC() VZ_PROFILE_SCOPE(__PRETTY_FUNCTION__)
+#define BOB_PROFILE 1
+#if BOB_PROFILE
+    #define BOB_PROFILE_SESSION_BEGIN(name, filepath) ::Vizir::Instrumentor::Get().BeginSession(name, filepath)
+    #define BOB_PROFILE_SESSION_END() ::Vizir::Instrumentor::Get().EndSession()
+    #define BOB_PROFILE_SCOPE(name) ::Vizir::InstrumentationTimer timer##__LINE__(name);
+    #ifdef BOB_PLATFORM_WINDOWS
+        #define BOB_PROFILE_FUNC() BOB_PROFILE_SCOPE(__FUNCSIG__)
+    #elif defined(BOB_PLATFORM_LINUX)
+        #define BOB_PROFILE_FUNC() BOB_PROFILE_SCOPE(__PRETTY_FUNCTION__)
     #endif
 #else
-  #define VZ_PROFILE_BEGIN_SESSION(name, filepath)
-  #define VZ_PROFILE_END_SESSION()
-  #define VZ_PROFILE_SCOPE(name)
-  #define VZ_PROFILE_FUNC()
+  #define BOB_PROFILE_BEGIN_SESSION(name, filepath)
+  #define BOB_PROFILE_END_SESSION()
+  #define BOB_PROFILE_SCOPE(name)
+  #define BOB_PROFILE_FUNC()
 #endif

@@ -1,7 +1,8 @@
 #include "SandboxLayout.h"
 
 #include "Vizir/Renderer/Renderer2D.h"
-#include <imgui/imgui.h>
+#include <imgui.h>
+#include "BobIntegration.h"
 
 
 SandboxLayout::SandboxLayout() : Layer("Sandbox - Layout"), m_CameraController(1280.0f / 720.0f, true)
@@ -24,12 +25,12 @@ void SandboxLayout::OnDetach()
 void SandboxLayout::OnUpdate(Vizir::Timestep ts)
 {
   {
-    VZ_PROFILE_SCOPE("Camera update");
+    BOB_PROFILE_SCOPE("Camera update");
     m_CameraController.OnUpdate(ts);
   }
 
   {
-    VZ_PROFILE_SCOPE("Clear Background");
+    BOB_PROFILE_SCOPE("Clear Background");
     Vizir::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
     Vizir::RenderCommand::Clear();
   }
@@ -43,7 +44,7 @@ void SandboxLayout::OnImGuiRender()
 {
   ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
-  VZ_TRACE("Rendering");
+  CQ_TRACE("Rendering");
   ImGui::Begin("Settings");
   ImGui::Image(reinterpret_cast<void*>(static_cast<uintptr_t>(m_Texture->GetID())), ImVec2{ 200.0f, 200.0f });
   ImGui::End();

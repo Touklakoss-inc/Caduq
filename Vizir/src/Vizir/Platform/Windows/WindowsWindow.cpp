@@ -14,12 +14,12 @@ namespace Vizir
 
     static void GLFWErrorCallback(int error, const char* description)
     {
-        VZ_CORE_ERROR("GLFW Error ({0}): {1}", error, description);
+        VZ_ERROR("GLFW Error ({0}): {1}", error, description);
     }
 
     Window* Window::Create(const WindowProps& props)
     {
-        VZ_PROFILE_FUNC()
+        BOB_PROFILE_FUNC()
 
         return new WindowsWindow(props);
     }
@@ -37,33 +37,33 @@ namespace Vizir
 
     void WindowsWindow::Init(const WindowProps& props)
     {
-        VZ_PROFILE_FUNC()
+        BOB_PROFILE_FUNC()
 
         m_Data.Title = props.Title;
         m_Data.Width = props.Width;
         m_Data.Height = props.Height;
 
-        VZ_CORE_INFO("Creating window {0} ({1}, {2})", props.Title, props.Width, props.Height);
+        VZ_INFO("Creating window {0} ({1}, {2})", props.Title, props.Width, props.Height);
 
 
         if (!s_GLFWInitialized)
         {
-            VZ_PROFILE_SCOPE("glfwInit")
+            BOB_PROFILE_SCOPE("glfwInit")
 
             int success = glfwInit();
-            VZ_CORE_ASSERT(success, "Could not initialize GLFW!");
+            VZ_ASSERT(success, "Could not initialize GLFW!");
             glfwSetErrorCallback(GLFWErrorCallback);
             s_GLFWInitialized = true;
         }
 
         {
-            VZ_PROFILE_SCOPE("glfwCreateWindow")
+            BOB_PROFILE_SCOPE("glfwCreateWindow")
 
             m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, props.Title.c_str(), nullptr, nullptr);
         }
 
         {
-            VZ_PROFILE_SCOPE("Init")
+            BOB_PROFILE_SCOPE("Init")
 
             m_Context = CreateScope<OpenGLContext>(m_Window);
             m_Context->Init();
@@ -165,13 +165,13 @@ namespace Vizir
 
     void WindowsWindow::Shutdown()
     {
-        VZ_PROFILE_FUNC()
+        BOB_PROFILE_FUNC()
         glfwDestroyWindow(m_Window);
     }
 
     void WindowsWindow::OnUpdate()
     {
-        VZ_PROFILE_FUNC()
+        BOB_PROFILE_FUNC()
 
         m_Context->SwapBuffers();
         glfwPollEvents();

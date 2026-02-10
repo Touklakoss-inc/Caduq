@@ -17,12 +17,12 @@ namespace Vizir
 		int width, height, channels;
 		std::vector<unsigned char> textureData;
 		{
-			VZ_PROFILE_SCOPE("Loading data - OpenGLTexture2D::OpenGLTexture2D")
+			BOB_PROFILE_SCOPE("Loading data - OpenGLTexture2D::OpenGLTexture2D")
 
 			// Extract data and size
 			stbi_uc* ptr;
 			ptr = stbi_load(path.c_str(), &width, &height, &channels, 0);
-			VZ_CORE_ASSERT(ptr, "Failed to load image");
+			VZ_ASSERT(ptr, "Failed to load image");
 
 			// Copy data to vector
 			size_t size = static_cast<size_t>(width * height * channels); // ========================================================================
@@ -46,7 +46,7 @@ namespace Vizir
 		}
 		else
 		{
-			VZ_ASSERT(false, "Only 3 or 4 channels are supported, detected {}.", channels)
+			BOB_ASSERT(false, "Only 3 or 4 channels are supported, detected {}.", channels)
 		}
 
 		return Texture::TextureData{
@@ -68,7 +68,7 @@ namespace Vizir
 		case TextureFormat::D24S8:
 			return 4;
 		default:
-			VZ_CORE_ASSERT(false, "Unknown texture format"); return 0;
+			VZ_ASSERT(false, "Unknown texture format"); return 0;
 		}
 	}
 
@@ -76,11 +76,11 @@ namespace Vizir
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::API::None:	VZ_CORE_ASSERT(false, "RendererAPI::None is not currently supported");  return nullptr;
+		case RendererAPI::API::None:	VZ_ASSERT(false, "RendererAPI::None is not currently supported");  return nullptr;
 		case RendererAPI::API::OpenGL:	return std::make_shared<OpenGLTexture2D>(width, height, format, type);
 		}
 
-		VZ_CORE_ASSERT(false, "Unknown Render API");
+		VZ_ASSERT(false, "Unknown Render API");
 		return nullptr;
 	}
 
@@ -88,11 +88,11 @@ namespace Vizir
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::API::None:	VZ_CORE_ASSERT(false, "RendererAPI::None is not currently supported");  return nullptr;
+		case RendererAPI::API::None:	VZ_ASSERT(false, "RendererAPI::None is not currently supported");  return nullptr;
 		case RendererAPI::API::OpenGL:	return std::make_shared<OpenGLTexture2D>(path);
 		}
 
-		VZ_CORE_ASSERT(false, "Unknown Render API");
+		VZ_ASSERT(false, "Unknown Render API");
 		return nullptr;
 	}
 }
