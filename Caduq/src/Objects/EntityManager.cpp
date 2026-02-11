@@ -53,6 +53,7 @@ namespace Caduq
 
     void EntityManager::RenderImGui()
     {
+        ClearEntityToDelete();
         // Point Creation
         if (ImGui::Button("Create Point"))
         {
@@ -66,11 +67,14 @@ namespace Caduq
         // Spline Creation
         if (ImGui::Button("Create Spline"))
         {
-            Spline::SetPopupParam(*this, Geometry::SplinePoint{}, m_PointList.at(0).lock()->GetID(), Geometry::SplinePoint{}, m_PointList.at(0).lock()->GetID());
-
-            m_CurEntity = nullptr;
             if (!m_PointList.empty())
+            {
+                Spline::SetPopupParam(*this, Geometry::SplinePoint{}, m_PointList.at(0).lock()->GetID(), 
+                                             Geometry::SplinePoint{}, m_PointList.at(0).lock()->GetID());
+
+                m_CurEntity = nullptr;
                 ImGui::OpenPopup("create_spline_popup");
+            }
             else
                 VZ_WARN("You need to create some points first");
         }
@@ -79,13 +83,15 @@ namespace Caduq
         // Patch4 Creation
         if (ImGui::Button("Create Patch4"))
         {
-            Patch::SetPopupParam(*this, m_PointList.at(0).lock()->GetID(),
-                                             m_PointList.at(0).lock()->GetID(),
-                                             m_PointList.at(0).lock()->GetID(),
-                                             m_PointList.at(0).lock()->GetID());
-            m_CurEntity = nullptr;
             if (!m_SplineList.empty())
+            {
+                Patch::SetPopupParam(*this, m_SplineList.at(0).lock()->GetID(),
+                                            m_SplineList.at(0).lock()->GetID(),
+                                            m_SplineList.at(0).lock()->GetID(),
+                                            m_SplineList.at(0).lock()->GetID());
+                m_CurEntity = nullptr;
                 ImGui::OpenPopup("create_patch_popup");
+            }
             else
                 VZ_WARN("You need to create some splines first");
         }
@@ -94,14 +100,16 @@ namespace Caduq
         // Patch3 Creation
         if (ImGui::Button("Create Patch3"))
         {
-            Patch::SetPopupParam(*this, m_PointList.at(0).lock()->GetID(),
-                                             m_PointList.at(0).lock()->GetID(),
-                                             m_PointList.at(0).lock()->GetID(),
-                                             -1);
-
-            m_CurEntity = nullptr;
             if (!m_SplineList.empty())
+            {
+                Patch::SetPopupParam(*this, m_SplineList.at(0).lock()->GetID(),
+                                            m_SplineList.at(0).lock()->GetID(),
+                                            m_SplineList.at(0).lock()->GetID(),
+                                            -1);
+
+                m_CurEntity = nullptr;
                 ImGui::OpenPopup("create_patch_popup");
+            }
             else
                 VZ_WARN("You need to create some splines first");
         }

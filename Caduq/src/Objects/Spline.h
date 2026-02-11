@@ -43,7 +43,7 @@ namespace Caduq
     public:
         Spline(const std::shared_ptr<Point>& startPoint, PointTangency startTangency, 
                const std::shared_ptr<Point>& endPoint, PointTangency endTangency,
-               int mesh_size, Type type, const std::string& name = "");
+               int mesh_size, Type type = Type::spline, const std::string& name = "");
         ~Spline() override = default;
 
         void Init() override;

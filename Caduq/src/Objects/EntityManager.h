@@ -19,12 +19,12 @@ namespace Caduq
     private:
         std::shared_ptr<XPBD::PhyXManager> m_PhyXManager;
 
-        std::vector<std::weak_ptr<Point>> m_PointList;
-        std::vector<std::weak_ptr<Spline>> m_SplineList;
-        std::vector<std::weak_ptr<Patch>> m_PatchList;
+        std::vector<std::weak_ptr<Point>> m_PointList{ };
+        std::vector<std::weak_ptr<Spline>> m_SplineList{ };
+        std::vector<std::weak_ptr<Patch>> m_PatchList{ };
 
-        std::vector<std::shared_ptr<Entity>> m_EntityList;
-        std::vector<std::shared_ptr<Entity>> m_EntityToDelete;
+        std::vector<std::shared_ptr<Entity>> m_EntityList{ };
+        std::vector<std::shared_ptr<Entity>> m_EntityToDelete{ };
 
         std::shared_ptr<Entity> m_CurEntity { nullptr };
 
@@ -36,13 +36,14 @@ namespace Caduq
 
     public:
         EntityManager();
+        virtual ~EntityManager() = default;
         const auto& GetPhyXManager() { return m_PhyXManager; };
 
         template<typename T> 
         void CreateEntity(const std::shared_ptr<T>& entity);
 
         void DeleteEntity(const std::shared_ptr<Entity>& entity);
-        void ClearEntityToDelete();
+        void ClearEntityToDelete(); // Call at the begining of RenderImGui()
 
         void RenderImGui();
 

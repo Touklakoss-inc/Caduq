@@ -25,7 +25,7 @@ namespace Caduq
         void UpdateFrame();
 
     public:
-        Frame(Transform transform, Type type, const std::string& name = "");
+        Frame(Transform transform = Transform::Identity(), Type type = Type::frame, const std::string& name = "");
 
         void Init() override;
         void UpdateGFX() override;

@@ -16,7 +16,8 @@ namespace Caduq
         frame,
         point,
         spline,
-        patch
+        patch,
+        part
     };
 
     class EntityManager;
@@ -59,7 +60,7 @@ namespace Caduq
 
         virtual void Init() = 0;
         virtual void UpdateGFX() = 0;
-        void Visualize(Vizir::Ref<Vizir::Shader> shader, glm::mat4 transform);
+        virtual void Visualize(Vizir::Ref<Vizir::Shader> shader, glm::mat4 transform);
         virtual void RenderImGui(EntityManager& entityManager);
 
         void AddParent(const std::shared_ptr<Entity>& parent);

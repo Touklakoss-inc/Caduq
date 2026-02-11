@@ -122,7 +122,6 @@ namespace Caduq
                 ImGui::CloseCurrentPopup();
                 entityManager.SetCurEntity(nullptr);
             }
-
         }
         ImGui::EndPopup();
     }
