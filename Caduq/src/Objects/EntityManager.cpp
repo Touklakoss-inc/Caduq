@@ -5,6 +5,7 @@
 #include "Point.h"
 #include "Spline.h"
 #include "Patch.h"
+#include "Frame.h"
 
 #include <Eigen/Core>
 #include <imgui.h>
@@ -54,8 +55,19 @@ namespace Caduq
     void EntityManager::RenderImGui()
     {
         ClearEntityToDelete();
+
+        // Frame Creation
+        if (ImGui::Button("Frame"))
+        {
+            Frame::SetPopupParam(Eigen::Vector3d::Zero(), Eigen::Vector4d::Zero());
+
+            m_CurEntity = nullptr;
+            ImGui::OpenPopup("create_frame_popup");
+        }
+
+        ImGui::SameLine();
         // Point Creation
-        if (ImGui::Button("Create Point"))
+        if (ImGui::Button("Point"))
         {
             Point::SetPopupParam(Eigen::Vector3f::Zero());
 
@@ -65,7 +77,7 @@ namespace Caduq
 
         ImGui::SameLine();
         // Spline Creation
-        if (ImGui::Button("Create Spline"))
+        if (ImGui::Button("Spline"))
         {
             if (!m_PointList.empty())
             {
@@ -81,7 +93,7 @@ namespace Caduq
 
         ImGui::SameLine();
         // Patch4 Creation
-        if (ImGui::Button("Create Patch4"))
+        if (ImGui::Button("Patch4"))
         {
             if (!m_SplineList.empty())
             {
@@ -98,7 +110,7 @@ namespace Caduq
 
         ImGui::SameLine();
         // Patch3 Creation
-        if (ImGui::Button("Create Patch3"))
+        if (ImGui::Button("Patch3"))
         {
             if (!m_SplineList.empty())
             {
@@ -113,6 +125,9 @@ namespace Caduq
             else
                 VZ_WARN("You need to create some splines first");
         }
+
+        if (ImGui::BeginPopup("create_frame_popup"))
+            Frame::Popup(*this);
 
         if (ImGui::BeginPopup("create_point_popup"))
             Point::Popup(*this); 

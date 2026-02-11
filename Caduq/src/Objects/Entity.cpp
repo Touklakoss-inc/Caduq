@@ -56,7 +56,6 @@ namespace Caduq
 
     void Entity::RenderImGui(EntityManager& entityManager)
     {
-        ImGui::SameLine();
         if (ImGui::Button("Delete")) 
             ImGui::OpenPopup("Delete?");
 

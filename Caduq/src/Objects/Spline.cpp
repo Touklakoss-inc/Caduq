@@ -90,6 +90,7 @@ namespace Caduq
                 ImGui::OpenPopup(id);
             }
 
+            ImGui::SameLine();
             Entity::RenderImGui(entityManager);
 
             ImGui::TreePop();

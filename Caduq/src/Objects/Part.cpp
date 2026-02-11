@@ -47,8 +47,9 @@ namespace Caduq
     {
         if (ImGui::TreeNode(m_Name.data()))
         {
+            ImGui::Separator();
+
             m_EntityManager.RenderImGui();
-            ImGui::SameLine();
             Entity::RenderImGui(_);
 
             ImGui::Separator();

@@ -83,6 +83,7 @@ namespace Caduq
                 entityManager.SetCurEntity(shared_from_this());
                 ImGui::OpenPopup(id);
             }
+            ImGui::SameLine();
             Entity::RenderImGui(entityManager);
 
             if (XPBD::PhyXManager::s_PhyXEnabled)
