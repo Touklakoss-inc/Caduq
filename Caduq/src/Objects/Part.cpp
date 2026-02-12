@@ -6,7 +6,7 @@
 
 namespace Caduq 
 {
-    Part::Part(Transform transform, Type type, const std::string& name)
+    Part::Part(Geometry::Transform transform, Type type, const std::string& name)
         : Entity{ name != "" ? name : "Part " + std::to_string(++s_IdGenerator), type }
         , m_MainFrame{ transform }
     {
@@ -55,7 +55,7 @@ namespace Caduq
 
             if (ImGui::Button("Modify")) 
             {
-                auto quat = Eigen::Quaterniond(m_MainFrame.GetTransform().rotation());
+                auto quat = Eigen::Quaterniond(m_MainFrame.GetGeoFrame().GetTransform().rotation());
                 double angle = acos(quat.w())*2;
 
                 Eigen::Vector4d rotEuler = Eigen::Vector4d::Zero();
@@ -63,7 +63,7 @@ namespace Caduq
                     rotEuler = Eigen::Vector4d(0.0, quat.x(), quat.y(), quat.z())/(sin(angle/2));
                 rotEuler[0] = angle * 180.0/M_PI;
 
-                SetPopupParam(m_MainFrame.GetTransform().translation(), rotEuler);
+                SetPopupParam(m_MainFrame.GetGeoFrame().GetTransform().translation(), rotEuler);
 
                 globalEntityManager.SetCurEntity(shared_from_this());
                 ImGui::OpenPopup(id);
@@ -102,21 +102,19 @@ namespace Caduq
                 const auto part = std::make_shared<Caduq::Part>();
                 entityManager.CreateEntity(part);
 
-                part->GetMainFrame().Translate(Eigen::Vector3d(m_GuiPopupPos[0], m_GuiPopupPos[1], m_GuiPopupPos[2]));
-
+                const auto pos = Eigen::Vector3d(m_GuiPopupPos[0], m_GuiPopupPos[1], m_GuiPopupPos[2]);
                 const auto normal = Eigen::Vector3d(m_GuiPopupRot[1], m_GuiPopupRot[2], m_GuiPopupRot[3]).normalized();
                 Eigen::Quaterniond rotQ = Eigen::Quaterniond(Eigen::AngleAxisd(m_GuiPopupRot[0] * (M_PI/180.0), normal));
-                part->GetMainFrame().RotateLocal(rotQ);
+
+                part->GetMainFrame().Update(pos, rotQ);
             }
             else
             {
-                const auto part = std::dynamic_pointer_cast<Caduq::Part>(entityManager.GetCurEntity());
-
                 auto pos = Eigen::Vector3d(m_GuiPopupPos[0], m_GuiPopupPos[1], m_GuiPopupPos[2]);
-
                 const auto normal = Eigen::Vector3d(m_GuiPopupRot[1], m_GuiPopupRot[2], m_GuiPopupRot[3]).normalized();
                 auto rotQ = Eigen::Quaterniond(Eigen::AngleAxisd(m_GuiPopupRot[0] * (M_PI/180.0), normal));
-                part->GetMainFrame().SetPositionRotation(pos, rotQ);
+
+                std::dynamic_pointer_cast<Caduq::Part>(entityManager.GetCurEntity())->GetMainFrame().Update(pos, rotQ);
 
                 ImGui::CloseCurrentPopup();
                 entityManager.SetCurEntity(nullptr);

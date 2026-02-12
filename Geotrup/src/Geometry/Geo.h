@@ -7,6 +7,8 @@
 
 namespace Geometry
 {
+    typedef Eigen::Transform<double, 3, Eigen::TransformTraits::Affine> Transform;
+
     struct Mesh
     {
         Eigen::MatrixXd nodes;

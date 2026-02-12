@@ -1,5 +1,6 @@
 #include "SandboxCaduq.h"
 
+#include "Eigen/Core"
 #include "Objects/Entity.h"
 #include "Objects/Point.h"
 #include "Objects/Spline.h"
@@ -92,11 +93,9 @@ void SandboxCaduq::OnAttach()
                                                                 10, Caduq::Type::patch));
 
 */
-    auto frame1 = std::make_shared<Caduq::Frame>(Caduq::Transform::Identity(), Caduq::Type::frame);
+    auto frame1 = std::make_shared<Caduq::Frame>(Geometry::Transform::Identity(), Caduq::Type::frame);
     m_Entity_Manager.CreateEntity(frame1);
-    frame1->Translate(Eigen::Vector3d{-1.0, -1.0, 0.0});
-    frame1->RotateLocal(Eigen::Quaterniond{Eigen::AngleAxisd(0.25*M_PI, Eigen::Vector3d::UnitZ())});
-    frame1->Translate(Eigen::Vector3d{-1.0, 0.0, 0.0});
+    frame1->Update(Eigen::Vector3d(-2.0, -1.0, 0.0), Eigen::Quaterniond(Eigen::AngleAxis(M_PI/4.0, Eigen::Vector3d::UnitZ())));
     m_Entity_Manager.CreateEntity(std::make_shared<Caduq::Part>());
 
     Vizir::RenderCommand::SetPointSize(m_PointSize);

@@ -22,7 +22,7 @@ namespace Caduq
         static inline float m_GuiPopupSca[3] { 1.0f, 1.0f, 1.0f };
 
     public:
-        Part(Transform transform = Transform::Identity(), Type type = Type::part, const std::string& name = "");
+        Part(Geometry::Transform transform = Geometry::Transform::Identity(), Type type = Type::part, const std::string& name = "");
         ~Part() = default;
 
         void Init() override;
