@@ -43,14 +43,33 @@ namespace Caduq
         m_EntityManager.ClearEntityToDelete();
     }
 
-    void Part::RenderImGui(EntityManager& _)
+    void Part::RenderImGui(EntityManager& globalEntityManager)
     {
+        ImGuiID id = ImGui::GetID("create_part_popup");
+
         if (ImGui::TreeNode(m_Name.data()))
         {
             ImGui::Separator();
 
             m_EntityManager.RenderImGui();
-            Entity::RenderImGui(_);
+
+            if (ImGui::Button("Modify")) 
+            {
+                auto quat = Eigen::Quaterniond(m_MainFrame.GetTransform().rotation());
+                double angle = acos(quat.w())*2;
+
+                Eigen::Vector4d rotEuler = Eigen::Vector4d::Zero();
+                if (angle != 0.0)
+                    rotEuler = Eigen::Vector4d(0.0, quat.x(), quat.y(), quat.z())/(sin(angle/2));
+                rotEuler[0] = angle * 180.0/M_PI;
+
+                SetPopupParam(m_MainFrame.GetTransform().translation(), rotEuler);
+
+                globalEntityManager.SetCurEntity(shared_from_this());
+                ImGui::OpenPopup(id);
+            }
+            ImGui::SameLine();
+            Entity::RenderImGui(globalEntityManager);
 
             ImGui::Separator();
 
@@ -59,5 +78,59 @@ namespace Caduq
 
             ImGui::TreePop();
         }
+    }
+
+    void Part::Popup(EntityManager& entityManager)
+    {
+        ImGui::InputFloat2("Position (xyz)", m_GuiPopupPos);
+        ImGui::InputFloat4("Rotation (angle, axis)", m_GuiPopupRot);
+
+        ImGui::Separator();
+
+        if (ImGui::Button("Cancel"))
+        {
+            ImGui::CloseCurrentPopup();
+            entityManager.SetCurEntity(nullptr);
+        }
+
+        ImGui::SameLine();
+
+        if (ImGui::Button("Ok"))
+        {
+            if (entityManager.GetCurEntity() == nullptr)
+            {
+                const auto part = std::make_shared<Caduq::Part>();
+                entityManager.CreateEntity(part);
+
+                part->GetMainFrame().Translate(Eigen::Vector3d(m_GuiPopupPos[0], m_GuiPopupPos[1], m_GuiPopupPos[2]));
+
+                const auto normal = Eigen::Vector3d(m_GuiPopupRot[1], m_GuiPopupRot[2], m_GuiPopupRot[3]).normalized();
+                Eigen::Quaterniond rotQ = Eigen::Quaterniond(Eigen::AngleAxisd(m_GuiPopupRot[0] * (M_PI/180.0), normal));
+                part->GetMainFrame().RotateLocal(rotQ);
+            }
+            else
+            {
+                const auto part = std::dynamic_pointer_cast<Caduq::Part>(entityManager.GetCurEntity());
+
+                auto pos = Eigen::Vector3d(m_GuiPopupPos[0], m_GuiPopupPos[1], m_GuiPopupPos[2]);
+
+                const auto normal = Eigen::Vector3d(m_GuiPopupRot[1], m_GuiPopupRot[2], m_GuiPopupRot[3]).normalized();
+                auto rotQ = Eigen::Quaterniond(Eigen::AngleAxisd(m_GuiPopupRot[0] * (M_PI/180.0), normal));
+                part->GetMainFrame().SetPositionRotation(pos, rotQ);
+
+                ImGui::CloseCurrentPopup();
+                entityManager.SetCurEntity(nullptr);
+            }
+        }
+        ImGui::EndPopup();
+    }
+
+    void Part::SetPopupParam(Eigen::Vector3d position, Eigen::Vector4d rotation)
+    {
+        for (int i = 0; i < 3; i++)
+            m_GuiPopupPos[i] = position[i];
+
+        for (int i = 0; i < 4; i++)
+            m_GuiPopupRot[i] = rotation[i];
     }
 }

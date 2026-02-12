@@ -1,7 +1,6 @@
 #ifndef CQ_PART_H
 #define CQ_PART_H
 
-#include "Eigen/Geometry"
 #include "EntityManager.h"
 #include "Frame.h"
 
@@ -17,6 +16,11 @@ namespace Caduq
         Frame m_MainFrame;
         EntityManager m_EntityManager{ };
 
+        /* ImGui */
+        static inline float m_GuiPopupPos[3] { 0.0f, 0.0f, 0.0f };
+        static inline float m_GuiPopupRot[4] { 0.0f, 0.0f, 0.0f, 0.0f};
+        static inline float m_GuiPopupSca[3] { 1.0f, 1.0f, 1.0f };
+
     public:
         Part(Transform transform = Transform::Identity(), Type type = Type::part, const std::string& name = "");
         ~Part() = default;
@@ -28,6 +32,10 @@ namespace Caduq
         int GetID() const override { return m_Id; };
 
         void RenderImGui(EntityManager& _) override;
+        static void Popup(EntityManager& entityManager);
+        static void SetPopupParam(Eigen::Vector3d position, Eigen::Vector4d rotation);
+
+        Frame& GetMainFrame() { return m_MainFrame; };
     };
 }
 

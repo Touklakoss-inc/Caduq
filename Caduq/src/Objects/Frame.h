@@ -46,7 +46,7 @@ namespace Caduq
         static void SetPopupParam(Eigen::Vector3d position, Eigen::Vector4d rotation);
 
         int GetID() const override { return m_Id; };
-        Eigen::Vector3d GetZ() { return m_Z; };
+        Transform GetTransform() { return m_Transform; };
     };
 }
 #endif

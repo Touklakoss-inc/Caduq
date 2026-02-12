@@ -6,6 +6,7 @@
 #include "Spline.h"
 #include "Patch.h"
 #include "Frame.h"
+#include "Part.h"
 
 #include <Eigen/Core>
 #include <imgui.h>
@@ -126,6 +127,16 @@ namespace Caduq
                 VZ_WARN("You need to create some splines first");
         }
 
+        ImGui::SameLine();
+        // Part Creation
+        if (ImGui::Button("Part"))
+        {
+            Part::SetPopupParam(Eigen::Vector3d::Zero(), Eigen::Vector4d::Zero());
+
+            m_CurEntity = nullptr;
+            ImGui::OpenPopup("create_frame_popup");
+        }
+
         if (ImGui::BeginPopup("create_frame_popup"))
             Frame::Popup(*this);
 
@@ -137,5 +148,8 @@ namespace Caduq
 
         if (ImGui::BeginPopup("create_patch_popup"))
             Patch::PatchPopup(*this);
+
+        if (ImGui::BeginPopup("create_part_popup"))
+            Part::Popup(*this);
     }
 }
