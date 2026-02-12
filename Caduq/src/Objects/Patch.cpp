@@ -14,8 +14,8 @@ namespace Caduq
 {
     Patch::Patch(const std::shared_ptr<Spline>& s0, const std::shared_ptr<Spline>& s1, 
                  const std::shared_ptr<Spline>& s2, const std::shared_ptr<Spline>& s3,
-                 int mesh_size, Type type, const std::string& name)
-        : Entity{ name != "" ? name : "Patch " + std::to_string(++s_IdGenerator), type }
+                 int mesh_size, const std::shared_ptr<Frame>& frame, Type type, const std::string& name)
+        : Entity{ name != "" ? name : "Patch " + std::to_string(++s_IdGenerator), type, frame }
         , m_Id{ name != "" ? ++s_IdGenerator : s_IdGenerator }, m_mesh_size{ mesh_size }
         , m_s0{ s0 }, m_s1{ s1 }, m_s2{ s2 }, m_s3{ s3 }
     {
@@ -57,7 +57,7 @@ namespace Caduq
         Geometry::Mesh mesh = m_c0.GetGfxMesh();
 
         // Cast points to float
-        Eigen::MatrixXf patchVertices = mesh.nodes.cast<float>();
+        Eigen::MatrixXf patchVertices = mesh.nodes.cast<float>().reshaped(3, m_mesh_size*m_mesh_size);
         Eigen::VectorX<uint32_t> patchIndices = mesh.elts.cast<uint32_t>();
 
         UpdateGFXBuffer(patchVertices, patchIndices, Vizir::TRIANGLES);
@@ -150,7 +150,7 @@ namespace Caduq
                                                                entityManager.GetSpline(m_GuiSpline2ID).lock(),
                                                                entityManager.GetSpline(m_GuiSpline3ID).lock(),
                                                                spline4,
-                                                               10, Type::patch));
+                                                               10, entityManager.GetMainFrame()));
                 }
                 else
                 {

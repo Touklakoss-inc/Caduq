@@ -21,6 +21,7 @@ namespace Caduq
     };
 
     class EntityManager;
+    class Frame;
 
     class Entity : public std::enable_shared_from_this<Entity>
     {
@@ -49,14 +50,15 @@ namespace Caduq
         float m_Size { 5.0f };
         Type m_Type { };
         bool m_deleting { false };
+        std::shared_ptr<Frame> m_RefFrame;
 
         Vizir::Ref<Vizir::VertexArray> m_VertexArray;
         std::unordered_set<std::shared_ptr<Entity>, SharedPtrHash, SharedPtrComparator> m_Children;
 
-        void UpdateGFXBuffer(Eigen::MatrixXf vertices, Eigen::VectorX<uint32_t> indices, Vizir::PrimitiveType primitiveType);
+        void UpdateGFXBuffer(Eigen::Matrix<float, 3, Eigen::Dynamic> vertices, Eigen::VectorX<uint32_t> indices, Vizir::PrimitiveType primitiveType);
 
     public:
-        Entity(const std::string& name, Type type);
+        Entity(const std::string& name, Type type, const std::shared_ptr<Frame>& frame);
 
         virtual void Init() = 0;
         virtual void UpdateGFX() = 0;

@@ -2,6 +2,7 @@
 
 #include "EntityManager.h"
 
+#include "Geometry/Geo.h"
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 #include <imgui.h>
@@ -13,8 +14,8 @@
 
 namespace Caduq
 {
-    Frame::Frame(Geometry::Transform transform, Type type, const std::string& name)
-        : Entity{ name != "" ? name : "Frame " + std::to_string(++s_IdGenerator), type }
+    Frame::Frame(Geometry::Transform transform, const std::shared_ptr<Frame>& frame, Type type, const std::string& name)
+        : Entity{ name != "" ? name : "Frame " + std::to_string(++s_IdGenerator), type, frame }
         , m_Id{ name != "" ? ++s_IdGenerator : s_IdGenerator }
         , m_GeoFrame{ transform }
         , m_X{ transform * Eigen::Vector3d::UnitX() }
@@ -39,11 +40,6 @@ namespace Caduq
         UpdateGFXBuffer(splineVertices.cast<float>(), splineIndices, Vizir::LINE_STRIP);
     }
 
-    void Frame::Delete()
-    {
-        Entity::Delete();
-    }
-
     void Frame::Update(Eigen::Vector3d position, Eigen::Quaterniond rotation)
     {
         m_GeoFrame.SetPositionRotation(position, rotation);
@@ -57,6 +53,20 @@ namespace Caduq
         m_Z = m_GeoFrame.GetTransform() * Eigen::Vector3d::UnitZ();
 
         UpdateGFX();
+    }
+
+    void Frame::Delete()
+    {
+        Entity::Delete();
+    }
+
+    /* /!\ recursive function /!\ */
+    const Geometry::Transform Frame::GetTransform()
+    {
+        if (m_RefFrame != nullptr)
+            return m_RefFrame->GetTransform() * m_GeoFrame.GetTransform();
+        else
+            return Geometry::Transform::Identity();
     }
 
     void Frame::RenderImGui(EntityManager& entityManager)
@@ -112,7 +122,7 @@ namespace Caduq
                 const auto normal = Eigen::Vector3d(m_GuiPopupRot[1], m_GuiPopupRot[2], m_GuiPopupRot[3]).normalized();
                 Eigen::Quaterniond rotQ = Eigen::Quaterniond(Eigen::AngleAxisd(m_GuiPopupRot[0] * (M_PI/180.0), normal));
 
-                const auto frame = std::make_shared<Caduq::Frame>();
+                const auto frame = std::make_shared<Caduq::Frame>(Geometry::Transform::Identity(), entityManager.GetMainFrame());
                 entityManager.CreateEntity(frame);
                 frame->Update(pos, rotQ);
             }

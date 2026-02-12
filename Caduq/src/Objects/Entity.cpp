@@ -1,6 +1,7 @@
 #include "Entity.h"
 
 #include "EntityManager.h"
+#include "Frame.h"
 #include "BobIntegration.h"
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
 
@@ -11,8 +12,8 @@
 
 namespace Caduq 
 {
-    Entity::Entity(const std::string& name, Type type)
-        : m_Name{ name }, m_Type{ type }
+    Entity::Entity(const std::string& name, Type type, const std::shared_ptr<Frame>& frame)
+        : m_Name{ name }, m_Type{ type }, m_RefFrame{ frame }
     {
     }
     Entity::~Entity()
@@ -20,8 +21,11 @@ namespace Caduq
         CQ_INFO(m_Name + " object successfully deleted.");
     }
 
-    void Entity::UpdateGFXBuffer(Eigen::MatrixXf vertices, Eigen::VectorX<uint32_t> indices, Vizir::PrimitiveType primitiveType)
+    void Entity::UpdateGFXBuffer(Eigen::Matrix<float, 3, Eigen::Dynamic> vertices, Eigen::VectorX<uint32_t> indices, Vizir::PrimitiveType primitiveType)
     {
+        if (m_RefFrame != nullptr)
+            vertices = m_RefFrame->GetTransform().cast<float>() * vertices;
+
         // Visualization buffer
         // Vertex Buffer
         Vizir::Ref<Vizir::VertexBuffer> pointsVertexBuffer;

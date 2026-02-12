@@ -10,11 +10,13 @@
 
 #include <Eigen/Core>
 #include <imgui.h>
+#include <memory>
 
 namespace Caduq 
 {
-    EntityManager::EntityManager()
-        : m_PhyXManager{ std::make_shared<XPBD::PhyXManager>() }
+    EntityManager::EntityManager(const std::shared_ptr<Frame>& frame)
+        : m_MainFrame{ frame }
+        , m_PhyXManager{ std::make_shared<XPBD::PhyXManager>() }
     {
     }
 
@@ -134,7 +136,7 @@ namespace Caduq
             Part::SetPopupParam(Eigen::Vector3d::Zero(), Eigen::Vector4d::Zero());
 
             m_CurEntity = nullptr;
-            ImGui::OpenPopup("create_frame_popup");
+            ImGui::OpenPopup("create_part_popup");
         }
 
         if (ImGui::BeginPopup("create_frame_popup"))

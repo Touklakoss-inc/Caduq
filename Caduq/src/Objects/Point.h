@@ -4,6 +4,7 @@
 #include "Geometry/Point.h"
 #include "XPBD/Point.h"
 #include "Entity.h"
+#include "Frame.h"
 
 #include <memory>
 #include <string>
@@ -18,6 +19,7 @@ namespace Caduq
         static inline int s_IdGenerator{ 0 };
         int m_Id{ };
 
+        std::shared_ptr<Frame> m_RefFrame;
         std::shared_ptr<Geometry::Point> m_GeoPoint;
         std::shared_ptr<XPBD::Point> m_PhyXPoint;
 
@@ -31,7 +33,7 @@ namespace Caduq
             bool grounded = false;
         };
 
-        Point(Eigen::Vector3d pos, Type type, OptParam oParam = { .name="", .mass=1.0, .grounded=false });
+        Point(Eigen::Vector3d pos, const std::shared_ptr<Frame>& frame, Type type = Type::point, OptParam oParam = { .name="", .mass=1.0, .grounded=false });
 
         ~Point() override = default;
 

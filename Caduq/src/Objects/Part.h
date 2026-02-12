@@ -5,6 +5,7 @@
 #include "Frame.h"
 
 #include "Objects/Entity.h"
+#include <memory>
 namespace Caduq 
 {
     class Part : public Entity
@@ -13,8 +14,8 @@ namespace Caduq
         static inline int s_IdGenerator{ 0 };
         int m_Id{ };
 
-        Frame m_MainFrame;
-        EntityManager m_EntityManager{ };
+        std::shared_ptr<Frame> m_MainFrame;
+        EntityManager m_EntityManager;
 
         /* ImGui */
         static inline float m_GuiPopupPos[3] { 0.0f, 0.0f, 0.0f };
@@ -22,10 +23,11 @@ namespace Caduq
         static inline float m_GuiPopupSca[3] { 1.0f, 1.0f, 1.0f };
 
     public:
-        Part(Geometry::Transform transform = Geometry::Transform::Identity(), Type type = Type::part, const std::string& name = "");
+        Part(Geometry::Transform transform, const std::shared_ptr<Frame>& frame, Type type = Type::part, const std::string& name = "");
         ~Part() = default;
 
         void Init() override;
+        void Update(Eigen::Vector3d position, Eigen::Quaterniond rotation);
         void UpdateGFX() override;
         void Visualize(Vizir::Ref<Vizir::Shader> shader, glm::mat4 transform) override;
         void Delete() override;
@@ -35,7 +37,7 @@ namespace Caduq
         static void Popup(EntityManager& entityManager);
         static void SetPopupParam(Eigen::Vector3d position, Eigen::Vector4d rotation);
 
-        Frame& GetMainFrame() { return m_MainFrame; };
+        const auto& GetMainFrame() { return m_MainFrame; };
     };
 }
 

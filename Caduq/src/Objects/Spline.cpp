@@ -10,12 +10,13 @@
 #include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <memory>
 namespace Caduq
 {
     Spline::Spline(const std::shared_ptr<Point>& startPoint, PointTangency startTangency, 
                    const std::shared_ptr<Point>& endPoint, PointTangency endTangency,
-                   int mesh_size, Type type, const std::string& name)
-        : Entity{ name != "" ? name : "Spline " + std::to_string(++s_IdGenerator), type }
+                   int mesh_size, const std::shared_ptr<Frame>& frame, Type type, const std::string& name)
+        : Entity{ name != "" ? name : "Spline " + std::to_string(++s_IdGenerator), type, frame }
         , m_Id{ name != "" ? ++s_IdGenerator : s_IdGenerator }, m_mesh_size{ mesh_size }
         , m_StartPoint{ startPoint }, m_StartTangency{ startTangency }
         , m_EndPoint{ endPoint }, m_EndTangency{ endTangency }
@@ -44,7 +45,7 @@ namespace Caduq
         Geometry::Mesh mesh = m_Spline.GetGfxMesh();
 
         // Cast points to float
-        Eigen::MatrixXf splineVertices = mesh.nodes.cast<float>();
+        Eigen::Matrix<float, 3, Eigen::Dynamic> splineVertices = mesh.nodes.cast<float>();
         Eigen::VectorX<uint32_t> splineIndices = mesh.elts;
 
         UpdateGFXBuffer(splineVertices, splineIndices, Vizir::LINE_STRIP);
@@ -132,7 +133,7 @@ namespace Caduq
                                                                  entityManager.GetPoint(m_GuiEndPointID).lock(),
                                                                  Caduq::PointTangency{{m_GuiEndTangent[0], m_GuiEndTangent[1],
                                                                                        m_GuiEndTangent[2]}, m_GuiEndTension[0]},
-                                                                 100, Type::spline));              
+                                                                 100, entityManager.GetMainFrame()));              
                 }
                 else
                 {

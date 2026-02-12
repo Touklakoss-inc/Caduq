@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 
+#include "Geometry/Geo.h"
 #include "XPBD/PhyXManager.h"
 #include "Entity.h"
 
@@ -13,10 +14,12 @@ namespace Caduq
     class Point;
     class Spline;
     class Patch;
+    class Frame;
 
     class EntityManager
     {
     private:
+        std::shared_ptr<Frame> m_MainFrame;
         std::shared_ptr<XPBD::PhyXManager> m_PhyXManager;
 
         std::vector<std::weak_ptr<Point>> m_PointList{ };
@@ -35,8 +38,9 @@ namespace Caduq
         }
 
     public:
-        EntityManager();
+        EntityManager(const std::shared_ptr<Frame>& frame);
         virtual ~EntityManager() = default;
+        const auto& GetMainFrame() { return m_MainFrame; };
         const auto& GetPhyXManager() { return m_PhyXManager; };
 
         template<typename T> 

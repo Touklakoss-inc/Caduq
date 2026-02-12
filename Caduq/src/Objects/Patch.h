@@ -34,7 +34,7 @@ namespace Caduq
         public:
         Patch(const std::shared_ptr<Spline>& s0, const std::shared_ptr<Spline>& s1, 
               const std::shared_ptr<Spline>& s2, const std::shared_ptr<Spline>& s3,
-              int mesh_size, Type type = Type::patch, const std::string& name = "");
+              int mesh_size, const std::shared_ptr<Frame>& frame, Type type = Type::patch, const std::string& name = "");
         ~Patch() override = default;
 
         void Init() override;
