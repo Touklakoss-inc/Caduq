@@ -6,6 +6,7 @@
 
 #include "Geometry/Geo.h"
 #include "XPBD/PhyXManager.h"
+#include "Entity.h"
 
 namespace Caduq 
 {
@@ -13,75 +14,76 @@ namespace Caduq
     class Point;
     class Spline;
     class Patch;
+    class Frame;
 
     class EntityManager
     {
     private:
-
+        std::shared_ptr<Frame> m_MainFrame;
         std::shared_ptr<XPBD::PhyXManager> m_PhyXManager;
 
-        std::vector<std::weak_ptr<Point>> m_PointList;
-        std::vector<std::weak_ptr<Spline>> m_SplineList;
-        std::vector<std::weak_ptr<Patch>> m_PatchList;
+        std::vector<std::weak_ptr<Point>> m_PointList{ };
+        std::vector<std::weak_ptr<Spline>> m_SplineList{ };
+        std::vector<std::weak_ptr<Patch>> m_PatchList{ };
 
-        std::vector<std::shared_ptr<Entity>> m_EntityList;
-        std::vector<std::shared_ptr<Entity>> m_EntityToDelete;
+        std::vector<std::shared_ptr<Entity>> m_EntityList{ };
+        std::vector<std::shared_ptr<Entity>> m_EntityToDelete{ };
 
         std::shared_ptr<Entity> m_CurEntity { nullptr };
 
-        /* ImGui */
-        // Point
-        float m_GuiPointPopupCoord[3] { 0.0f, 0.0f, 0.0f };
-
-        // Spline
-        int m_GuiStartPointID = 0; // Here we store our selection data as an index.
-        float m_GuiStartTangent[3] = { 0.0f, 0.0f, 0.0f };
-        float m_GuiStartTension[1] = { 1.0f };
-
-        int m_GuiEndPointID = 0; // Here we store our selection data as an index.
-        float m_GuiEndTangent[3] = { 0.0f, 0.0f, 0.0f };
-        float m_GuiEndTension[1] = { 1.0f };
-
-        // Patch
-        int m_GuiSpline1ID = 0; // Here we store our selection data as an index.
-        int m_GuiSpline2ID = 0; // Here we store our selection data as an index.
-        int m_GuiSpline3ID = 0; // Here we store our selection data as an index.
-        int m_GuiSpline4ID = 0; // Here we store our selection data as an index.
-
-        void PointPopup();
-        void SplinePopup();
-        void PatchPopup();
-
         template<typename T> 
-        void CleanWeakPtrList(std::vector<std::weak_ptr<T>>& list);
+        void CleanWeakPtrList(std::vector<std::weak_ptr<T>>& list)
+        {
+            list.erase(std::remove_if(list.begin(), list.end(), [](const std::weak_ptr<T>& l) { return l.expired(); }), list.end());
+        }
 
     public:
-        EntityManager();
-        const auto& GetPhyXManager() { return m_PhyXManager; };
+        EntityManager(const std::shared_ptr<Frame>& frame);
+        virtual ~EntityManager() = default;
+        const std::shared_ptr<Frame>& GetMainFrame() { return m_MainFrame; };
+        const std::shared_ptr<XPBD::PhyXManager>& GetPhyXManager() { return m_PhyXManager; };
+
+        template<typename T> 
+        void CreateEntity(const std::shared_ptr<T>& entity);
+
+        void DeleteEntity(const std::shared_ptr<Entity>& entity);
+        void ClearEntityToDelete(); // Call at the begining of RenderImGui()
 
         void RenderImGui();
 
-        void CreateEntity(const std::shared_ptr<Entity>& entity);
+        const std::vector<std::shared_ptr<Entity>>& GetEntityToDelete() { return m_EntityToDelete; };
 
-        void DeleteEntity(const std::shared_ptr<Entity>& entity);
-        void ClearEntityToDelete();
-        auto GetEntityToDelete() { return m_EntityToDelete; };
         void SetCurEntity(const std::shared_ptr<Entity>& curEntity) { m_CurEntity = curEntity; };
+        const std::shared_ptr<Entity>& GetCurEntity() { return m_CurEntity; };
 
-        // should it be returned by reference ?
         const std::vector<std::shared_ptr<Entity>>& GetEntityList() { return m_EntityList; };
+        const std::vector<std::weak_ptr<Point>>& GetPointList() { return m_PointList; };
+        const std::vector<std::weak_ptr<Spline>>& GetSplineList() { return m_SplineList; };
+        const std::vector<std::weak_ptr<Patch>>& GetPatchList() { return m_PatchList; };
 
         std::shared_ptr<Entity>& GetEntity(int index) { return m_EntityList.at(index); };
         std::weak_ptr<Point>& GetPoint(int index) { return m_PointList.at(index); };
         std::weak_ptr<Spline>& GetSpline(int index) { return m_SplineList.at(index); };
         std::weak_ptr<Patch>& GetPatch(int index) { return m_PatchList.at(index); };
-
-        /* ImGui */
-        void SetPointPopupParam(Eigen::Vector3f coord) {
-            for (int i = 0; i < 3; i++) m_GuiPointPopupCoord[i] = coord[i]; };
-        void SetSplinePopupParam(Geometry::SplinePoint startPoint, int startPointID, Geometry::SplinePoint endPoint, int endPointID);
-        void SetPatchPopupParam(int spline1ID, int spline2ID, int spline3ID, int spline4ID);
     };
+
+    template<typename T> 
+    void EntityManager::CreateEntity(const std::shared_ptr<T>& entity)
+    {
+        m_EntityList.push_back(entity);
+        if constexpr (std::is_same_v<T, Point>) 
+        {
+            m_PhyXManager->AddPhyXPointToList(entity->GetPhyXPoint());
+            m_PointList.push_back(entity);
+        }
+        else if constexpr (std::is_same_v<T, Spline>) 
+            m_SplineList.push_back(entity);
+        else if constexpr (std::is_same_v<T, Patch>) 
+            m_PatchList.push_back(entity);
+
+        entity->Init();
+        VZ_INFO(entity->GetName() + " created");
+    }
 }
 
 #endif

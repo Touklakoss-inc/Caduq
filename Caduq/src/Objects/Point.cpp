@@ -1,6 +1,7 @@
 #include "Point.h"
 
 #include "EntityManager.h"
+#include "Geometry/Geo.h"
 #include "XPBD/PhyXManager.h"
 #include "BobIntegration.h"
 
@@ -13,9 +14,10 @@
 
 namespace Caduq
 {
-    Point::Point(Eigen::Vector3d pos, Type type, OptParam oP)
-        : Entity{ oP.name != "" ? oP.name : "Point " + std::to_string(++s_IdGenerator), type }
+    Point::Point(Eigen::Vector3d pos, const std::shared_ptr<Frame>& frame, Type type, OptParam oP)
+        : Entity{ oP.name != "" ? oP.name : "Point " + std::to_string(++s_IdGenerator), type, frame }
         , m_Id{ oP.name != "" ? ++s_IdGenerator : s_IdGenerator }
+        , m_RefFrame{ frame }
         , m_GeoPoint{ std::make_shared<Geometry::Point>(pos) }
         , m_PhyXPoint{ std::make_shared<XPBD::Point>(m_GeoPoint, oP.mass, m_Name, m_Id, oP.grounded) }
     {
@@ -29,40 +31,16 @@ namespace Caduq
     void Point::UpdateGFX()
     {
         // Cast to float
+        // Eigen::Vector3f pointVertice = (m_RefFrame->GetGeoFrame().GetTransform() * m_GeoPoint->GetPosition()).cast<float>();
         Eigen::Vector3f pointVertice = m_GeoPoint->GetPosition().cast<float>();
         Eigen::Vector<uint32_t, 1> pointIndice{ 0 };
 
-        UpdateGFXBuffer(pointVertice, pointIndice);
+        UpdateGFXBuffer(pointVertice, pointIndice, Vizir::POINTS);
 
         for (const auto& child : m_Children)
         {
             child->UpdateGFX();
         }
-    }
-
-    void Point::UpdateGFXBuffer(Eigen::MatrixXf vertices, Eigen::VectorX<uint32_t> indices, Vizir::PrimitiveType primitiveType)
-    {
-        // Visualization buffer
-        // Vertex Buffer
-        Vizir::Ref<Vizir::VertexBuffer> pointsVertexBuffer;
-        pointsVertexBuffer.reset(Vizir::VertexBuffer::Create(vertices.data(), static_cast<uint32_t>(vertices.size()) * sizeof(float)));
-
-        Vizir::BufferLayout pointsLayout = {
-            { Vizir::ShaderDataType::Float3, "v_position"},
-        };
-        pointsVertexBuffer->SetLayout(pointsLayout);
-
-        // Index buffer
-        Vizir::Ref<Vizir::IndexBuffer> pointIndexBuffer;
-        pointIndexBuffer.reset(Vizir::IndexBuffer::Create(indices.data(), static_cast<uint32_t>(indices.size())));
-
-        // Vertex array
-        m_VertexArray = Vizir::VertexArray::Create();        
-        m_VertexArray->Bind();
-        m_VertexArray->SetVertexBuffer(pointsVertexBuffer);
-        m_VertexArray->SetIndexBuffer(pointIndexBuffer);
-        m_VertexArray->SetPrimitiveType(primitiveType);
-        m_VertexArray->Unbind();
     }
 
     void Point::Update(double x, double y, double z)
@@ -103,11 +81,12 @@ namespace Caduq
             if (ImGui::Button("Modify")) 
             {
                 Eigen::Vector3f vec = m_GeoPoint->GetPosition().cast<float>();
-                entityManager.SetPointPopupParam(vec);
+                SetPopupParam(vec);
 
                 entityManager.SetCurEntity(shared_from_this());
                 ImGui::OpenPopup(id);
             }
+            ImGui::SameLine();
             Entity::RenderImGui(entityManager);
 
             if (XPBD::PhyXManager::s_PhyXEnabled)
@@ -120,5 +99,34 @@ namespace Caduq
 
             ImGui::TreePop();
         }
+    }
+
+    void Point::Popup(EntityManager& entityManager)
+    {
+        ImGui::InputFloat2("", m_GuiPointPopupCoord);
+
+        ImGui::Separator();
+
+        if (ImGui::Button("Cancel"))
+        {
+            ImGui::CloseCurrentPopup();
+            entityManager.SetCurEntity(nullptr);
+        }
+
+        ImGui::SameLine();
+
+        if (ImGui::Button("Ok"))
+        {
+            if (entityManager.GetCurEntity() == nullptr)
+                entityManager.CreateEntity(std::make_shared<Caduq::Point>(Eigen::Vector3d{m_GuiPointPopupCoord[0], m_GuiPointPopupCoord[1], m_GuiPointPopupCoord[2]}, entityManager.GetMainFrame()));
+            else
+            {
+                std::dynamic_pointer_cast<Caduq::Point>(entityManager.GetCurEntity())->Update(m_GuiPointPopupCoord[0], m_GuiPointPopupCoord[1], m_GuiPointPopupCoord[2]);
+
+                ImGui::CloseCurrentPopup();
+                entityManager.SetCurEntity(nullptr);
+            }
+        }
+        ImGui::EndPopup();
     }
 }

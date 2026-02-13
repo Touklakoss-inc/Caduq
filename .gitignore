@@ -26,3 +26,6 @@ dev-app.sh
 **.k
 **.cfile
 **.msg
+
+# CAD files
+**.stl

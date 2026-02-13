@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Objects/EntityManager.h"
+#include "Objects/Frame.h"
 #include "XPBD/PhyXManager.h"
 #include "Vizir.h"
 
@@ -20,7 +21,7 @@ public:
 private:
 
 
-    Caduq::EntityManager m_Entity_Manager {};
+    Caduq::EntityManager m_EntityManager { std::make_shared<Caduq::Frame>(Geometry::Transform::Identity(), nullptr) };
     std::shared_ptr<XPBD::PhyXManager> m_PhyXManager {};
 
 	// Rendering 

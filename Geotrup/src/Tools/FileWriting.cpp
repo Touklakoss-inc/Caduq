@@ -2,11 +2,11 @@
 
 #include "Geometry/Patch.h"
 #include <fstream>
-#include <iostream>
 
 #include <vector>
 namespace Geometry::Tools
 {
+    // Justify a string to a number of characters 
     std::string RJust(std::string str, int chr_nb)
     {
         int strLength{ static_cast<int>(str.length()) };

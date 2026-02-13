@@ -1,8 +1,11 @@
 #pragma once
 
+#include "Geometry/Geo.h"
 #include "Vizir.h"
 #include "Objects/EntityManager.h"
+#include "Objects/Frame.h"
 
+#include <memory>
 class SandboxCaduq : public Vizir::Layer
 {
 public:
@@ -17,7 +20,7 @@ public:
 private:
 
 
-    Caduq::EntityManager m_Entity_Manager {};
+    Caduq::EntityManager m_EntityManager { std::make_shared<Caduq::Frame>(Geometry::Transform::Identity(), nullptr) };
 
 	// Rendering 
 	Vizir::OrthographicCameraController m_CameraController;

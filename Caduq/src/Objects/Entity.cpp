@@ -1,6 +1,7 @@
 #include "Entity.h"
 
 #include "EntityManager.h"
+#include "Frame.h"
 #include "BobIntegration.h"
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
 
@@ -11,13 +12,41 @@
 
 namespace Caduq 
 {
-    Entity::Entity(const std::string& name, Type type)
-        : m_Name{ name }, m_Type{ type }
+    Entity::Entity(const std::string& name, Type type, const std::shared_ptr<Frame>& frame)
+        : m_Name{ name }, m_Type{ type }, m_RefFrame{ frame }
     {
     }
     Entity::~Entity()
     {
         CQ_INFO(m_Name + " object successfully deleted.");
+    }
+
+    void Entity::UpdateGFXBuffer(Eigen::Matrix<float, 3, Eigen::Dynamic> vertices, Eigen::VectorX<uint32_t> indices, Vizir::PrimitiveType primitiveType)
+    {
+        if (m_RefFrame != nullptr)
+            vertices = m_RefFrame->GetTransform().cast<float>() * vertices;
+
+        // Visualization buffer
+        // Vertex Buffer
+        Vizir::Ref<Vizir::VertexBuffer> pointsVertexBuffer;
+        pointsVertexBuffer.reset(Vizir::VertexBuffer::Create(vertices.data(), static_cast<uint32_t>(vertices.size()) * sizeof(float)));
+
+        Vizir::BufferLayout pointsLayout = {
+            { Vizir::ShaderDataType::Float3, "v_position"},
+        };
+        pointsVertexBuffer->SetLayout(pointsLayout);
+
+        // Index buffer
+        Vizir::Ref<Vizir::IndexBuffer> pointIndexBuffer;
+        pointIndexBuffer.reset(Vizir::IndexBuffer::Create(indices.data(), static_cast<uint32_t>(indices.size())));
+
+        // Vertex array
+        m_VertexArray = Vizir::VertexArray::Create();        
+        m_VertexArray->Bind();
+        m_VertexArray->SetVertexBuffer(pointsVertexBuffer);
+        m_VertexArray->SetIndexBuffer(pointIndexBuffer);
+        m_VertexArray->SetPrimitiveType(primitiveType);
+        m_VertexArray->Unbind();
     }
 
     void Entity::Visualize(Vizir::Ref<Vizir::Shader> shader, glm::mat4 transform)
@@ -31,7 +60,6 @@ namespace Caduq
 
     void Entity::RenderImGui(EntityManager& entityManager)
     {
-        ImGui::SameLine();
         if (ImGui::Button("Delete")) 
             ImGui::OpenPopup("Delete?");
 

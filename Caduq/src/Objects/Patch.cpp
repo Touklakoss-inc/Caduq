@@ -2,18 +2,20 @@
 
 #include "EntityManager.h"
 #include "BobIntegration.h"
+#include "MyImGui.h"
 
 #include <Eigen/Core>
 #include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <memory>
+#include <set>
 
 namespace Caduq
 {
     Patch::Patch(const std::shared_ptr<Spline>& s0, const std::shared_ptr<Spline>& s1, 
                  const std::shared_ptr<Spline>& s2, const std::shared_ptr<Spline>& s3,
-                 int mesh_size, Type type, const std::string& name)
-        : Entity{ name != "" ? name : "Patch " + std::to_string(++s_IdGenerator), type }
+                 int mesh_size, const std::shared_ptr<Frame>& frame, Type type, const std::string& name)
+        : Entity{ name != "" ? name : "Patch " + std::to_string(++s_IdGenerator), type, frame }
         , m_Id{ name != "" ? ++s_IdGenerator : s_IdGenerator }, m_mesh_size{ mesh_size }
         , m_s0{ s0 }, m_s1{ s1 }, m_s2{ s2 }, m_s3{ s3 }
     {
@@ -55,29 +57,10 @@ namespace Caduq
         Geometry::Mesh mesh = m_c0.GetGfxMesh();
 
         // Cast points to float
-        Eigen::MatrixXf patchVertices = mesh.nodes.cast<float>();
+        Eigen::MatrixXf patchVertices = mesh.nodes.cast<float>().reshaped(3, m_mesh_size*m_mesh_size);
         Eigen::VectorX<uint32_t> patchIndices = mesh.elts.cast<uint32_t>();
 
-        // Vertex Buffer
-        Vizir::Ref<Vizir::VertexBuffer> patchVertexBuffer;
-        patchVertexBuffer.reset(Vizir::VertexBuffer::Create(patchVertices.data(), static_cast<uint32_t>(patchVertices.size()) * sizeof(float)));
-
-        Vizir::BufferLayout patchLayout = {
-            { Vizir::ShaderDataType::Float3, "v_position"},
-        };
-        patchVertexBuffer->SetLayout(patchLayout);
-
-        // Index buffer
-        Vizir::Ref<Vizir::IndexBuffer> patchIndexBuffer;
-        patchIndexBuffer.reset(Vizir::IndexBuffer::Create(patchIndices.data(), static_cast<uint32_t>(patchIndices.size())));
-
-        // Vertex array
-        m_VertexArray = Vizir::VertexArray::Create();
-        m_VertexArray->Bind();
-        m_VertexArray->SetVertexBuffer(patchVertexBuffer);
-        m_VertexArray->SetIndexBuffer(patchIndexBuffer);
-        m_VertexArray->SetPrimitiveType(Vizir::TRIANGLES);
-        m_VertexArray->Unbind();
+        UpdateGFXBuffer(patchVertices, patchIndices, Vizir::TRIANGLES);
 
         for (const auto& child : m_Children)
         {
@@ -115,15 +98,97 @@ namespace Caduq
             ImGui::SameLine();
             if (ImGui::Button("Modify")) 
             {
-                entityManager.SetPatchPopupParam(m_s0->GetID(), m_s1->GetID(), m_s2->GetID(), m_s3->GetID());
+                if (m_s3 != nullptr)
+                    SetPopupParam(entityManager, m_s0->GetID(), m_s1->GetID(), m_s2->GetID(), m_s3->GetID());
+                else
+                    SetPopupParam(entityManager, m_s0->GetID(), m_s1->GetID(), m_s2->GetID(), -1);
 
                 entityManager.SetCurEntity(shared_from_this());
                 ImGui::OpenPopup(id);
             }
 
+            ImGui::SameLine();
             Entity::RenderImGui(entityManager);
 
             ImGui::TreePop();
         }
+    }
+
+    void Patch::PatchPopup(EntityManager& entityManager)
+    {
+        MyImGui::MyCombo("First Spline", entityManager.GetSplineList(), m_GuiSpline1ID);
+        MyImGui::MyCombo("Second Spline", entityManager.GetSplineList(), m_GuiSpline2ID);
+
+        ImGui::Separator();
+
+        MyImGui::MyCombo("Third Spline", entityManager.GetSplineList(), m_GuiSpline3ID);
+        if (m_GuiSpline4ID != -1)
+            MyImGui::MyCombo("Fourth Spline", entityManager.GetSplineList(), m_GuiSpline4ID);
+
+        ImGui::Separator();
+
+        if (ImGui::Button("Cancel"))
+        {
+            ImGui::CloseCurrentPopup();
+            entityManager.SetCurEntity(nullptr);
+        }
+
+        ImGui::SameLine();
+
+        if (ImGui::Button("Ok"))
+        {
+            // Check if all 4 selected splines are different
+            std::set<int> indexes = { m_GuiSpline1ID, m_GuiSpline2ID, m_GuiSpline3ID, m_GuiSpline4ID };
+            if (indexes.size() == 4)
+            {
+                std::shared_ptr<Caduq::Spline> spline4 { nullptr };
+                if (m_GuiSpline4ID != -1)
+                    spline4 = entityManager.GetSpline(m_GuiSpline4ID).lock();
+                if (entityManager.GetCurEntity() == nullptr)
+                {
+                    entityManager.CreateEntity(std::make_shared<Caduq::Patch>(entityManager.GetSpline(m_GuiSpline1ID).lock(),
+                                                               entityManager.GetSpline(m_GuiSpline2ID).lock(),
+                                                               entityManager.GetSpline(m_GuiSpline3ID).lock(),
+                                                               spline4,
+                                                               10, entityManager.GetMainFrame()));
+                }
+                else
+                {
+                    std::dynamic_pointer_cast<Caduq::Patch>(entityManager.GetCurEntity())->Update(entityManager.GetSpline(m_GuiSpline1ID).lock(),
+                                                                                 entityManager.GetSpline(m_GuiSpline2ID).lock(),
+                                                                                 entityManager.GetSpline(m_GuiSpline3ID).lock(),
+                                                                                 spline4);
+                }
+
+                ImGui::CloseCurrentPopup();
+                entityManager.SetCurEntity(nullptr);
+            }
+            else
+                VZ_WARN("Select four different splines to create a patch");
+        }
+        ImGui::EndPopup();
+    }
+
+    void Patch::SetPopupParam(EntityManager& entityManager, int spline1ID, int spline2ID, int spline3ID, int spline4ID)
+    {
+        for (int i = 0; i < entityManager.GetSplineList().size(); i++)
+        {
+            auto curSplineID = entityManager.GetSpline(i).lock()->GetID();
+
+            if (curSplineID == spline1ID)
+                m_GuiSpline1ID = i;
+
+            if (curSplineID == spline2ID)
+                m_GuiSpline2ID = i;
+
+            if (curSplineID == spline3ID)
+                m_GuiSpline3ID = i;
+
+            if (curSplineID == spline4ID)
+                m_GuiSpline4ID = i;
+        }
+
+        if (spline4ID == -1)
+            m_GuiSpline4ID = -1;
     }
 }

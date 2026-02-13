@@ -1,13 +1,14 @@
 #ifndef CQ_POINT_H
 #define CQ_POINT_H
 
-#include <memory>
-#include <string>
-#include <Eigen/Dense>
-
 #include "Geometry/Point.h"
 #include "XPBD/Point.h"
 #include "Entity.h"
+#include "Frame.h"
+
+#include <memory>
+#include <string>
+#include <Eigen/Dense>
 
 namespace Caduq
 {
@@ -18,11 +19,11 @@ namespace Caduq
         static inline int s_IdGenerator{ 0 };
         int m_Id{ };
 
+        std::shared_ptr<Frame> m_RefFrame;
         std::shared_ptr<Geometry::Point> m_GeoPoint;
         std::shared_ptr<XPBD::Point> m_PhyXPoint;
 
-        void UpdateGFXBuffer(Eigen::MatrixXf vertices, Eigen::VectorX<uint32_t> indices, Vizir::PrimitiveType primitiveType=Vizir::POINTS);
-
+        static inline float m_GuiPointPopupCoord[3] { 0.0f, 0.0f, 0.0f };
 
     public:
         struct OptParam
@@ -32,7 +33,9 @@ namespace Caduq
             bool grounded = false;
         };
 
-        Point(Eigen::Vector3d pos, Type type, OptParam oParam = { .name="", .mass=1.0, .grounded=false });
+        Point(Eigen::Vector3d pos, const std::shared_ptr<Frame>& frame, Type type = Type::point, OptParam oParam = { .name="", .mass=1.0, .grounded=false });
+
+        ~Point() override = default;
 
         void Init() override;
         void UpdateGFX() override;
@@ -40,6 +43,9 @@ namespace Caduq
         void Delete() override;
 
         void RenderImGui(EntityManager& entityManager) override;
+        static void Popup(EntityManager& entityManager);
+        static void SetPopupParam(Eigen::Vector3f coord) {
+            for (int i = 0; i < 3; i++) m_GuiPointPopupCoord[i] = coord[i]; };
 
         const std::shared_ptr<Geometry::Point>& GetGeoPoint() const { return m_GeoPoint; };
         const std::shared_ptr<XPBD::Point>& GetPhyXPoint() const { return m_PhyXPoint; };
