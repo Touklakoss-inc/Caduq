@@ -1,15 +1,11 @@
+#include "cqpch.h"
 #include "SandboxXPBD.h"
 
 #include "XPBD/JAttach.h"
-#include "Objects/Entity.h"
+#include "Caduq/Objects/Entity.h"
 #include "Objects/Point.h"
 #include "Objects/Spline.h"
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
-
-#include <cmath>
-#include <imgui.h>
-#include <glm/gtc/type_ptr.hpp>
-#include <memory>
 
 void SandboxXPBD::OnAttach()
 {

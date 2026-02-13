@@ -1,9 +1,7 @@
+#include "cqpch.h"
 #include "SandboxLayout.h"
 
 #include "Vizir/Renderer/Renderer2D.h"
-#include <imgui.h>
-#include "BobIntegration.h"
-
 
 SandboxLayout::SandboxLayout() : Layer("Sandbox - Layout"), m_CameraController(1280.0f / 720.0f, true)
 {

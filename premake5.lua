@@ -188,6 +188,10 @@ group ""
         targetdir ("bin/" .. outputdir .. "/%{prj.name}")
         objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
+        pchheader "cqpch.h"
+        pchsource "Caduq/src/cqpch.cpp"
+
+
         files
         {
             "%{prj.name}/src/**.h",

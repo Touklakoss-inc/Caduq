@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Objects/EntityManager.h"
-#include "Objects/Frame.h"
+#include "Caduq/Objects/EntityManager.h"
+#include "Caduq/Objects/Frame.h"
 #include "XPBD/PhyXManager.h"
 #include "Vizir.h"
 

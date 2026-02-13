@@ -1,15 +1,11 @@
+#include "cqpch.h"
 #include "StlEntity.h"
 
-#include "BobIntegration.h"
-#include "Objects/Entity.h"
-#include "Objects/EntityManager.h"
+#include "Caduq/Objects/Entity.h"
+#include "Caduq/Objects/EntityManager.h"
 #include "Vizir/Renderer/VertexArray.h"
 #include "Tools/STL.h"
 #include "MyImGui.h"
-
-#include <filesystem>
-#include <imgui.h>
-#include <glm/gtc/type_ptr.hpp>
 
 namespace Caduq
 {

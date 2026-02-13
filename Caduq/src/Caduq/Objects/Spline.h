@@ -6,9 +6,6 @@
 #include "Point.h"
 #include "Geometry/Spline.h"
 
-#include <Eigen/Core>
-#include <memory>
-
 namespace Caduq
 {
     struct PointTangency

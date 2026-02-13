@@ -1,6 +1,6 @@
+#include "cqpch.h"
 #include "EntityManager.h"
 
-#include "BobIntegration.h"
 #include "Entity.h"
 #include "Point.h"
 #include "Spline.h"
@@ -8,10 +8,6 @@
 #include "Frame.h"
 #include "Part.h"
 #include "StlEntity.h"
-
-#include <Eigen/Core>
-#include <imgui.h>
-#include <memory>
 
 namespace Caduq 
 {
