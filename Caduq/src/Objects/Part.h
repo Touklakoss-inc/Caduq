@@ -37,7 +37,7 @@ namespace Caduq
         static void Popup(EntityManager& entityManager);
         static void SetPopupParam(Eigen::Vector3d position, Eigen::Vector4d rotation);
 
-        const auto& GetMainFrame() { return m_MainFrame; };
+        const std::shared_ptr<Frame>& GetMainFrame() { return m_MainFrame; };
     };
 }
 

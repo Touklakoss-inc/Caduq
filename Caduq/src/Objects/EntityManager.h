@@ -40,8 +40,8 @@ namespace Caduq
     public:
         EntityManager(const std::shared_ptr<Frame>& frame);
         virtual ~EntityManager() = default;
-        const auto& GetMainFrame() { return m_MainFrame; };
-        const auto& GetPhyXManager() { return m_PhyXManager; };
+        const std::shared_ptr<Frame>& GetMainFrame() { return m_MainFrame; };
+        const std::shared_ptr<XPBD::PhyXManager>& GetPhyXManager() { return m_PhyXManager; };
 
         template<typename T> 
         void CreateEntity(const std::shared_ptr<T>& entity);
@@ -51,10 +51,10 @@ namespace Caduq
 
         void RenderImGui();
 
-        const auto& GetEntityToDelete() { return m_EntityToDelete; };
+        const std::vector<std::shared_ptr<Entity>>& GetEntityToDelete() { return m_EntityToDelete; };
 
         void SetCurEntity(const std::shared_ptr<Entity>& curEntity) { m_CurEntity = curEntity; };
-        const auto& GetCurEntity() { return m_CurEntity; };
+        const std::shared_ptr<Entity>& GetCurEntity() { return m_CurEntity; };
 
         const std::vector<std::shared_ptr<Entity>>& GetEntityList() { return m_EntityList; };
         const std::vector<std::weak_ptr<Point>>& GetPointList() { return m_PointList; };

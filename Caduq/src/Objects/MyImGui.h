@@ -10,7 +10,7 @@ namespace MyImGui
     template<typename T> 
     void MyCombo(const char* name, std::vector<std::weak_ptr<T>> list, int& point_idx)
     {
-        const auto combo_preview_value = list[point_idx];  // Pass in the preview value visible before opening the combo (it could be anything)
+        const std::weak_ptr<T>& combo_preview_value = list[point_idx];  // Pass in the preview value visible before opening the combo (it could be anything)
         if (ImGui::BeginCombo(name, combo_preview_value.lock()->GetName().data()))
         {
             for (int n = 0; n < list.size(); n++)
