@@ -10,6 +10,10 @@
 
 #include <memory>
 #include <string>
+
+#ifdef VZ_PLATFORM_WINDOWS
+  #define _USE_MATH_DEFINES
+#endif
 #include <math.h>
 
 namespace Caduq
