@@ -7,6 +7,11 @@
 #include <imgui.h>
 
 #include <memory>
+#ifdef VZ_PLATFORM_WINDOWS
+  #define _USE_MATH_DEFINES
+#endif
+#include <math.h>
+
 namespace Caduq 
 {
     Part::Part(Geometry::Transform transform, const std::shared_ptr<Frame>& frame, Type type, const std::string& name)

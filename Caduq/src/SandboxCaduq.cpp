@@ -19,6 +19,11 @@
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
 
+#ifdef VZ_PLATFORM_WINDOWS
+  #define _USE_MATH_DEFINES
+#endif
+#include <math.h>
+
 void SandboxCaduq::OnAttach()
 {
 	Vizir::RenderCommand::EnablePrimitiveRestart();

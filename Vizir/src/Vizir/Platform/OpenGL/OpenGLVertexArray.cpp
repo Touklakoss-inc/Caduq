@@ -53,6 +53,14 @@ namespace Vizir
 
 		glCreateVertexArrays(1, &m_RendererID);
 	}
+
+	OpenGLVertexArray::~OpenGLVertexArray()
+	{
+		BOB_PROFILE_FUNC()
+
+		glDeleteVertexArrays(1, &m_RendererID);
+	}
+
 	void OpenGLVertexArray::Bind() const
 	{
 		BOB_PROFILE_FUNC()
