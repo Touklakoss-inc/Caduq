@@ -7,6 +7,7 @@
 #include "Patch.h"
 #include "Frame.h"
 #include "Part.h"
+#include "StlEntity.h"
 
 #include <Eigen/Core>
 #include <imgui.h>
@@ -139,6 +140,16 @@ namespace Caduq
             ImGui::OpenPopup("create_part_popup");
         }
 
+        ImGui::SameLine();
+        // StlEntity Creation
+        if (ImGui::Button("Stl"))
+        {
+            StlEntity::SetPopupParam("");
+
+            m_CurEntity = nullptr;
+            ImGui::OpenPopup("create_stlEntity_popup");
+        }
+
         if (ImGui::BeginPopup("create_frame_popup"))
             Frame::Popup(*this);
 
@@ -153,5 +164,8 @@ namespace Caduq
 
         if (ImGui::BeginPopup("create_part_popup"))
             Part::Popup(*this);
+
+        if (ImGui::BeginPopup("create_stlEntity_popup"))
+            StlEntity::Popup(*this);
     }
 }

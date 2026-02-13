@@ -100,13 +100,13 @@ namespace Caduq
 
     void Spline::SplinePopup(EntityManager& entityManager)
     {
-        MyCombo("Start Point", entityManager.GetPointList(), m_GuiStartPointID);
+        MyImGui::MyCombo("Start Point", entityManager.GetPointList(), m_GuiStartPointID);
         ImGui::InputFloat2("Start Tangent Vector", m_GuiStartTangent);
         ImGui::InputFloat("Start Tension", m_GuiStartTension);
 
         ImGui::Separator();
 
-        MyCombo("End Point", entityManager.GetPointList(), m_GuiEndPointID);
+        MyImGui::MyCombo("End Point", entityManager.GetPointList(), m_GuiEndPointID);
         ImGui::InputFloat2("End Tangent Vector", m_GuiEndTangent);
         ImGui::InputFloat("End Tension", m_GuiEndTension);
 

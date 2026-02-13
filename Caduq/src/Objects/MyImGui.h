@@ -5,7 +5,7 @@
 #include <memory>
 #include <vector>
 
-namespace Caduq
+namespace MyImGui
 {
     template<typename T> 
     void MyCombo(const char* name, std::vector<std::weak_ptr<T>> list, int& point_idx)
@@ -26,6 +26,8 @@ namespace Caduq
             ImGui::EndCombo();
         }
     }
+
+    IMGUI_API bool  InputText(const char* label, std::string* str, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = NULL, void* user_data = NULL);
 }
 
 #endif

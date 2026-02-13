@@ -116,14 +116,14 @@ namespace Caduq
 
     void Patch::PatchPopup(EntityManager& entityManager)
     {
-        MyCombo("First Spline", entityManager.GetSplineList(), m_GuiSpline1ID);
-        MyCombo("Second Spline", entityManager.GetSplineList(), m_GuiSpline2ID);
+        MyImGui::MyCombo("First Spline", entityManager.GetSplineList(), m_GuiSpline1ID);
+        MyImGui::MyCombo("Second Spline", entityManager.GetSplineList(), m_GuiSpline2ID);
 
         ImGui::Separator();
 
-        MyCombo("Third Spline", entityManager.GetSplineList(), m_GuiSpline3ID);
+        MyImGui::MyCombo("Third Spline", entityManager.GetSplineList(), m_GuiSpline3ID);
         if (m_GuiSpline4ID != -1)
-            MyCombo("Fourth Spline", entityManager.GetSplineList(), m_GuiSpline4ID);
+            MyImGui::MyCombo("Fourth Spline", entityManager.GetSplineList(), m_GuiSpline4ID);
 
         ImGui::Separator();
 

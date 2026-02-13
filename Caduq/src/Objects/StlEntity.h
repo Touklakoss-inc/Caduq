@@ -12,7 +12,7 @@ namespace Caduq
         static inline int s_IdGenerator{ 0 };
         int m_Id{ };
 
-        std::string m_FileName;
+        static inline std::string m_FileName { "" };
         Geometry::Mesh m_Mesh;
 
     public:
@@ -23,6 +23,8 @@ namespace Caduq
         void Delete() override;
 
         void RenderImGui(EntityManager& entityManager) override;
+        static void Popup(EntityManager& entityManager);
+        static void SetPopupParam(const std::string& name) { m_FileName = name; }; 
 
         int GetID() const override { return m_Id; };
     };
