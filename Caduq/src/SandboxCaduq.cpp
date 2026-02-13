@@ -8,7 +8,10 @@
 #include "Objects/Patch.h"
 #include "Objects/Frame.h"
 #include "Objects/Part.h"
+#include "Objects/StlEntity.h"
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
+
+#include "Tools/STL.h"
 
 #include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
@@ -53,7 +56,7 @@ void SandboxCaduq::OnAttach()
         )";
 
     m_Shader = Vizir::Shader::Create("PointShader", vertexSrc, fragmentSrc);
-
+/*
     m_EntityManager.CreateEntity(std::make_shared<Caduq::Point>(Eigen::Vector3d{0.0, 0.0, 0.0}, m_EntityManager.GetMainFrame()));
     m_EntityManager.CreateEntity(std::make_shared<Caduq::Point>(Eigen::Vector3d{3.0, 0.0, 1.0}, m_EntityManager.GetMainFrame()));
     m_EntityManager.CreateEntity(std::make_shared<Caduq::Point>(Eigen::Vector3d{3.0, 4.0, 0.0}, m_EntityManager.GetMainFrame()));
@@ -90,11 +93,13 @@ void SandboxCaduq::OnAttach()
                                                                 m_EntityManager.GetSpline(1).lock(),
                                                                 nullptr, 
                                                                 10, m_EntityManager.GetMainFrame()));
-
+*/
     auto frame1 = std::make_shared<Caduq::Frame>(Geometry::Transform::Identity(), m_EntityManager.GetMainFrame());
     m_EntityManager.CreateEntity(frame1);
     frame1->Update(Eigen::Vector3d(-2.0, -1.0, 0.0), Eigen::Quaterniond(Eigen::AngleAxis(M_PI/4.0, Eigen::Vector3d::UnitZ())));
     m_EntityManager.CreateEntity(std::make_shared<Caduq::Part>(Geometry::Transform::Identity(), m_EntityManager.GetMainFrame()));
+
+    m_EntityManager.CreateEntity(std::make_shared<Caduq::StlEntity>("cube.stl", m_EntityManager.GetMainFrame()));
 
     Vizir::RenderCommand::SetPointSize(m_PointSize);
 	Vizir::RenderCommand::SetLineWidth(m_LineSize);

@@ -17,7 +17,8 @@ namespace Caduq
         point,
         spline,
         patch,
-        part
+        part,
+        stlEntity
     };
 
     class EntityManager;
