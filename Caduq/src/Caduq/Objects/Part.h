@@ -4,8 +4,8 @@
 #include "EntityManager.h"
 #include "Frame.h"
 
-#include "Objects/Entity.h"
-#include <memory>
+#include "Caduq/Objects/Entity.h"
+
 namespace Caduq 
 {
     class Part : public Entity

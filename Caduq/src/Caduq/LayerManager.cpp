@@ -1,8 +1,5 @@
+#include "cqpch.h"
 #include "LayerManager.h"
-
-#include <imgui.h>
-#include "BobIntegration.h"
-
 
 // --- Layers ---
 #include "SandboxXPBD.h"
@@ -11,7 +8,6 @@
 #include "SandboxLayout.h"
 #include "SandboxFramebuffer.h"
 
-#include "SandboxXPBD.h"
 void LayerManager::OnAttach()
 {
   RegisterLayer(std::make_shared<SandboxXPBD>());

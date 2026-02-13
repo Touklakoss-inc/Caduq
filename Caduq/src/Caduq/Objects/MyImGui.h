@@ -1,11 +1,6 @@
 #ifndef IG_MYIMGUI_H
 #define IG_MYIMGUI_H
 
-#include <imgui.h>
-#include <memory>
-#include <vector>
-#include <string>
-
 namespace MyImGui
 {
     template<typename T> 

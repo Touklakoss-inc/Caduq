@@ -6,10 +6,6 @@
 #include "Entity.h"
 #include "Frame.h"
 
-#include <memory>
-#include <string>
-#include <Eigen/Dense>
-
 namespace Caduq
 {
     class Point: public Entity

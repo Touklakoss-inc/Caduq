@@ -1,16 +1,11 @@
+#include "cqpch.h"
 #include "Spline.h"
 
 #include "Point.h"
 #include "Geometry/Spline.h"
 #include "EntityManager.h"
-#include "BobIntegration.h"
 #include "MyImGui.h"
 
-#include <Eigen/Core>
-#include <imgui.h>
-#include <glm/gtc/type_ptr.hpp>
-
-#include <memory>
 namespace Caduq
 {
     Spline::Spline(const std::shared_ptr<Point>& startPoint, PointTangency startTangency, 

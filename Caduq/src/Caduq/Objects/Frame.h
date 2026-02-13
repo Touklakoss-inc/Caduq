@@ -3,12 +3,8 @@
 
 #include "Entity.h"
 #include "Geometry/Frame.h"
-
 #include "Geometry/Geo.h"
-#include <Eigen/Dense>
-#include <Eigen/Geometry>
 
-#include <memory>
 namespace Caduq
 {
     class Frame: public Entity

@@ -1,28 +1,17 @@
+#include "cqpch.h"
 #include "SandboxCaduq.h"
 
-#include "Eigen/Core"
 #include "Geometry/Geo.h"
-#include "Objects/Entity.h"
+#include "Caduq/Objects/Entity.h"
 #include "Objects/Point.h"
 #include "Objects/Spline.h"
 #include "Objects/Patch.h"
-#include "Objects/Frame.h"
+#include "Caduq/Objects/Frame.h"
 #include "Objects/Part.h"
 #include "Objects/StlEntity.h"
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
 
 #include "Tools/STL.h"
-
-#include <imgui.h>
-#include <glm/gtc/type_ptr.hpp>
-#include <memory>
-#include <Eigen/Dense>
-#include <Eigen/Geometry>
-
-#ifdef VZ_PLATFORM_WINDOWS
-  #define _USE_MATH_DEFINES
-#endif
-#include <math.h>
 
 void SandboxCaduq::OnAttach()
 {
@@ -99,9 +88,10 @@ void SandboxCaduq::OnAttach()
                                                                 nullptr, 
                                                                 10, m_EntityManager.GetMainFrame()));
 */
+    
     auto frame1 = std::make_shared<Caduq::Frame>(Geometry::Transform::Identity(), m_EntityManager.GetMainFrame());
     m_EntityManager.CreateEntity(frame1);
-    frame1->Update(Eigen::Vector3d(-2.0, -1.0, 0.0), Eigen::Quaterniond(Eigen::AngleAxis(M_PI/4.0, Eigen::Vector3d::UnitZ())));
+    frame1->Update(Eigen::Vector3d(-2.0, -1.0, 0.0), Eigen::Quaterniond(Eigen::AngleAxis(std::numbers::pi/4.0, Eigen::Vector3d::UnitZ())));
     m_EntityManager.CreateEntity(std::make_shared<Caduq::Part>(Geometry::Transform::Identity(), m_EntityManager.GetMainFrame()));
 
     m_EntityManager.CreateEntity(std::make_shared<Caduq::StlEntity>("cube.stl", m_EntityManager.GetMainFrame()));

@@ -1,14 +1,9 @@
+#include "cqpch.h"
 #include "Entity.h"
 
 #include "EntityManager.h"
 #include "Frame.h"
-#include "BobIntegration.h"
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
-
-#include <memory>
-#include <string>
-#include <imgui.h>
-#include <glm/gtc/type_ptr.hpp>
 
 namespace Caduq 
 {

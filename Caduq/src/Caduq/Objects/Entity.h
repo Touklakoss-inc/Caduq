@@ -3,12 +3,6 @@
 
 #include "Vizir.h"
 
-#include <glm/fwd.hpp>
-#include <memory>
-#include <string>
-#include <unordered_set>
-#include <Eigen/Dense>
-
 namespace Caduq 
 {
     enum class Type

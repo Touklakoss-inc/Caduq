@@ -1,9 +1,6 @@
 #ifndef ENTITY_MANAGER_H
 #define ENTITY_MANAGER_H
 
-#include <vector>
-#include <memory>
-
 #include "Geometry/Geo.h"
 #include "XPBD/PhyXManager.h"
 #include "Entity.h"

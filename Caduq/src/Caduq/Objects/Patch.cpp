@@ -1,14 +1,8 @@
+#include "cqpch.h"
 #include "Patch.h"
 
 #include "EntityManager.h"
-#include "BobIntegration.h"
 #include "MyImGui.h"
-
-#include <Eigen/Core>
-#include <imgui.h>
-#include <glm/gtc/type_ptr.hpp>
-#include <memory>
-#include <set>
 
 namespace Caduq
 {

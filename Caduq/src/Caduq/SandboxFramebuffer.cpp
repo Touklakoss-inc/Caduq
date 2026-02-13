@@ -1,11 +1,8 @@
+#include "cqpch.h"
 #include "SandboxFramebuffer.h"
 
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
 #include "Vizir/Renderer/Shader.h"
-
-#include <imgui.h>
-#include <glm/ext.hpp>
-
 
 SandboxFramebuffer::SandboxFramebuffer()
 	: Layer("Sandbox - Framebuffer"), m_CameraController(1280.0f / 720.0f, true)

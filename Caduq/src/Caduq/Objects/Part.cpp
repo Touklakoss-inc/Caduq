@@ -1,16 +1,9 @@
+#include "cqpch.h"
 #include "Part.h"
 
 #include "Geometry/Geo.h"
-#include "Objects/EntityManager.h"
-
-#include "Objects/Frame.h"
-#include <imgui.h>
-
-#include <memory>
-#ifdef VZ_PLATFORM_WINDOWS
-  #define _USE_MATH_DEFINES
-#endif
-#include <math.h>
+#include "Caduq/Objects/EntityManager.h"
+#include "Caduq/Objects/Frame.h"
 
 namespace Caduq 
 {
@@ -76,7 +69,7 @@ namespace Caduq
                 Eigen::Vector4d rotEuler = Eigen::Vector4d::Zero();
                 if (angle != 0.0)
                     rotEuler = Eigen::Vector4d(0.0, quat.x(), quat.y(), quat.z())/(sin(angle/2));
-                rotEuler[0] = angle * 180.0/M_PI;
+                rotEuler[0] = angle * 180.0/std::numbers::pi;
 
                 SetPopupParam(m_MainFrame->GetGeoFrame().GetTransform().translation(), rotEuler);
 
@@ -119,7 +112,7 @@ namespace Caduq
 
                 const auto pos = Eigen::Vector3d(m_GuiPopupPos[0], m_GuiPopupPos[1], m_GuiPopupPos[2]);
                 const auto normal = Eigen::Vector3d(m_GuiPopupRot[1], m_GuiPopupRot[2], m_GuiPopupRot[3]).normalized();
-                Eigen::Quaterniond rotQ = Eigen::Quaterniond(Eigen::AngleAxisd(m_GuiPopupRot[0] * (M_PI/180.0), normal));
+                Eigen::Quaterniond rotQ = Eigen::Quaterniond(Eigen::AngleAxisd(m_GuiPopupRot[0] * (std::numbers::pi/180.0), normal));
 
                 part->GetMainFrame()->Update(pos, rotQ);
             }
@@ -127,7 +120,7 @@ namespace Caduq
             {
                 auto pos = Eigen::Vector3d(m_GuiPopupPos[0], m_GuiPopupPos[1], m_GuiPopupPos[2]);
                 const auto normal = Eigen::Vector3d(m_GuiPopupRot[1], m_GuiPopupRot[2], m_GuiPopupRot[3]).normalized();
-                auto rotQ = Eigen::Quaterniond(Eigen::AngleAxisd(m_GuiPopupRot[0] * (M_PI/180.0), normal));
+                auto rotQ = Eigen::Quaterniond(Eigen::AngleAxisd(m_GuiPopupRot[0] * (std::numbers::pi/180.0), normal));
 
                 std::dynamic_pointer_cast<Caduq::Part>(entityManager.GetCurEntity())->Update(pos, rotQ);
 

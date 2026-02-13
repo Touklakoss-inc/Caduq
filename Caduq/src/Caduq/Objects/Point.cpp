@@ -1,16 +1,9 @@
+#include "cqpch.h"
 #include "Point.h"
 
 #include "EntityManager.h"
 #include "Geometry/Geo.h"
 #include "XPBD/PhyXManager.h"
-#include "BobIntegration.h"
-
-#include <Eigen/Core>
-#include <imgui.h>
-#include <glm/gtc/type_ptr.hpp>
-
-#include <memory>
-#include <string>
 
 namespace Caduq
 {

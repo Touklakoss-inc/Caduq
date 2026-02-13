@@ -6,8 +6,6 @@
 #include "Spline.h"
 #include "Geometry/Patch.h"
 
-#include <memory>
-
 namespace Caduq
 {
     class Patch: public Entity
