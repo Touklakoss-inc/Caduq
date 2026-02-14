@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Vizir/EventSystem/Event.h"
+#include "Vizir/Platform/OpenGL/OpenGLContext.h"
+
+struct GLFWwindow;
 
 namespace Vizir
 {
@@ -23,20 +26,33 @@ namespace Vizir
 	public:
 		using EventCallbackFn = std::function<void(Event&)>;
 
-		virtual ~Window() = default;
+		Window(const WindowProps& props = WindowProps());
+		~Window();
 
-		virtual void OnUpdate() = 0;
+		void OnUpdate();
 
-		virtual unsigned int GetWidth() const = 0;
-		virtual unsigned int GetHeight() const = 0;
+		unsigned int GetWidth() const { return m_Data.Width; }
+		unsigned int GetHeight() const { return m_Data.Height; }
 
-		virtual void* GetNativeWindow() const = 0;
+		void* GetNativeWindow() const { return m_Window; }
 
-		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
-		virtual void SetVSync(bool value) = 0;
-		virtual bool IsVSync() const = 0;
+		void SetEventCallback(const EventCallbackFn& callback) { m_Data.EventCallback = callback; }
+		void SetVSync(bool value);
+		bool IsVSync() const;
+	private:
+		GLFWwindow* m_Window;
+		Scope<GraphicsContext> m_Context;
 
-		static Window* Create(const WindowProps& props = WindowProps());
+		struct WindowData
+		{
+			std::string Title;
+			unsigned int Width, Height;
+			bool VSync;
+
+			EventCallbackFn EventCallback;
+		};
+
+		WindowData m_Data;
 	};
 }
 
