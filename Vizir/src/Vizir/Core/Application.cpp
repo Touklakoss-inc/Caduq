@@ -22,9 +22,9 @@ namespace Vizir
 		BOB_PROFILE_FUNC();
 		VZ_ASSERT(!s_Instance, "Another application has already be created !")
 		s_Instance = this;
-
+		
 		RegisterLogger();
-		m_Window = std::unique_ptr<Window>(Window::Create());
+		m_Window = std::make_unique<Window>();
 		m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
 
 		Renderer::Init();
