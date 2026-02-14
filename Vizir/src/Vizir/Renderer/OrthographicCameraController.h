@@ -30,12 +30,12 @@ namespace Vizir
 
 		float m_AspectRatio;
 		float m_ZoomLevel = 1.0f;
+		glm::vec3 m_CameraPosition = { 0.0f, 0.0f, 0.0f };
+		bool m_Rotation;
 		OrthographicCamera m_Camera;
 
-		bool m_Rotation;
-		glm::vec3 m_CameraPosition = { 0.0f, 0.0f, 0.0f };
-		float m_CameraRotation = 0.0f;
-		float m_CameraTranslationSpeed = m_BaseCameraTranslationSpeed, m_CameraRotationSpeed = 1.0f;
+		float m_CameraTranslationSpeed = m_BaseCameraTranslationSpeed;
+		float m_CameraRotationSpeed = 1.0f;
 	};
 }
 

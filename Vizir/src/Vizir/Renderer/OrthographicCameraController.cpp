@@ -29,12 +29,14 @@ namespace Vizir
 
         if (m_Rotation)
         {
-            if (Input::IsKeyPressed(VZ_KEY_Q))
-                m_CameraRotation -= m_CameraRotationSpeed * ts;
-            else if (Input::IsKeyPressed(VZ_KEY_E))
-                m_CameraRotation += m_CameraRotationSpeed * ts;
+            float angle = 0.0f;
 
-            m_Camera.SetRotation(m_CameraRotation);
+            if (Input::IsKeyPressed(VZ_KEY_Q))
+                angle  = m_CameraRotationSpeed * ts;
+            else if (Input::IsKeyPressed(VZ_KEY_E))
+                angle = -m_CameraRotationSpeed * ts;
+
+            m_Camera.Rotate(angle, glm::vec3(0.0f, 0.0f, 1.0f));
         }
 
         m_Camera.SetPosition(m_CameraPosition);
