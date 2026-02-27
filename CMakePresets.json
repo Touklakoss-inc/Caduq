@@ -1,0 +1,26 @@
+{
+  "version": 4,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 15
+  },
+  "configurePresets": [
+    {
+      "name": "default-template",
+      "hidden": false,
+      "binaryDir": "${sourceDir}/bin/release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_CXX_STANDARD": "20"
+      }
+    },
+    {
+      "name": "debug-template",
+      "binaryDir": "${sourceDir}/bin/debug",
+      "inherits": "default-template",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    }
+  ]
+}

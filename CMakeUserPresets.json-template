@@ -1,0 +1,36 @@
+{
+  "version": 4,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 15
+  },
+  "configurePresets": [
+    {
+      "name": "release",
+      "generator": "Unix Makefiles",
+      "inherits": "default-template",
+      "cacheVariables": {
+      }
+    },
+    {
+      "name": "debug",
+      "generator": "Unix Makefiles",
+      "inherits": "debug-template",
+      "cacheVariables": {
+       "CMAKE_CXX_FLAGS": "-Wall -fpermissive"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "debug",
+      "configurePreset": "debug",
+      "jobs": 6
+    },
+    {
+      "name": "release",
+      "configurePreset": "release",
+      "jobs": 6
+    }
+  ]
+}
