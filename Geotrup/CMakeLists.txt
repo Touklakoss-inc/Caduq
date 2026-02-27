@@ -20,4 +20,5 @@ target_sources(Geotrup
         ${HEADER_LIST}
 )
 target_include_directories(Geotrup PUBLIC src)
-target_link_libraries(Geotrup PUBLIC imgui)
+
+target_link_libraries(Geotrup PRIVATE imgui)

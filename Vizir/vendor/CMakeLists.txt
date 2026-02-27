@@ -12,6 +12,9 @@ target_sources(imgui PRIVATE
 "${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp"
 )
 
-target_include_directories(imgui PUBLIC .)
+target_include_directories(imgui PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+
+# Do not print warnings where it is included
+target_include_directories(imgui SYSTEM INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(imgui PUBLIC glfw glad)

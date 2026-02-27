@@ -12,11 +12,7 @@ target_sources(Caduq
         ${HEADER_LIST}
 )
 
-target_link_libraries(Caduq
-    PRIVATE
-        Vizir
-        Geotrup
-        Bob
-)
 target_include_directories(Caduq PRIVATE src)
 target_precompile_headers(Caduq PRIVATE src/cqpch.h)
+
+target_link_libraries(Caduq PRIVATE Vizir Geotrup Bob)

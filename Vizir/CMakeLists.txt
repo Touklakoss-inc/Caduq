@@ -19,6 +19,5 @@ target_sources(Vizir
 
 target_include_directories(Vizir PUBLIC src src/Vizir)
 target_precompile_headers(Vizir PRIVATE src/vzpch.h)
-target_compile_options(Vizir PRIVATE -fpermissive)
 
-target_link_libraries(Vizir PUBLIC Bob glm glfw imgui stb_image)
+target_link_libraries(Vizir PRIVATE Bob glm glfw imgui stb_image)
