@@ -12,7 +12,6 @@ add_subdirectory(Vizir/vendor/glad)
 add_subdirectory(Vizir/vendor/glm)
 add_subdirectory(Vizir/vendor/GLFW)
 add_subdirectory(Vizir/vendor/imgui)
-add_subdirectory(Vizir/vendor/spdlog)
 add_subdirectory(Vizir/vendor/stb_image)
 
 
@@ -24,7 +23,8 @@ add_subdirectory(Caduq)
 
 target_include_directories(Geotrup PUBLIC Vizir/vendor/Eigen)
 target_include_directories(Caduq PUBLIC Vizir/vendor/Eigen)
+target_include_directories(Bob PUBLIC Vizir/vendor/spdlog/include)
 
 target_link_libraries(Caduq 
-    PRIVATE glad glm glfw imgui spdlog stb_image
+    PRIVATE glad glm glfw imgui stb_image
 )
