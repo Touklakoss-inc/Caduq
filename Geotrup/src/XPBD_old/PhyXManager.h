@@ -5,20 +5,10 @@
 #include <Eigen/Dense>
 
 #include <memory>
-#include <sys/types.h>
 #include <vector>
 namespace XPBD
 {
     class Joint;
-
-    struct JAttachStruct
-    {
-        int pt1;
-        int pt2;
-        double m_DRest;
-        double m_Alpha;
-    };
-
     class PhyXManager
     {
     private:
@@ -41,38 +31,6 @@ namespace XPBD
         double m_GuiDistRest[1] { 0.0 };
 
         int m_GuiSubSteps { 500 };
-
-
-        // current entities positions
-        std::vector<double> m_PtXPosition {};
-        std::vector<double> m_PtYPosition {};
-        std::vector<double> m_PtZPosition {};
-
-        // last entities positions
-        std::vector<double> m_PtXLastPos {};
-        std::vector<double> m_PtYLastPos {};
-        std::vector<double> m_PtZLastPos {};
-
-        // current entities velcity
-        std::vector<double> m_PtXVelocity {};
-        std::vector<double> m_PtYVelocity {};
-        std::vector<double> m_PtZVelocity {};
-
-        // is grounded mask
-        std::vector<uint8_t> m_PtGrounded {};
-
-        // entities masses
-        std::vector<double> m_PtMasses {};
-
-        // joints
-        std::vector<JAttachStruct> m_Joints {};
-
-        void ImportEntities();
-
-        void AttachJoint(int p1, int p2, double dRest, double alpha, double dts);
-
-        void ApplyLinearCorrection(int p1, int p2, Eigen::Vector3d dp, double alpha, double dts);
-
     public:
         static inline bool s_PhyXEnabled { false };
 
