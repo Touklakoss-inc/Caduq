@@ -29,69 +29,6 @@ namespace XPBD
         }
     }
 
-    void PhyXManager::ImportEntities()
-    {
-        std::cout << "Load entities..." << '\n';
-        for (const auto& phyXPoint : m_PhyXPointList)
-        {
-            Eigen::Vector3d pos = phyXPoint->GetGeoPoint()->GetPosition();
-            m_PtXPosition.push_back(pos.x());
-            m_PtYPosition.push_back(pos.y());
-            m_PtZPosition.push_back(pos.z());
-
-            Eigen::Vector3d lastPos = phyXPoint->GetLastPosition();
-            m_PtXLastPos.push_back(lastPos.x());
-            m_PtYLastPos.push_back(lastPos.y());
-            m_PtZLastPos.push_back(lastPos.z());
-
-            Eigen::Vector3d vel = phyXPoint->GetVelocity();
-            m_PtXVelocity.push_back(vel.x());
-            m_PtYVelocity.push_back(vel.y());
-            m_PtZVelocity.push_back(vel.z());
-
-            m_PtGrounded.push_back(phyXPoint->IsGrounded());
-
-            m_PtMasses.push_back(phyXPoint->GetMass());
-        }
-        std::cout << "Done" << '\n';
-    }
-    void PhyXManager::ApplyLinearCorrection(int p1, int p2, Eigen::Vector3d dp, double alpha, double dts)
-    {
-        double C = dp.norm();
-        Eigen::Vector3d n = dp.normalized();
-
-        double w1 = 1.0/m_PtMasses[p1];
-        if (m_PtGrounded[p1])
-            w1 = 0.0;
-
-        double w2 = 1.0/m_PtMasses[p2];
-        if (m_PtGrounded[p2])
-            w2 = 0.0;
-
-        double lambda = -C;
-        if (dts != 0.0 && (w1 != 0.0 || w2 != 0.0 || alpha != 0.0))
-            lambda /= w1 + w2 + alpha/(dts*dts);
-
-        m_PtXPosition[p1] += lambda*n.x()*w1;
-        m_PtYPosition[p1] += lambda*n.y()*w1;
-        m_PtZPosition[p1] += lambda*n.z()*w1;
-
-        m_PtXPosition[p2] -= lambda*n.x()*w2;
-        m_PtYPosition[p2] -= lambda*n.y()*w2;
-        m_PtZPosition[p2] -= lambda*n.z()*w2;
-    }
-
-    void PhyXManager::AttachJoint(int p1, int p2, double dRest, double alpha, double dts)
-    {
-        Eigen::Vector3d n = {m_PtXPosition[p2] - m_PtXPosition[p1],
-                             m_PtYPosition[p2] - m_PtYPosition[p1],
-                             m_PtZPosition[p2] - m_PtZPosition[p1]}; 
-        double d = n.norm();
-        n.normalize();
-
-        ApplyLinearCorrection(p1, p2, -(d-dRest)*n, alpha, dts);
-    }
-
     void PhyXManager::UpdatePhyX(float dt)
     {
         if (!s_PhyXEnabled || !m_TimeEnabled)
@@ -127,61 +64,12 @@ namespace XPBD
                 }
             }
         }
-
-        /*
-        for (int n = 0; n < m_GuiSubSteps; n++)
-        {
-            for (int i = 0; i < m_PtXPosition.size(); i++)
-            {
-                if (!m_PtGrounded[i])
-                {
-                    m_PtYVelocity[i] += dts*g.y();
-
-                    m_PtXLastPos[i] = m_PtXPosition[i];
-                    m_PtYLastPos[i] = m_PtYPosition[i];
-                    m_PtZLastPos[i] = m_PtZPosition[i];
-
-                    m_PtXPosition[i] += dts*m_PtXVelocity[i];
-                    m_PtYPosition[i] += dts*m_PtYVelocity[i];
-                    m_PtZPosition[i] += dts*m_PtZVelocity[i];
-                }
-            }
-
-            for (int i = 0; i < m_Joints.size(); i++)
-            {
-                AttachJoint(0, 1, 1.0, 0.0, dts);
-            }
-
-            for (int i = 0; i < m_PtXPosition.size(); i++)
-            {
-                m_PtXVelocity[i] = (m_PtXPosition[i] - m_PtXLastPos[i])/dts;
-                m_PtYVelocity[i] = (m_PtYPosition[i] - m_PtYLastPos[i])/dts;
-                m_PtZVelocity[i] = (m_PtZPosition[i] - m_PtZLastPos[i])/dts;
-            }
-        }
-
-        for (int i = 0; i < m_PhyXPointList.size(); i++) 
-        {
-            auto& phyXPoint = m_PhyXPointList[i];
-            auto& geoPoint = phyXPoint->GetGeoPoint();
-
-            Eigen::Vector3d vel = {m_PtXVelocity[i], m_PtYVelocity[i], m_PtZVelocity[i]};
-            phyXPoint->SetVelocity(vel);
-
-            Eigen::Vector3d lastPos = {m_PtXLastPos[i], m_PtYLastPos[i], m_PtZLastPos[i]};
-            phyXPoint->SetLastPosition(lastPos);
-
-            Eigen::Vector3d pos = {m_PtXPosition[i], m_PtYPosition[i], m_PtZPosition[i]};
-            geoPoint->SetPosition(pos);
-        }
-        */
     }
 
     void PhyXManager::CreateJoint(const std::shared_ptr<Joint>& joint)
     {
         joint->Init();
         m_JointList.push_back(joint); 
-        m_Joints.push_back({0, 1, 1.0, 0.0});
     }
 
     void PhyXManager::ClearJointsToDelete()
@@ -209,13 +97,9 @@ namespace XPBD
         }
     }
 
-
     void PhyXManager::RenderImGui()
     {
-        if (ImGui::Checkbox("Enable PhyX", &s_PhyXEnabled) && s_PhyXEnabled)
-        {
-            ImportEntities();
-        }
+        ImGui::Checkbox("Enable PhyX", &s_PhyXEnabled);
 
         if (s_PhyXEnabled)
         {
