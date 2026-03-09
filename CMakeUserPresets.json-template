@@ -10,6 +10,7 @@
       "generator": "Unix Makefiles",
       "inherits": "default-template",
       "cacheVariables": {
+       "CMAKE_CXX_FLAGS": "-Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion -fpermissive"
       }
     },
     {
@@ -17,7 +18,15 @@
       "generator": "Unix Makefiles",
       "inherits": "debug-template",
       "cacheVariables": {
-       "CMAKE_CXX_FLAGS": "-Wall -fpermissive"
+       "CMAKE_CXX_FLAGS": "-fpermissive"
+      }
+    },
+    {
+      "name": "profile",
+      "generator": "Unix Makefiles",
+      "inherits": "profile-template",
+      "cacheVariables": {
+       "CMAKE_CXX_FLAGS": "-fpermissive"
       }
     }
   ],
@@ -30,6 +39,11 @@
     {
       "name": "release",
       "configurePreset": "release",
+      "jobs": 6
+    },
+    {
+      "name": "profile",
+      "configurePreset": "profile",
       "jobs": 6
     }
   ]

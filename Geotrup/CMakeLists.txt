@@ -21,4 +21,4 @@ target_sources(Geotrup
 )
 target_include_directories(Geotrup PUBLIC src)
 
-target_link_libraries(Geotrup PRIVATE imgui)
+target_link_libraries(Geotrup PRIVATE imgui Tracy::TracyClient)

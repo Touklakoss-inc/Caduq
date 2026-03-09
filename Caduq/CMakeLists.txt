@@ -15,4 +15,4 @@ target_sources(Caduq
 target_include_directories(Caduq PRIVATE src)
 target_precompile_headers(Caduq PRIVATE src/cqpch.h)
 
-target_link_libraries(Caduq PRIVATE Vizir Geotrup Bob)
+target_link_libraries(Caduq PRIVATE Vizir Geotrup Bob Tracy::TracyClient)

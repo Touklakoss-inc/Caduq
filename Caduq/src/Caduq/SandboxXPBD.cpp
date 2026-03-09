@@ -6,6 +6,7 @@
 #include "Objects/Point.h"
 #include "Objects/Spline.h"
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
+#include "tracy/Tracy.hpp"
 
 void SandboxXPBD::OnAttach()
 {
@@ -88,6 +89,7 @@ void SandboxXPBD::OnAttach()
 
 void SandboxXPBD::OnUpdate(Vizir::Timestep ts)
 {
+    ZoneScoped;
 	m_CameraController.OnUpdate(ts);
 
     m_PhyXManager->UpdatePhyX(ts.GetSeconds());
@@ -110,6 +112,7 @@ void SandboxXPBD::OnUpdate(Vizir::Timestep ts)
     std::dynamic_pointer_cast<Vizir::OpenGLShader>(m_Shader)->Unbind();
 
 	Vizir::Renderer::EndScene();
+    FrameMark;
 }
 
 void SandboxXPBD::OnImGuiRender()
