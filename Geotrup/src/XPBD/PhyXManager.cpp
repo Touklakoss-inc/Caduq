@@ -98,6 +98,7 @@ namespace XPBD
             return;
 
         double dts = static_cast<double>(dt)/static_cast<double>(m_GuiSubSteps);
+        /*
         for (int n = 0; n < m_GuiSubSteps; n++)
         {
             for (const auto& phyXPoint : m_PhyXPointList)
@@ -127,8 +128,8 @@ namespace XPBD
                 }
             }
         }
+        */
 
-        /*
         for (int n = 0; n < m_GuiSubSteps; n++)
         {
             for (int i = 0; i < m_PtXPosition.size(); i++)
@@ -149,7 +150,8 @@ namespace XPBD
 
             for (int i = 0; i < m_Joints.size(); i++)
             {
-                AttachJoint(0, 1, 1.0, 0.0, dts);
+                auto& joint = m_Joints[i];
+                AttachJoint(joint.pt1, joint.pt2, joint.m_DRest, joint.m_Alpha, dts);
             }
 
             for (int i = 0; i < m_PtXPosition.size(); i++)
@@ -174,14 +176,24 @@ namespace XPBD
             Eigen::Vector3d pos = {m_PtXPosition[i], m_PtYPosition[i], m_PtZPosition[i]};
             geoPoint->SetPosition(pos);
         }
-        */
     }
 
     void PhyXManager::CreateJoint(const std::shared_ptr<Joint>& joint)
     {
         joint->Init();
-        m_JointList.push_back(joint); 
-        m_Joints.push_back({0, 1, 1.0, 0.0});
+        m_JointList.push_back(joint);
+        auto jAttach = std::dynamic_pointer_cast<JAttach>(joint);
+
+        auto it1 = std::find(m_PhyXPointList.begin(), m_PhyXPointList.end(), jAttach->m_P1);
+        auto it2 = std::find(m_PhyXPointList.begin(), m_PhyXPointList.end(), jAttach->m_P2);
+        if (it1 != m_PhyXPointList.end() && it2 != m_PhyXPointList.end())
+        {
+            int p1 = std::distance(m_PhyXPointList.begin(), it1);
+            int p2 = std::distance(m_PhyXPointList.begin(), it2);
+            m_Joints.push_back({p1, p2, jAttach->m_DRest, jAttach->m_Alpha});
+        }
+        else
+            std::cout << "point not found\n";
     }
 
     void PhyXManager::ClearJointsToDelete()

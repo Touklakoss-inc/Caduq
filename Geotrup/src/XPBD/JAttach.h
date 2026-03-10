@@ -10,7 +10,8 @@ namespace XPBD
 {
     class JAttach : public Joint
     {
-    private:
+    // private:
+    public:
         std::shared_ptr<Point> m_P1;
         std::shared_ptr<Point> m_P2;
         double m_DRest;
