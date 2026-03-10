@@ -51,11 +51,14 @@ void SandboxXPBD::OnAttach()
 
     m_EntityManager.CreateEntity(std::make_shared<Caduq::Point>(Eigen::Vector3d{0.0, 0.0, 0.0}, m_EntityManager.GetMainFrame(), Caduq::Type::point, Caduq::Point::OptParam{.grounded=true}));
     m_EntityManager.CreateEntity(std::make_shared<Caduq::Point>(Eigen::Vector3d{1.0, 0.0, 0.0}, m_EntityManager.GetMainFrame()));
-    // m_EntityManager.CreateEntity(std::make_shared<Caduq::Point>(Eigen::Vector3d{1.5, 0.0, 0.0}, m_EntityManager.GetMainFrame()));
+    m_EntityManager.CreateEntity(std::make_shared<Caduq::Point>(Eigen::Vector3d{2.0, 0.0, 0.0}, m_EntityManager.GetMainFrame()));
     // m_EntityManager.CreateEntity(std::make_shared<Caduq::Point>(Eigen::Vector3d{3.5, 0.0, 0.0}, m_EntityManager.GetMainFrame(), Caduq::Type::point, Caduq::Point::OptParam{.grounded=true}));
 
     m_EntityManager.CreateEntity(std::make_shared<Caduq::Spline>(m_EntityManager.GetPoint(0).lock(), Caduq::PointTangency{{0, 0, 0}},
                                                                  m_EntityManager.GetPoint(1).lock(), Caduq::PointTangency{{0, 0, 0}},
+                                                                 100, m_EntityManager.GetMainFrame()));              
+    m_EntityManager.CreateEntity(std::make_shared<Caduq::Spline>(m_EntityManager.GetPoint(1).lock(), Caduq::PointTangency{{0, 0, 0}},
+                                                                 m_EntityManager.GetPoint(2).lock(), Caduq::PointTangency{{0, 0, 0}},
                                                                  100, m_EntityManager.GetMainFrame()));              
     // m_EntityManager.CreateEntity(std::make_shared<Caduq::Spline>(m_EntityManager.GetPoint(2).lock(), Caduq::PointTangency{{0, 0, 0}},
     //                                                              m_EntityManager.GetPoint(1).lock(), Caduq::PointTangency{{0, 0, 0}},
@@ -75,6 +78,9 @@ void SandboxXPBD::OnAttach()
 
     m_PhyXManager->CreateJoint(std::make_shared<XPBD::JAttach>(m_EntityManager.GetPoint(0).lock()->GetPhyXPoint(), 
                                                                m_EntityManager.GetPoint(1).lock()->GetPhyXPoint(), 
+                                                               1.0, 0.0));
+    m_PhyXManager->CreateJoint(std::make_shared<XPBD::JAttach>(m_EntityManager.GetPoint(1).lock()->GetPhyXPoint(), 
+                                                               m_EntityManager.GetPoint(2).lock()->GetPhyXPoint(), 
                                                                1.0, 0.0));
     // m_PhyXManager->CreateJoint(std::make_shared<XPBD::JAttach>(m_EntityManager.GetPoint(1).lock()->GetPhyXPoint(), 
     //                                                            m_EntityManager.GetPoint(2).lock()->GetPhyXPoint(), 
