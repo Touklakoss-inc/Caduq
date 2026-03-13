@@ -3,6 +3,7 @@
 #include <Eigen/Core>
 #include "XPBD/JAttach.h"
 #include "XPBD/Joint.h"
+#include "XPBD/PhyXPart.h"
 #include "XPBD/Point.h"
 #include <imgui.h>
 #include "tracy/Tracy.hpp"
@@ -32,27 +33,45 @@ namespace XPBD
 
     void PhyXManager::ImportEntities()
     {
+        std::cout << "Clear entities..." << '\n';
+
+        m_PtXPosition.clear();
+        m_PtYPosition.clear();
+        m_PtZPosition.clear();
+
+        m_PtXLastPos.clear();
+        m_PtYLastPos.clear();
+        m_PtZLastPos.clear();
+
+        m_PtXVelocity.clear();
+        m_PtYVelocity.clear();
+        m_PtZVelocity.clear();
+
+        m_PtGrounded.clear();
+
+        m_PtMasses.clear();
+
         std::cout << "Load entities..." << '\n';
-        for (const auto& phyXPoint : m_PhyXPointList)
+        for (const auto& phyXPart : m_PhyXPartList)
         {
-            Eigen::Vector3d pos = phyXPoint->GetGeoPoint()->GetPosition();
+            Eigen::Vector3d pos = phyXPart->frame->GetPosition();
             m_PtXPosition.push_back(pos.x());
             m_PtYPosition.push_back(pos.y());
             m_PtZPosition.push_back(pos.z());
 
-            Eigen::Vector3d lastPos = phyXPoint->GetLastPosition();
+            Eigen::Vector3d lastPos = Eigen::Vector3d::Zero();
             m_PtXLastPos.push_back(lastPos.x());
             m_PtYLastPos.push_back(lastPos.y());
             m_PtZLastPos.push_back(lastPos.z());
 
-            Eigen::Vector3d vel = phyXPoint->GetVelocity();
+            Eigen::Vector3d vel = Eigen::Vector3d::Zero();
             m_PtXVelocity.push_back(vel.x());
             m_PtYVelocity.push_back(vel.y());
             m_PtZVelocity.push_back(vel.z());
 
-            m_PtGrounded.push_back(phyXPoint->IsGrounded());
+            m_PtGrounded.push_back(phyXPart->isGrounded);
 
-            m_PtMasses.push_back(phyXPoint->GetMass());
+            m_PtMasses.push_back(phyXPart->mass);
         }
         std::cout << "Done" << '\n';
     }
@@ -100,37 +119,6 @@ namespace XPBD
             return;
 
         double dts = static_cast<double>(dt)/static_cast<double>(m_GuiSubSteps);
-        /*
-        for (int n = 0; n < m_GuiSubSteps; n++)
-        {
-            for (const auto& phyXPoint : m_PhyXPointList)
-            {
-                if (!phyXPoint->IsGrounded())
-                {
-                    auto& geoPoint = phyXPoint->GetGeoPoint();
-                    phyXPoint->SetVelocity(phyXPoint->GetVelocity() + dts*g);
-
-                    phyXPoint->SetLastPosition(geoPoint->GetPosition());
-
-                    geoPoint->SetPosition(geoPoint->GetPosition() + dts*phyXPoint->GetVelocity());
-                }
-            }
-
-            for (const auto& joint : m_JointList)
-            {
-                joint->ApplyConstraints(dts);
-            }
-
-            for (const auto& phyXPoint : m_PhyXPointList)
-            {
-                if (!phyXPoint->IsGrounded())
-                {
-                    auto& geoPoint = phyXPoint->GetGeoPoint();
-                    phyXPoint->SetVelocity((geoPoint->GetPosition() - phyXPoint->GetLastPosition())/dts);
-                }
-            }
-        }
-        */
 
         for (int n = 0; n < m_GuiSubSteps; n++)
         {
@@ -164,35 +152,24 @@ namespace XPBD
             }
         }
 
-        for (int i = 0; i < m_PhyXPointList.size(); i++) 
+        for (int i = 0; i < m_PhyXPartList.size(); i++) 
         {
-            auto& phyXPoint = m_PhyXPointList[i];
-            auto& geoPoint = phyXPoint->GetGeoPoint();
-
-            Eigen::Vector3d vel = {m_PtXVelocity[i], m_PtYVelocity[i], m_PtZVelocity[i]};
-            phyXPoint->SetVelocity(vel);
-
-            Eigen::Vector3d lastPos = {m_PtXLastPos[i], m_PtYLastPos[i], m_PtZLastPos[i]};
-            phyXPoint->SetLastPosition(lastPos);
+            auto& phyXPart = m_PhyXPartList[i];
 
             Eigen::Vector3d pos = {m_PtXPosition[i], m_PtYPosition[i], m_PtZPosition[i]};
-            geoPoint->SetPosition(pos);
+            phyXPart->frame->SetPositionRotation(pos, Eigen::Quaterniond::Identity());
         }
     }
 
-    void PhyXManager::CreateJoint(const std::shared_ptr<Joint>& joint)
+    void PhyXManager::CreateJoint(const std::shared_ptr<PhyXPart> p1, const std::shared_ptr<PhyXPart> p2, double dRest, double alpha)
     {
-        joint->Init();
-        m_JointList.push_back(joint);
-        auto jAttach = std::dynamic_pointer_cast<JAttach>(joint);
-
-        auto it1 = std::find(m_PhyXPointList.begin(), m_PhyXPointList.end(), jAttach->m_P1);
-        auto it2 = std::find(m_PhyXPointList.begin(), m_PhyXPointList.end(), jAttach->m_P2);
-        if (it1 != m_PhyXPointList.end() && it2 != m_PhyXPointList.end())
+        auto it1 = std::find(m_PhyXPartList.begin(), m_PhyXPartList.end(), p1);
+        auto it2 = std::find(m_PhyXPartList.begin(), m_PhyXPartList.end(), p2);
+        if (it1 != m_PhyXPartList.end() && it2 != m_PhyXPartList.end())
         {
-            int p1 = std::distance(m_PhyXPointList.begin(), it1);
-            int p2 = std::distance(m_PhyXPointList.begin(), it2);
-            m_Joints.push_back({p1, p2, jAttach->m_DRest, jAttach->m_Alpha});
+            int p1 = std::distance(m_PhyXPartList.begin(), it1);
+            int p2 = std::distance(m_PhyXPartList.begin(), it2);
+            m_Joints.push_back({p1, p2, dRest, alpha});
         }
         else
             std::cout << "point not found\n";
@@ -214,12 +191,12 @@ namespace XPBD
         m_JointsToDelete.clear();
     }
 
-    void PhyXManager::RemovePhyXPointFromList(const std::shared_ptr<Point>& phyXPoint)
+    void PhyXManager::RemovePhyXPartFromList(const std::shared_ptr<PhyXPart>& phyXPart)
     {
-        auto it = std::find(m_PhyXPointList.begin(), m_PhyXPointList.end(), phyXPoint);
-        if (it != m_PhyXPointList.end())
+        auto it = std::find(m_PhyXPartList.begin(), m_PhyXPartList.end(), phyXPart);
+        if (it != m_PhyXPartList.end())
         {
-            m_PhyXPointList.erase(it);
+            m_PhyXPartList.erase(it);
         }
     }
 
@@ -227,13 +204,14 @@ namespace XPBD
     void PhyXManager::RenderImGui()
     {
         if (ImGui::Checkbox("Enable PhyX", &s_PhyXEnabled) && s_PhyXEnabled)
-        {
             ImportEntities();
-        }
 
         if (s_PhyXEnabled)
         {
             ImGui::SameLine();
+            if (ImGui::Button("Import phyX points"))
+                ImportEntities();
+
             ImGui::Checkbox("Enable Time", &m_TimeEnabled);
 
             ImGui::Separator();
@@ -263,8 +241,8 @@ namespace XPBD
 
     void PhyXManager::AttachPopup()
     {
-        MyCombo("Start Point", m_PhyXPointList, m_GuiStartPointID);
-        MyCombo("End Point", m_PhyXPointList, m_GuiEndPointID);
+        // MyCombo("Start Point", m_PhyXPartList, m_GuiStartPointID);
+        // MyCombo("End Point", m_PhyXPartList, m_GuiEndPointID);
 
         ImGui::InputDouble("Distance", &m_GuiDistRest[0]);
 
@@ -277,43 +255,43 @@ namespace XPBD
 
         ImGui::SameLine();
 
-        if (ImGui::Button("Ok"))
-        {
-            // Check if all 4 selected splines are different
-            if (m_GuiStartPointID != m_GuiEndPointID)
-            {
-                if (m_CurJoint == nullptr)
-                {
-                    CreateJoint(std::make_shared<JAttach>(m_PhyXPointList.at(m_GuiStartPointID),
-                                                          m_PhyXPointList.at(m_GuiEndPointID),
-                                                          m_GuiDistRest[0], 0.0));
-                }
-                else
-                {
-                    std::dynamic_pointer_cast<JAttach>(m_CurJoint)->Update(m_PhyXPointList.at(m_GuiStartPointID),
-                                                       m_PhyXPointList.at(m_GuiEndPointID),
-                                                       m_GuiDistRest[0], 0.0);
-                }
-                m_CurJoint = nullptr;
-
-                ImGui::CloseCurrentPopup();
-            }
-            else
-                std::cout << "Select two different points to create an attach joint" << '\n';
-        }
+        // if (ImGui::Button("Ok"))
+        // {
+        //     // Check if all 4 selected splines are different
+        //     if (m_GuiStartPointID != m_GuiEndPointID)
+        //     {
+        //         if (m_CurJoint == nullptr)
+        //         {
+        //             CreateJoint(std::make_shared<JAttach>(m_PhyXPartList.at(m_GuiStartPointID),
+        //                                                   m_PhyXPartList.at(m_GuiEndPointID),
+        //                                                   m_GuiDistRest[0], 0.0));
+        //         }
+        //         else
+        //         {
+        //             std::dynamic_pointer_cast<JAttach>(m_CurJoint)->Update(m_PhyXPartList.at(m_GuiStartPointID),
+        //                                                m_PhyXPartList.at(m_GuiEndPointID),
+        //                                                m_GuiDistRest[0], 0.0);
+        //         }
+        //         m_CurJoint = nullptr;
+        //
+        //         ImGui::CloseCurrentPopup();
+        //     }
+        //     else
+        //         std::cout << "Select two different points to create an attach joint" << '\n';
+        // }
         ImGui::EndPopup();
     }
 
     void PhyXManager::SetAttachPopupParam(int startPointID, int endPointID, double dist)
     {
         m_GuiDistRest[0] = dist;
-        for (int i = 0; i < m_PhyXPointList.size(); i++)
+        for (int i = 0; i < m_PhyXPartList.size(); i++)
         {
-            auto curPointID = m_PhyXPointList.at(i)->GetID();
-            if (curPointID == startPointID)
-                m_GuiStartPointID = i;
-            else if (curPointID == endPointID)
-                m_GuiEndPointID = i;
+            // auto curPointID = m_PhyXPartList.at(i)->GetID();
+            // if (curPointID == startPointID)
+            //     m_GuiStartPointID = i;
+            // else if (curPointID == endPointID)
+            //     m_GuiEndPointID = i;
         }
     }
 }

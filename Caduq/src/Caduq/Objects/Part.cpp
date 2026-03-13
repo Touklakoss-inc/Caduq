@@ -1,3 +1,4 @@
+#include "XPBD/PhyXPart.h"
 #include "cqpch.h"
 #include "Part.h"
 
@@ -5,11 +6,13 @@
 #include "Caduq/Objects/EntityManager.h"
 #include "Caduq/Objects/Frame.h"
 
+#include <memory>
 namespace Caduq 
 {
-    Part::Part(Geometry::Transform transform, const std::shared_ptr<Frame>& frame, Type type, const std::string& name)
-        : Entity{ name != "" ? name : "Part " + std::to_string(++s_IdGenerator), type, frame }
+    Part::Part(Geometry::Transform transform, const std::shared_ptr<Frame>& frame,  OptParam oParam)
+        : Entity{ oParam.name != "" ? oParam.name : "Part " + std::to_string(++s_IdGenerator), oParam.type, frame }
         , m_MainFrame{ std::make_shared<Frame>(transform, frame) }
+        , m_PhyXPart{ std::make_shared<XPBD::PhyXPart>(XPBD::PhyXPart{&(m_MainFrame->GetGeoFrame()), oParam.mass, oParam.grounded}) }
         , m_EntityManager{ m_MainFrame }
     {
     }

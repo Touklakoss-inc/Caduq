@@ -1,6 +1,7 @@
 #ifndef GO_FRAME_H
 #define GO_FRAME_H
 
+#include "Eigen/Core"
 #include "Geo.h"
 
 #include <Eigen/Dense>
@@ -23,6 +24,7 @@ namespace Geometry
         void SetPositionRotation(Eigen::Vector3d position, Eigen::Quaterniond rotation);
 
         const Transform GetTransform() const { return m_Transform; };
+        const Eigen::Vector3d GetPosition() const { return m_Transform.translation(); };
     };
 }
 #endif
