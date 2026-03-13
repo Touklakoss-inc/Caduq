@@ -2,7 +2,6 @@
 #define CQ_POINT_H
 
 #include "Geometry/Point.h"
-#include "XPBD/Point.h"
 #include "Entity.h"
 #include "Frame.h"
 
@@ -17,19 +16,11 @@ namespace Caduq
 
         std::shared_ptr<Frame> m_RefFrame;
         std::shared_ptr<Geometry::Point> m_GeoPoint;
-        std::shared_ptr<XPBD::Point> m_PhyXPoint;
 
         static inline float m_GuiPointPopupCoord[3] { 0.0f, 0.0f, 0.0f };
 
     public:
-        struct OptParam
-        {
-            std::string name = "";
-            double mass = 1.0;
-            bool grounded = false;
-        };
-
-        Point(Eigen::Vector3d pos, const std::shared_ptr<Frame>& frame, Type type = Type::point, OptParam oParam = { .name="", .mass=1.0, .grounded=false });
+        Point(Eigen::Vector3d pos, const std::shared_ptr<Frame>& frame, Type type = Type::point, const std::string& name = "");
 
         ~Point() override = default;
 
@@ -44,7 +35,6 @@ namespace Caduq
             for (int i = 0; i < 3; i++) m_GuiPointPopupCoord[i] = coord[i]; };
 
         const std::shared_ptr<Geometry::Point>& GetGeoPoint() const { return m_GeoPoint; };
-        const std::shared_ptr<XPBD::Point>& GetPhyXPoint() const { return m_PhyXPoint; };
         int GetID() const override { return m_Id; };
     };
 }

@@ -31,9 +31,6 @@ namespace Caduq
     {
         for (const auto& entity : m_EntityToDelete)
         {
-            if (entity->GetType() == Type::point)
-                m_PhyXManager->RemovePhyXPartFromList(std::dynamic_pointer_cast<Part>(entity)->GetPhyXPart());
-
             entity->Delete();
 
             auto it = std::find(m_EntityList.begin(), m_EntityList.end(), entity);

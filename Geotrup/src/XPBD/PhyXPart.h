@@ -3,7 +3,6 @@
 
 #include "Geometry/Frame.h"
 
-#include <memory>
 namespace XPBD
 {
     struct PhyXPart

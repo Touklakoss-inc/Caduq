@@ -2,7 +2,6 @@
 #include "cqpch.h"
 #include "SandboxXPBD.h"
 
-#include "XPBD/JAttach.h"
 #include "Caduq/Objects/Entity.h"
 #include "Objects/Point.h"
 #include "Objects/Part.h"
@@ -170,18 +169,9 @@ void SandboxXPBD::OnImGuiRender()
 
     m_PhyXManager->RenderImGui();
 
-    if (m_PhyXManager->s_PhyXEnabled)
-    {
-        for (const auto& joint : m_PhyXManager->GetJointList()) 
-        {
-            joint->RenderImGui(*m_PhyXManager);
-        }
-    }
-
     ImGui::End();
 
     m_EntityManager.ClearEntityToDelete();
-    m_PhyXManager->ClearJointsToDelete();
     
     ImGui::ShowDemoWindow();
 }

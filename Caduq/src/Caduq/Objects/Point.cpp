@@ -2,17 +2,14 @@
 #include "Point.h"
 
 #include "EntityManager.h"
-#include "Geometry/Geo.h"
-#include "XPBD/PhyXManager.h"
 
 namespace Caduq
 {
-    Point::Point(Eigen::Vector3d pos, const std::shared_ptr<Frame>& frame, Type type, OptParam oP)
-        : Entity{ oP.name != "" ? oP.name : "Point " + std::to_string(++s_IdGenerator), type, frame }
-        , m_Id{ oP.name != "" ? ++s_IdGenerator : s_IdGenerator }
+    Point::Point(Eigen::Vector3d pos, const std::shared_ptr<Frame>& frame, Type type, const std::string& name)
+        : Entity{ name != "" ? name : "Point " + std::to_string(++s_IdGenerator), type, frame }
+        , m_Id{ name != "" ? ++s_IdGenerator : s_IdGenerator }
         , m_RefFrame{ frame }
         , m_GeoPoint{ std::make_shared<Geometry::Point>(pos) }
-        , m_PhyXPoint{ std::make_shared<XPBD::Point>(m_GeoPoint, oP.mass, m_Name, m_Id, oP.grounded) }
     {
     }
 
@@ -54,12 +51,6 @@ namespace Caduq
 
     void Point::Delete()
     {
-        for (const auto& pj : m_PhyXPoint->GetParentJoints())
-        {
-            XPBD::PhyXManager::AddJointToDelete(pj);
-        }
-
-        m_PhyXPoint->Delete();
         Entity::Delete();
     }
 
@@ -81,14 +72,6 @@ namespace Caduq
             }
             ImGui::SameLine();
             Entity::RenderImGui(entityManager);
-
-            if (XPBD::PhyXManager::s_PhyXEnabled)
-            {
-                ImGui::Checkbox("Grounded", &m_PhyXPoint->IsGroundedRef());
-
-                if (!m_PhyXPoint->IsGrounded()) 
-                    ImGui::InputDouble("Mass [kg]", &m_PhyXPoint->GetMassRef());
-            }
 
             ImGui::TreePop();
         }
