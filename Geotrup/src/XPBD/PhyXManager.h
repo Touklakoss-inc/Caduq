@@ -1,8 +1,7 @@
 #ifndef PHYXMANAGER_H
 #define PHYXMANAGER_H
 
-#include "Point.h"
-#include "XPBD/PhyXPart.h"
+#include "PhyXPart.h"
 #include <Eigen/Dense>
 
 #include <memory>
@@ -10,8 +9,6 @@
 #include <vector>
 namespace XPBD
 {
-    class Joint;
-
     struct JAttachStruct
     {
         int pt1;
@@ -28,10 +25,6 @@ namespace XPBD
         bool m_TimeEnabled { false };
 
         std::vector<std::shared_ptr<PhyXPart>> m_PhyXPartList { };
-
-        std::vector<std::shared_ptr<Joint>> m_JointList { };
-        static inline std::vector<std::shared_ptr<Joint>> m_JointsToDelete { };
-        std::shared_ptr<Joint> m_CurJoint { nullptr };
 
         // ImGui function
         void AttachPopup();
@@ -82,18 +75,10 @@ namespace XPBD
         void UpdatePhyX(float dt);
 
         void CreateJoint(const std::shared_ptr<PhyXPart> p1, const std::shared_ptr<PhyXPart> p2, double dRest, double alpha);
-        static void AddJointToDelete(const std::shared_ptr<Joint>& joint) { m_JointsToDelete.push_back(joint); };
-        void ClearJointsToDelete();
-
-        void SetCurJoint(const std::shared_ptr<Joint>& joint) { m_CurJoint = joint; };
-
-        const auto& GetJointList() { return m_JointList; };
 
         void AddPhyXPartToList(const auto& phyXPart) { m_PhyXPartList.push_back(phyXPart); };
-        void RemovePhyXPartFromList(const std::shared_ptr<PhyXPart>& phyXPart);
 
         void RenderImGui();
-        void SetAttachPopupParam(int start_idx, int end_idx, double dist);
     };
 }
 

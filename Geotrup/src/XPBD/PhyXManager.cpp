@@ -1,11 +1,9 @@
 #include "PhyXManager.h"
 
 #include <Eigen/Core>
-#include "XPBD/JAttach.h"
-#include "XPBD/Joint.h"
 #include "XPBD/PhyXPart.h"
-#include "XPBD/Point.h"
 #include <imgui.h>
+#include <iostream>
 
 #include <memory>
 namespace XPBD
@@ -173,32 +171,6 @@ namespace XPBD
             std::cout << "point not found\n";
     }
 
-    void PhyXManager::ClearJointsToDelete()
-    {
-        for (const auto& joint : m_JointsToDelete)
-        {
-            joint->Delete();
-
-            auto it = std::find(m_JointList.begin(), m_JointList.end(), joint);
-            if (it != m_JointList.end())
-            {
-                m_JointList.erase(it);
-            }
-        }
-
-        m_JointsToDelete.clear();
-    }
-
-    void PhyXManager::RemovePhyXPartFromList(const std::shared_ptr<PhyXPart>& phyXPart)
-    {
-        auto it = std::find(m_PhyXPartList.begin(), m_PhyXPartList.end(), phyXPart);
-        if (it != m_PhyXPartList.end())
-        {
-            m_PhyXPartList.erase(it);
-        }
-    }
-
-
     void PhyXManager::RenderImGui()
     {
         if (ImGui::Checkbox("Enable PhyX", &s_PhyXEnabled) && s_PhyXEnabled)
@@ -217,79 +189,6 @@ namespace XPBD
             float framerate = ImGui::GetIO().Framerate;
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / framerate, framerate);
             ImGui::InputInt("PhyX substeps", &m_GuiSubSteps);
-
-            ImGui::Separator();
-
-            if (ImGui::Button("Attach"))
-            {
-                m_GuiStartPointID = 0;
-                m_GuiEndPointID = 0;
-                m_GuiDistRest[0] = 0.0;
-
-                ImGui::OpenPopup("create_attach_popup");
-            }
-
-            ImGui::Separator();
-
-            if (ImGui::BeginPopup("create_attach_popup"))
-                AttachPopup();
-
-        }
-    }
-
-    void PhyXManager::AttachPopup()
-    {
-        // MyCombo("Start Point", m_PhyXPartList, m_GuiStartPointID);
-        // MyCombo("End Point", m_PhyXPartList, m_GuiEndPointID);
-
-        ImGui::InputDouble("Distance", &m_GuiDistRest[0]);
-
-        ImGui::Separator();
-
-        if (ImGui::Button("Cancel"))
-        {
-            ImGui::CloseCurrentPopup();
-        }
-
-        ImGui::SameLine();
-
-        // if (ImGui::Button("Ok"))
-        // {
-        //     // Check if all 4 selected splines are different
-        //     if (m_GuiStartPointID != m_GuiEndPointID)
-        //     {
-        //         if (m_CurJoint == nullptr)
-        //         {
-        //             CreateJoint(std::make_shared<JAttach>(m_PhyXPartList.at(m_GuiStartPointID),
-        //                                                   m_PhyXPartList.at(m_GuiEndPointID),
-        //                                                   m_GuiDistRest[0], 0.0));
-        //         }
-        //         else
-        //         {
-        //             std::dynamic_pointer_cast<JAttach>(m_CurJoint)->Update(m_PhyXPartList.at(m_GuiStartPointID),
-        //                                                m_PhyXPartList.at(m_GuiEndPointID),
-        //                                                m_GuiDistRest[0], 0.0);
-        //         }
-        //         m_CurJoint = nullptr;
-        //
-        //         ImGui::CloseCurrentPopup();
-        //     }
-        //     else
-        //         std::cout << "Select two different points to create an attach joint" << '\n';
-        // }
-        ImGui::EndPopup();
-    }
-
-    void PhyXManager::SetAttachPopupParam(int startPointID, int endPointID, double dist)
-    {
-        m_GuiDistRest[0] = dist;
-        for (int i = 0; i < m_PhyXPartList.size(); i++)
-        {
-            // auto curPointID = m_PhyXPartList.at(i)->GetID();
-            // if (curPointID == startPointID)
-            //     m_GuiStartPointID = i;
-            // else if (curPointID == endPointID)
-            //     m_GuiEndPointID = i;
         }
     }
 }
