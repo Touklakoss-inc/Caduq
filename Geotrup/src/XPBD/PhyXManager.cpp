@@ -1,6 +1,7 @@
 #include "PhyXManager.h"
 
 #include <Eigen/Core>
+#include "Eigen/Geometry"
 #include "XPBD/PhyXPart.h"
 #include <imgui.h>
 #include <iostream>
@@ -40,13 +41,31 @@ namespace XPBD
         m_PtYLastPos.clear();
         m_PtZLastPos.clear();
 
-        m_PtXVelocity.clear();
-        m_PtYVelocity.clear();
-        m_PtZVelocity.clear();
+        m_PtXRotation.clear();
+        m_PtYRotation.clear();
+        m_PtZRotation.clear();
+        m_PtWRotation.clear();
 
-        m_PtGrounded.clear();
+        m_PtXLastRot.clear();
+        m_PtYLastRot.clear();
+        m_PtZLastRot.clear();
+        m_PtWLastRot.clear();
+
+        m_PtXLinVelocity.clear();
+        m_PtYLinVelocity.clear();
+        m_PtZLinVelocity.clear();
+
+        m_PtXAngVelocity.clear();
+        m_PtYAngVelocity.clear();
+        m_PtZAngVelocity.clear();
 
         m_PtMasses.clear();
+
+        m_PtXInertia.clear();
+        m_PtYInertia.clear();
+        m_PtZInertia.clear();
+
+        m_PtGrounded.clear();
 
         std::cout << "Load entities..." << '\n';
         for (const auto& phyXPart : m_PhyXPartList)
@@ -61,14 +80,35 @@ namespace XPBD
             m_PtYLastPos.push_back(lastPos.y());
             m_PtZLastPos.push_back(lastPos.z());
 
-            Eigen::Vector3d vel = Eigen::Vector3d::Zero();
-            m_PtXVelocity.push_back(vel.x());
-            m_PtYVelocity.push_back(vel.y());
-            m_PtZVelocity.push_back(vel.z());
+            Eigen::Quaterniond rot = phyXPart->frame->GetRotation();
+            m_PtXRotation.push_back(rot.x());
+            m_PtYRotation.push_back(rot.y());
+            m_PtZRotation.push_back(rot.z());
+            m_PtWRotation.push_back(rot.w());
 
-            m_PtGrounded.push_back(phyXPart->isGrounded);
+            Eigen::Quaterniond lastRot = Eigen::Quaterniond::Identity();
+            m_PtXLastRot.push_back(lastRot.x());
+            m_PtYLastRot.push_back(lastRot.y());
+            m_PtZLastRot.push_back(lastRot.z());
+            m_PtWLastRot.push_back(lastRot.w());
+
+            Eigen::Vector3d linVel = Eigen::Vector3d::Zero();
+            m_PtXLinVelocity.push_back(linVel.x());
+            m_PtYLinVelocity.push_back(linVel.y());
+            m_PtZLinVelocity.push_back(linVel.z());
+
+            Eigen::Vector3d angVel = Eigen::Vector3d::Zero();
+            m_PtXAngVelocity.push_back(angVel.x());
+            m_PtYAngVelocity.push_back(angVel.y());
+            m_PtZAngVelocity.push_back(angVel.z());
 
             m_PtMasses.push_back(phyXPart->mass);
+
+            m_PtXInertia.push_back(phyXPart->inertiaTensor.x());
+            m_PtYInertia.push_back(phyXPart->inertiaTensor.y());
+            m_PtZInertia.push_back(phyXPart->inertiaTensor.z());
+
+            m_PtGrounded.push_back(phyXPart->isGrounded);
         }
         std::cout << "Done" << '\n';
     }
@@ -122,15 +162,39 @@ namespace XPBD
             {
                 if (!m_PtGrounded[i])
                 {
-                    m_PtYVelocity[i] += dts*g.y();
-
                     m_PtXLastPos[i] = m_PtXPosition[i];
                     m_PtYLastPos[i] = m_PtYPosition[i];
                     m_PtZLastPos[i] = m_PtZPosition[i];
 
-                    m_PtXPosition[i] += dts*m_PtXVelocity[i];
-                    m_PtYPosition[i] += dts*m_PtYVelocity[i];
-                    m_PtZPosition[i] += dts*m_PtZVelocity[i];
+                    m_PtYLinVelocity[i] += dts*g.y();
+
+                    m_PtXPosition[i] += dts*m_PtXLinVelocity[i];
+                    m_PtYPosition[i] += dts*m_PtYLinVelocity[i];
+                    m_PtZPosition[i] += dts*m_PtZLinVelocity[i];
+
+                    m_PtXLastRot[i] = m_PtXRotation[i];
+                    m_PtYLastRot[i] = m_PtYRotation[i];
+                    m_PtZLastRot[i] = m_PtZRotation[i];
+                    m_PtWLastRot[i] = m_PtWRotation[i];
+
+                    // If want to add torque: omega += h*(I^-1)*torque_ext
+
+                    Eigen::Quaterniond omega{ 0.0, m_PtXAngVelocity[i], m_PtYAngVelocity[i], m_PtZAngVelocity[i]};
+                    Eigen::Quaterniond rot{ m_PtWRotation[i], m_PtXRotation[i], m_PtYRotation[i], m_PtZRotation[i]};
+
+                    Eigen::Quaterniond new_rot = omega * rot;
+                    
+                    rot.x() += 0.5 * dts * new_rot.x();
+                    rot.x() += 0.5 * dts * new_rot.y();
+                    rot.x() += 0.5 * dts * new_rot.z();
+                    rot.x() += 0.5 * dts * new_rot.w();
+
+                    rot.normalize();
+
+                    m_PtXRotation[i] = rot.x();
+                    m_PtYRotation[i] = rot.y();
+                    m_PtZRotation[i] = rot.z();
+                    m_PtWRotation[i] = rot.w();
                 }
             }
 
@@ -142,9 +206,22 @@ namespace XPBD
 
             for (int i = 0; i < m_PtXPosition.size(); i++)
             {
-                m_PtXVelocity[i] = (m_PtXPosition[i] - m_PtXLastPos[i])/dts;
-                m_PtYVelocity[i] = (m_PtYPosition[i] - m_PtYLastPos[i])/dts;
-                m_PtZVelocity[i] = (m_PtZPosition[i] - m_PtZLastPos[i])/dts;
+                m_PtXLinVelocity[i] = (m_PtXPosition[i] - m_PtXLastPos[i])/dts;
+                m_PtYLinVelocity[i] = (m_PtYPosition[i] - m_PtYLastPos[i])/dts;
+                m_PtZLinVelocity[i] = (m_PtZPosition[i] - m_PtZLastPos[i])/dts;
+
+                Eigen::Quaterniond rot{ m_PtWRotation[i], m_PtXRotation[i], m_PtYRotation[i], m_PtZRotation[i]};
+                Eigen::Quaterniond rot_prev{ m_PtWLastRot[i], m_PtXLastRot[i], m_PtYLastRot[i], m_PtZLastRot[i]};
+
+                Eigen::Quaterniond drot = rot * rot_prev.inverse();
+
+                double sign = 1.0;
+                if (drot.w() < 0.0)
+                    sign = -1.0;
+
+                m_PtXAngVelocity[i] = sign * 2 * drot.x()/dts;
+                m_PtYAngVelocity[i] = sign * 2 * drot.y()/dts;
+                m_PtZAngVelocity[i] = sign * 2 * drot.z()/dts;
             }
         }
 
@@ -153,7 +230,8 @@ namespace XPBD
             auto& phyXPart = m_PhyXPartList[i];
 
             Eigen::Vector3d pos = {m_PtXPosition[i], m_PtYPosition[i], m_PtZPosition[i]};
-            phyXPart->frame->SetPositionRotation(pos, Eigen::Quaterniond::Identity());
+            Eigen::Quaterniond rot = {m_PtWRotation[i], m_PtXRotation[i], m_PtYRotation[i], m_PtZRotation[i]};
+            phyXPart->frame->SetPositionRotation(pos, rot);
         }
     }
 

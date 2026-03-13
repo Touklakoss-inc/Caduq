@@ -36,27 +36,45 @@ namespace XPBD
 
         int m_GuiSubSteps { 500 };
 
-
-        // current entities positions
+        // current entities translation positions
         std::vector<double> m_PtXPosition {};
         std::vector<double> m_PtYPosition {};
         std::vector<double> m_PtZPosition {};
-
-        // last entities positions
+        // last entities translation positions
         std::vector<double> m_PtXLastPos {};
         std::vector<double> m_PtYLastPos {};
         std::vector<double> m_PtZLastPos {};
 
-        // current entities velcity
-        std::vector<double> m_PtXVelocity {};
-        std::vector<double> m_PtYVelocity {};
-        std::vector<double> m_PtZVelocity {};
+        // current entities rotation positions
+        std::vector<double> m_PtXRotation {};
+        std::vector<double> m_PtYRotation {};
+        std::vector<double> m_PtZRotation {};
+        std::vector<double> m_PtWRotation {};
+        // last entities rotation positions
+        std::vector<double> m_PtXLastRot {};
+        std::vector<double> m_PtYLastRot {};
+        std::vector<double> m_PtZLastRot {};
+        std::vector<double> m_PtWLastRot {};
 
-        // is grounded mask
-        std::vector<uint8_t> m_PtGrounded {};
+        // current entities linear velcity
+        std::vector<double> m_PtXLinVelocity {};
+        std::vector<double> m_PtYLinVelocity {};
+        std::vector<double> m_PtZLinVelocity {};
+        // current entities angular velcity
+        std::vector<double> m_PtXAngVelocity {};
+        std::vector<double> m_PtYAngVelocity {};
+        std::vector<double> m_PtZAngVelocity {};
 
         // entities masses
         std::vector<double> m_PtMasses {};
+
+        // entities inertia tensor
+        std::vector<double> m_PtXInertia {};
+        std::vector<double> m_PtYInertia {};
+        std::vector<double> m_PtZInertia {};
+
+        // is grounded mask
+        std::vector<uint8_t> m_PtGrounded {};
 
         // joints
         std::vector<JAttachStruct> m_Joints {};
