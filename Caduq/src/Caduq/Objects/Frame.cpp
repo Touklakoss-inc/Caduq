@@ -24,6 +24,10 @@ namespace Caduq
 
     void Frame::UpdateGFX()
     {
+        m_X = m_GeoFrame.GetTransform() * Eigen::Vector3d::UnitX();
+        m_Y = m_GeoFrame.GetTransform() * Eigen::Vector3d::UnitY();
+        m_Z = m_GeoFrame.GetTransform() * Eigen::Vector3d::UnitZ();
+
         // Cast to float
         Eigen::MatrixXd splineVertices(3, 4);
         splineVertices << m_GeoFrame.GetTransform().translation(), m_X, m_Y, m_Z;
@@ -38,12 +42,9 @@ namespace Caduq
 
         Update();
     }
+    // for retro compatibility, to be deleted
     void Frame::Update()
     {
-        m_X = m_GeoFrame.GetTransform() * Eigen::Vector3d::UnitX();
-        m_Y = m_GeoFrame.GetTransform() * Eigen::Vector3d::UnitY();
-        m_Z = m_GeoFrame.GetTransform() * Eigen::Vector3d::UnitZ();
-
         UpdateGFX();
     }
 

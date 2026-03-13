@@ -38,7 +38,7 @@ namespace Caduq
         static void SetPopupParam(Eigen::Vector3d position, Eigen::Vector4d rotation);
 
         int GetID() const override { return m_Id; };
-        const Geometry::Frame& GetGeoFrame() { return m_GeoFrame; };
+        Geometry::Frame& GetGeoFrame() { return m_GeoFrame; };
         const Geometry::Transform GetTransform();
     };
 }

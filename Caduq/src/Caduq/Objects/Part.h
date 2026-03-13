@@ -5,6 +5,7 @@
 #include "Frame.h"
 
 #include "Caduq/Objects/Entity.h"
+#include "XPBD/PhyXPart.h"
 
 namespace Caduq 
 {
@@ -15,6 +16,7 @@ namespace Caduq
         int m_Id{ };
 
         std::shared_ptr<Frame> m_MainFrame;
+        std::shared_ptr<XPBD::PhyXPart> m_PhyXPart;
         EntityManager m_EntityManager;
 
         /* ImGui */
@@ -23,7 +25,15 @@ namespace Caduq
         static inline float m_GuiPopupSca[3] { 1.0f, 1.0f, 1.0f };
 
     public:
-        Part(Geometry::Transform transform, const std::shared_ptr<Frame>& frame, Type type = Type::part, const std::string& name = "");
+        struct OptParam
+        {
+            Type type = Type::part;
+            std::string name = "";
+            double mass = 1.0;
+            bool grounded = false;
+        };
+
+        Part(Geometry::Transform transform, const std::shared_ptr<Frame>& frame,  OptParam oParam = { .type = Type::part, .name="", .mass=1.0, .grounded=false });
         ~Part() = default;
 
         void Init() override;
@@ -38,6 +48,7 @@ namespace Caduq
         static void SetPopupParam(Eigen::Vector3d position, Eigen::Vector4d rotation);
 
         const std::shared_ptr<Frame>& GetMainFrame() { return m_MainFrame; };
+        const std::shared_ptr<XPBD::PhyXPart>& GetPhyXPart() const { return m_PhyXPart; };
     };
 }
 

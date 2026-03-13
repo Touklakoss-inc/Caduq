@@ -1,12 +1,15 @@
+#include "Eigen/Core"
 #include "cqpch.h"
 #include "SandboxXPBD.h"
 
 #include "XPBD/JAttach.h"
 #include "Caduq/Objects/Entity.h"
 #include "Objects/Point.h"
+#include "Objects/Part.h"
 #include "Objects/Spline.h"
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
 
+#include <memory>
 void SandboxXPBD::OnAttach()
 {
 	Vizir::RenderCommand::EnablePrimitiveRestart();
@@ -48,17 +51,17 @@ void SandboxXPBD::OnAttach()
     m_PhyXManager = m_EntityManager.GetPhyXManager();
 
 
-    m_EntityManager.CreateEntity(std::make_shared<Caduq::Point>(Eigen::Vector3d{0.0, 0.0, 0.0}, m_EntityManager.GetMainFrame(), Caduq::Type::point, Caduq::Point::OptParam{.grounded=true}));
-    m_EntityManager.CreateEntity(std::make_shared<Caduq::Point>(Eigen::Vector3d{1.0, 0.0, 0.0}, m_EntityManager.GetMainFrame()));
-    m_EntityManager.CreateEntity(std::make_shared<Caduq::Point>(Eigen::Vector3d{2.0, 0.0, 0.0}, m_EntityManager.GetMainFrame()));
+    // m_EntityManager.CreateEntity(std::make_shared<Caduq::Point>(Eigen::Vector3d{0.0, 0.0, 0.0}, m_EntityManager.GetMainFrame(), Caduq::Type::point, Caduq::Point::OptParam{.grounded=true}));
+    // m_EntityManager.CreateEntity(std::make_shared<Caduq::Point>(Eigen::Vector3d{1.0, 0.0, 0.0}, m_EntityManager.GetMainFrame()));
+    // m_EntityManager.CreateEntity(std::make_shared<Caduq::Point>(Eigen::Vector3d{2.0, 0.0, 0.0}, m_EntityManager.GetMainFrame()));
     // m_EntityManager.CreateEntity(std::make_shared<Caduq::Point>(Eigen::Vector3d{3.5, 0.0, 0.0}, m_EntityManager.GetMainFrame(), Caduq::Type::point, Caduq::Point::OptParam{.grounded=true}));
 
-    m_EntityManager.CreateEntity(std::make_shared<Caduq::Spline>(m_EntityManager.GetPoint(0).lock(), Caduq::PointTangency{{0, 0, 0}},
-                                                                 m_EntityManager.GetPoint(1).lock(), Caduq::PointTangency{{0, 0, 0}},
-                                                                 100, m_EntityManager.GetMainFrame()));              
-    m_EntityManager.CreateEntity(std::make_shared<Caduq::Spline>(m_EntityManager.GetPoint(1).lock(), Caduq::PointTangency{{0, 0, 0}},
-                                                                 m_EntityManager.GetPoint(2).lock(), Caduq::PointTangency{{0, 0, 0}},
-                                                                 100, m_EntityManager.GetMainFrame()));              
+    // m_EntityManager.CreateEntity(std::make_shared<Caduq::Spline>(m_EntityManager.GetPoint(0).lock(), Caduq::PointTangency{{0, 0, 0}},
+    //                                                              m_EntityManager.GetPoint(1).lock(), Caduq::PointTangency{{0, 0, 0}},
+    //                                                              100, m_EntityManager.GetMainFrame()));              
+    // m_EntityManager.CreateEntity(std::make_shared<Caduq::Spline>(m_EntityManager.GetPoint(1).lock(), Caduq::PointTangency{{0, 0, 0}},
+    //                                                              m_EntityManager.GetPoint(2).lock(), Caduq::PointTangency{{0, 0, 0}},
+    //                                                              100, m_EntityManager.GetMainFrame()));              
     // m_EntityManager.CreateEntity(std::make_shared<Caduq::Spline>(m_EntityManager.GetPoint(2).lock(), Caduq::PointTangency{{0, 0, 0}},
     //                                                              m_EntityManager.GetPoint(1).lock(), Caduq::PointTangency{{0, 0, 0}},
     //                                                              100, m_EntityManager.GetMainFrame()));              
@@ -75,12 +78,14 @@ void SandboxXPBD::OnAttach()
     //                                                             m_EntityManager.GetSpline(1).lock(), 
     //                                                             10));
 
-    m_PhyXManager->CreateJoint(std::make_shared<XPBD::JAttach>(m_EntityManager.GetPoint(0).lock()->GetPhyXPoint(), 
-                                                               m_EntityManager.GetPoint(1).lock()->GetPhyXPoint(), 
-                                                               1.0, 0.0));
-    m_PhyXManager->CreateJoint(std::make_shared<XPBD::JAttach>(m_EntityManager.GetPoint(1).lock()->GetPhyXPoint(), 
-                                                               m_EntityManager.GetPoint(2).lock()->GetPhyXPoint(), 
-                                                               1.0, 0.0));
+    m_EntityManager.CreateEntity(std::make_shared<Caduq::Part>(Geometry::Transform::Identity(), m_EntityManager.GetMainFrame(), Caduq::Part::OptParam{.grounded=true}));
+    m_EntityManager.CreateEntity(std::make_shared<Caduq::Part>(Geometry::Transform::Identity(), m_EntityManager.GetMainFrame(), Caduq::Part::OptParam{.grounded=false}));
+
+    m_EntityManager.GetPart(1).lock()->GetMainFrame()->Update(Eigen::Vector3d(1.0, 0.0, 0.0), Eigen::Quaterniond::Identity());
+
+    m_PhyXManager->CreateJoint(m_EntityManager.GetPart(0).lock()->GetPhyXPart(),
+                               m_EntityManager.GetPart(1).lock()->GetPhyXPart(), 
+                               1.0, 0.0);
     // m_PhyXManager->CreateJoint(std::make_shared<XPBD::JAttach>(m_EntityManager.GetPoint(1).lock()->GetPhyXPoint(), 
     //                                                            m_EntityManager.GetPoint(2).lock()->GetPhyXPoint(), 
     //                                                            std::sqrt(1.25), 0.0));
@@ -108,7 +113,7 @@ void SandboxXPBD::OnUpdate(Vizir::Timestep ts)
     // Render points
     for (const auto& entity : m_EntityManager.GetEntityList()) //GetEntities return by value, is it good ?
     {
-        if (entity->GetType() == Caduq::Type::point)
+        if (entity->GetType() == Caduq::Type::part && m_PhyXManager->s_PhyXEnabled)
             entity->UpdateGFX();
         entity->Visualize(m_Shader, m_Transform);
     }
