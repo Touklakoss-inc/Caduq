@@ -2,6 +2,7 @@
 #define PHYXPART_H
 
 #include "Geometry/Frame.h"
+#include <Eigen/Dense>
 
 namespace XPBD
 {
@@ -9,6 +10,7 @@ namespace XPBD
     {
         Geometry::Frame* frame;
         double mass;
+        Eigen::Vector3d inertiaTensor;
         bool isGrounded;
     };
 }

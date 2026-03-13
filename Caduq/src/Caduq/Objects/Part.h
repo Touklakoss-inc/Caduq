@@ -1,11 +1,14 @@
 #ifndef CQ_PART_H
 #define CQ_PART_H
 
+#include "Eigen/Core"
 #include "EntityManager.h"
 #include "Frame.h"
 
 #include "Caduq/Objects/Entity.h"
 #include "XPBD/PhyXPart.h"
+
+#include <Eigen/Dense>
 
 namespace Caduq 
 {
@@ -30,10 +33,11 @@ namespace Caduq
             Type type = Type::part;
             std::string name = "";
             double mass = 1.0;
+            Eigen::Vector3d inertiaTensor = Eigen::Vector3d::Zero();
             bool grounded = false;
         };
 
-        Part(Geometry::Transform transform, const std::shared_ptr<Frame>& frame,  OptParam oParam = { .type = Type::part, .name="", .mass=1.0, .grounded=false });
+        Part(Geometry::Transform transform, const std::shared_ptr<Frame>& frame,  OptParam oParam = { .type = Type::part, .name="", .mass=1.0, .inertiaTensor = Eigen::Vector3d::Zero(), .grounded=false});
         ~Part() = default;
 
         void Init() override;
