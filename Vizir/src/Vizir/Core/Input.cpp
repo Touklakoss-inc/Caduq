@@ -21,7 +21,7 @@ namespace Vizir
 		return state == GLFW_PRESS;
 	}
 
-	std::pair<float, float> Input::GetMousePosition()
+	glm::vec2 Input::GetMousePosition()
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		double xPos, yPos;
@@ -32,15 +32,12 @@ namespace Vizir
 
 	float Input::GetMouseX()
 	{
-		auto [x, y] = Input::GetMousePosition();
+		return Input::GetMousePosition().x;
 
-		return x;
 	}
 
 	float Input::GetMouseY()
 	{
-		auto [x, y] = Input::GetMousePosition();
-
-		return y;
+		return Input::GetMousePosition().y;
 	}
 }
