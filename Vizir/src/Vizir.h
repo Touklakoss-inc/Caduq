@@ -27,4 +27,5 @@
 
 #include "Vizir/Renderer/OrthographicCamera.h"
 #include "Vizir/Renderer/OrthographicCameraController.h"
+#include "Vizir/Renderer/ArcballCameraController.h"
 //--------------------
