@@ -8,7 +8,7 @@ namespace Vizir
 	class OrthographicCamera
 	{
 	public:
-		OrthographicCamera(float left, float right, float top, float bottom);
+		OrthographicCamera(float left, float right, float bottom, float top);
 
 		void SetProjection(float left, float right, float top, float bottom);
 		const glm::fquat& GetRotation() const { return m_RotationQuat; }
@@ -33,7 +33,10 @@ namespace Vizir
 		glm::mat4 m_ViewMatrix;
 		glm::mat4 m_ViewProjectionMatrix;
 
-		glm::vec3 m_Position = { 0.0f, 0.0f, 0.0f };
-		glm::fquat m_RotationQuat = glm::fquat(0, glm::vec3(0.0f, 0.0f, 1.0f));
+		float m_Near = 0.01f;
+		float m_Far = 10000.0f;
+
+		glm::vec3 m_Position = { 0.0f, 0.0f, 1.0f };
+		glm::fquat m_RotationQuat = glm::fquat(1.0f, 0.0f, 0.0f, 0.0f);
 	};
 }

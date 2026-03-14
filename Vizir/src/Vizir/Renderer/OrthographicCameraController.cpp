@@ -18,14 +18,15 @@ namespace Vizir
     {
         BOB_PROFILE_FUNC()
 
+        glm::vec3 displacement{ 0.0f, 0.0f, 0.0f };
         if (Input::IsKeyPressed(VZ_KEY_W))
-            m_CameraPosition.y -= m_CameraTranslationSpeed * ts;
+            displacement.y += m_CameraTranslationSpeed * ts;
         else if (Input::IsKeyPressed(VZ_KEY_S))
-            m_CameraPosition.y += m_CameraTranslationSpeed * ts;
+            displacement.y -= m_CameraTranslationSpeed * ts;
         if (Input::IsKeyPressed(VZ_KEY_A))
-            m_CameraPosition.x -= m_CameraTranslationSpeed * ts;
+            displacement.x -= m_CameraTranslationSpeed * ts;
         else if (Input::IsKeyPressed(VZ_KEY_D))
-            m_CameraPosition.x += m_CameraTranslationSpeed * ts;
+            displacement.x += m_CameraTranslationSpeed * ts;
 
         if (m_Rotation)
         {
@@ -39,7 +40,7 @@ namespace Vizir
             m_Camera.Rotate(angle, glm::vec3(0.0f, 0.0f, 1.0f));
         }
 
-        m_Camera.SetPosition(m_CameraPosition);
+        m_Camera.Translate(displacement);
     }
 
     void OrthographicCameraController::OnEvent(Event& e)
