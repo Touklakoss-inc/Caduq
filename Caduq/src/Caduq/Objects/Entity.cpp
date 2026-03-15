@@ -19,7 +19,7 @@ namespace Caduq
     void Entity::UpdateGFXBuffer(Eigen::Matrix<float, 3, Eigen::Dynamic> vertices, Eigen::VectorX<uint32_t> indices, Vizir::PrimitiveType primitiveType)
     {
         if (m_RefFrame != nullptr)
-            vertices = m_RefFrame->GetTransform().cast<float>() * vertices;
+            vertices = m_RefFrame->GetWorldTransform().cast<float>() * vertices;
 
         // Visualization buffer
 

@@ -1,6 +1,7 @@
 #ifndef PHYXMANAGER_H
 #define PHYXMANAGER_H
 
+#include "Eigen/Core"
 #include "PhyXPart.h"
 #include <Eigen/Dense>
 
@@ -81,9 +82,9 @@ namespace XPBD
 
         void ImportEntities();
 
-        void AttachJoint(int p1, int p2, double dRest, double alpha, double dts);
+        void AttachJoint(int prt1, Eigen::Vector3d r1, int prt2, Eigen::Vector3d r2, double dRest, double alpha, double dts);
 
-        void ApplyLinearCorrection(int p1, int p2, Eigen::Vector3d dp, double alpha, double dts);
+        void ApplyLinearCorrection(int prt1, Eigen::Vector3d r1, int prt2, Eigen::Vector3d r2, Eigen::Vector3d dp, double alpha, double dts);
 
     public:
         static inline bool s_PhyXEnabled { false };

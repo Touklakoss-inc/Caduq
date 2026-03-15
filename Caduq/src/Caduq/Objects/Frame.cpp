@@ -54,10 +54,10 @@ namespace Caduq
     }
 
     /* /!\ recursive function /!\ */
-    const Geometry::Transform Frame::GetTransform()
+    const Geometry::Transform Frame::GetWorldTransform()
     {
         if (m_RefFrame != nullptr)
-            return m_RefFrame->GetTransform() * m_GeoFrame.GetTransform();
+            return m_RefFrame->GetWorldTransform() * m_GeoFrame.GetTransform();
         else
             return Geometry::Transform::Identity();
     }

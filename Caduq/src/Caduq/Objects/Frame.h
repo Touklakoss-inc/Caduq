@@ -39,7 +39,7 @@ namespace Caduq
 
         int GetID() const override { return m_Id; };
         Geometry::Frame& GetGeoFrame() { return m_GeoFrame; };
-        const Geometry::Transform GetTransform();
+        const Geometry::Transform GetWorldTransform();
     };
 }
 #endif
