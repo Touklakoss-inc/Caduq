@@ -15,6 +15,10 @@ namespace Vizir
 		{
 			s_RendererAPI->SetViewport(x, y, width, height);
 		}
+		inline static void GetViewPort(int& x, int& y, uint32_t& width, uint32_t& height)
+		{
+			s_RendererAPI->GetViewport(x, y, width, height);
+		}
 		inline static void SetClearColor(const glm::vec4& color)
 		{
 			s_RendererAPI->SetClearColor(color);
