@@ -25,5 +25,6 @@ namespace Vizir
 
 		Ref<Texture2D> m_ColorAttachment{ };
 		Ref<Texture2D> m_DepthStencilAttachment{ };
+		int m_LastWidth{ 0 }, m_LastHeight{ 0 };
 	};
 }
