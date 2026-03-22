@@ -13,12 +13,9 @@ file(GLOB_RECURSE CPP_LIST
         "src/XPBD/*.cpp"
         "src/Tools/*.cpp"
 )
-target_sources(Geotrup
-    PRIVATE
-        ${CPP_LIST}
-    PUBLIC
-        ${HEADER_LIST}
-)
+target_sources(Geotrup PRIVATE ${CPP_LIST} ${HEADER_LIST})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "" FILES ${CPP_LIST} ${HEADER_LIST})
+
 target_include_directories(Geotrup PUBLIC src)
 
 target_link_libraries(Geotrup PRIVATE imgui Tracy::TracyClient)

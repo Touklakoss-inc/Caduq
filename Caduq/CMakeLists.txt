@@ -6,11 +6,8 @@ file(GLOB_RECURSE HEADER_LIST
 file(GLOB_RECURSE CPP_LIST 
     CONFIGURE_DEPENDS "src/*.cpp")
 
-target_sources(Caduq
-    PRIVATE
-        ${CPP_LIST}
-        ${HEADER_LIST}
-)
+target_sources(Caduq PRIVATE ${CPP_LIST} ${HEADER_LIST})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "" FILES ${CPP_LIST} ${HEADER_LIST})
 
 target_include_directories(Caduq PRIVATE src)
 target_precompile_headers(Caduq PRIVATE src/cqpch.h)

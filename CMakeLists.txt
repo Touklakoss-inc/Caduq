@@ -4,13 +4,27 @@ project(Caduq VERSION 0.0.4
               DESCRIPTION "Simple CAD software"
               LANGUAGES CXX)
 
+function(add_ext_subdirectory path)
+  add_subdirectory(${path})
+  foreach(target IN LISTS ARGN)
+        if(TARGET ${target})
+        get_target_property(folder ${target} FOLDER)
+        if(NOT (${folder} STREQUAL "folder-NOTFOUND"))
+            set_target_properties(${target} PROPERTIES FOLDER "ext/${folder}")
+        else()
+            set_target_properties(${target} PROPERTIES FOLDER "ext")
+        endif()
+    endif()
+  endforeach()
+endfunction()
+
 # Vendors
-add_subdirectory(Vizir/vendor/glad)
-add_subdirectory(Vizir/vendor/glm)
-add_subdirectory(Vizir/vendor/GLFW)
-add_subdirectory(Vizir/vendor/imgui)
-add_subdirectory(Vizir/vendor/stb_image)
-add_subdirectory(Vizir/vendor/tracy)
+add_ext_subdirectory(Vizir/vendor/glad glad)
+add_ext_subdirectory(Vizir/vendor/glm glm)
+add_ext_subdirectory(Vizir/vendor/GLFW glfw uninstall update_mappings)
+add_ext_subdirectory(Vizir/vendor/imgui imgui)
+add_ext_subdirectory(Vizir/vendor/stb_image stb_image)
+add_ext_subdirectory(Vizir/vendor/tracy TracyClient)
 
 # My projects
 add_subdirectory(Vizir)

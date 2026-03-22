@@ -10,12 +10,8 @@ file(GLOB_RECURSE HEADER_LIST
     CONFIGURE_DEPENDS "src/*.h")
 file(GLOB_RECURSE CPP_LIST 
     CONFIGURE_DEPENDS "src/*.cpp")
-target_sources(Vizir
-    PRIVATE
-        ${CPP_LIST}
-    PUBLIC
-        ${HEADER_LIST}
-)
+target_sources(Vizir PRIVATE ${CPP_LIST} ${HEADER_LIST})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "" FILES ${CPP_LIST} ${HEADER_LIST})
 
 target_include_directories(Vizir PUBLIC src src/Vizir)
 target_precompile_headers(Vizir PRIVATE src/vzpch.h)
