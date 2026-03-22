@@ -32,7 +32,7 @@ namespace Vizir
 		glClearColor(color.r, color.g, color.b, color.a);
 	}
 
-	void OpenGLRendererAPI::SetViewPort(int x, int y, uint32_t width, uint32_t height)
+	void OpenGLRendererAPI::SetViewport(int x, int y, uint32_t width, uint32_t height)
 	{
 		glViewport(x, y, width, height);
 	}

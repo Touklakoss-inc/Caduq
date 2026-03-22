@@ -11,9 +11,9 @@ namespace Vizir
 		{
 			s_RendererAPI->Init();
 		}
-		inline static void SetViewPort(int x, int y, uint32_t width, uint32_t height)
+		inline static void SetViewport(int x, int y, uint32_t width, uint32_t height)
 		{
-			s_RendererAPI->SetViewPort(x, y, width, height);
+			s_RendererAPI->SetViewport(x, y, width, height);
 		}
 		inline static void SetClearColor(const glm::vec4& color)
 		{
