@@ -25,11 +25,11 @@ namespace Vizir
       return;
     }
 
-    // Normalize mouse position to [-1.0, 1.0]
-    glm::vec2 temp = Input::GetMousePosition();
-    glm::vec2 mousePosition = 2.0f * glm::vec2(temp.x / m_ScreenWidth, temp.y / m_ScreenHeight) - 1.0f;
+    glm::vec2 mousePosition = Input::GetMousePosition();
     // invert mouse coordinates y axis to be coherent with the world y axis
     mousePosition.y *= -1.0f;
+    // Normalize mouse position to [-1.0, 1.0]
+    glm::vec2 normalizedMousePosition = glm::vec2(2.0f * mousePosition.x / m_ScreenWidth - 1.0f, 2.0f * mousePosition.y / m_ScreenHeight + 1.0f);
 
     glm::vec2 displacement = mousePosition - m_LastMousePosition;
 
@@ -38,13 +38,13 @@ namespace Vizir
       if (Input::IsMouseButtonPressed(VZ_MOUSE_BUTTON_RIGHT))
       {
         // Project the mouse position onto the arcball (a "unit sphere") by computing z from x and y coordinates and sphere equation
-        glm::vec3 lastArcballProjection = glm::vec3(m_LastMousePosition, 0.0f);
-        glm::vec3 arcballProjection = glm::vec3(mousePosition, 0.0f);
+        glm::vec3 lastArcballProjection = glm::vec3(m_LastNormalizedMousePosition, 0.0f);
+        glm::vec3 arcballProjection = glm::vec3(normalizedMousePosition, 0.0f);
 
-        lastArcballProjection.z = glm::sqrt(1.0f - m_LastMousePosition.y * m_LastMousePosition.y - m_LastMousePosition.x * m_LastMousePosition.x);
+        lastArcballProjection.z = glm::sqrt(1.0f - m_LastNormalizedMousePosition.y * m_LastNormalizedMousePosition.y - m_LastNormalizedMousePosition.x * m_LastNormalizedMousePosition.x);
         lastArcballProjection /= glm::length(lastArcballProjection);
 
-        arcballProjection.z = glm::sqrt(1.0f - mousePosition.y * mousePosition.y - mousePosition.x * mousePosition.x);
+        arcballProjection.z = glm::sqrt(1.0f - normalizedMousePosition.y * normalizedMousePosition.y - normalizedMousePosition.x * normalizedMousePosition.x);
         arcballProjection /= glm::length(arcballProjection);
 
         // Compute the angle between both arcball projections vectors in the sphere basis
@@ -63,12 +63,17 @@ namespace Vizir
       else
       {
         // Displacement mode
-        glm::vec3 translation = glm::vec3(-displacement * m_CameraTranslationSpeed, 0.0f);
+        // We want to map the mouse positions [0, screenWidth] x [0, screenHeight] 
+        // to the projection bounds size [0, 2.0f * m_ScreenWidth / m_ScreenHeight * m_ZoomLevel] x [0, 2.0 * m_ZoomLevel]
+        // So we just need to multiply both intervals by 2.0f / m_ScreenHeight * m_ZoomLevel
+        float scale = 2.0f * m_ZoomLevel / m_ScreenHeight;
+        glm::vec3 translation = glm::vec3(-displacement * scale, 0.0f);
         m_Camera.Translate(translation);
       }
     }
 
     m_LastMousePosition = mousePosition;
+    m_LastNormalizedMousePosition = normalizedMousePosition;
     m_EnableMove = true;
   }
 
@@ -83,7 +88,6 @@ namespace Vizir
   {
     m_AspectRatio = width / height;
     m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
-    RecomputeSpeed();
   }
 
   bool ArcballCameraController::OnMouseScrolled(MouseScrolledEvent& e)
@@ -96,7 +100,6 @@ namespace Vizir
     }
 
     m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
-    RecomputeSpeed();
 
     return true;
   }
@@ -108,10 +111,5 @@ namespace Vizir
     ResizeBounds(m_ScreenWidth, m_ScreenHeight);
 
     return true;
-  }
-
-  void ArcballCameraController::RecomputeSpeed()
-  {
-    m_CameraTranslationSpeed = 2.0f * m_ZoomLevel * m_BaseCameraTranslationSpeed;
   }
 }

@@ -22,19 +22,18 @@ namespace Vizir
 	private:
 		bool OnMouseScrolled(MouseScrolledEvent& e);
 		bool OnWindowResized(WindowResizedEvent& e);
-		void RecomputeSpeed();
 	private:
 		const float m_MinZoomLevel = 0.01f;
-		const float m_BaseCameraTranslationSpeed = 1.0f;
 
 		float m_AspectRatio;
 		float m_ZoomLevel = 1.0f;
 		OrthographicCamera m_Camera;
 
-		float m_CameraTranslationSpeed = m_BaseCameraTranslationSpeed;
 		float m_CameraRotationSpeed = 1.0f;
 
 		glm::vec2 m_LastMousePosition = glm::vec2(0.0f, 0.0f);
+		glm::vec2 m_LastNormalizedMousePosition = glm::vec2(0.0f, 0.0f);
+
 		bool m_EnableMove = false;
 
 		float m_ScreenWidth = 0.0f, m_ScreenHeight = 0.0f;
