@@ -24,6 +24,13 @@ namespace Vizir
 	{
 		BOB_PROFILE_FUNC();
 
+		// Query for curren view port
+		int data[4];
+		glGetIntegerv(GL_VIEWPORT, data);
+
+		m_LastWidth = data[2];
+		m_LastHeight = data[3];
+
 		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
 		glViewport(0, 0, m_Specifications.width, m_Specifications.height);
 	}
@@ -33,6 +40,9 @@ namespace Vizir
 		BOB_PROFILE_FUNC();
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		if(m_LastWidth && m_LastHeight)
+			glViewport(0, 0, m_LastWidth, m_LastHeight);
 	}
 
 	void OpenGLFramebuffer::Resize(uint32_t width, uint32_t height)

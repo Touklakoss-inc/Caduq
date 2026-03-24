@@ -77,7 +77,7 @@ namespace Vizir
 	{
 		BOB_PROFILE_FUNC()
 
-		RenderCommand::SetViewPort(0, 0, width, height);
+		RenderCommand::SetViewport(0, 0, width, height);
 	}
 
 	void Renderer2D::BeginScene(OrthographicCamera& camera)
