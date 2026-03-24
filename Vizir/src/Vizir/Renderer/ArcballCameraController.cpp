@@ -57,7 +57,7 @@ namespace Vizir
           glm::vec3 axis = glm::normalize(glm::cross(arcballProjection, lastArcballProjection));
 
           // Multiplying the angle by 2 feels way more natural
-          m_Camera.Rotate(2.0f * angle, axis);
+          m_Camera.Rotate(m_CameraRotationSpeed * angle, axis);
         }
       }
       else

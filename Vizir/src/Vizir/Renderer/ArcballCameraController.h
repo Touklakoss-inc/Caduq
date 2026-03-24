@@ -16,8 +16,12 @@ namespace Vizir
 
 		void ResizeBounds(float width, float height);
 
+
+		float GetRotationSpeed() const { return m_CameraRotationSpeed; }
 		const OrthographicCamera& GetCamera() const { return m_Camera; }
 		OrthographicCamera& GetCamera() { return m_Camera; }
+
+		void SetRotationSpeed(float rotationSpeed) { m_CameraRotationSpeed = rotationSpeed; }
 
 	private:
 		bool OnMouseScrolled(MouseScrolledEvent& e);
@@ -29,7 +33,7 @@ namespace Vizir
 		float m_ZoomLevel = 1.0f;
 		OrthographicCamera m_Camera;
 
-		float m_CameraRotationSpeed = 1.0f;
+		float m_CameraRotationSpeed = 2.0f; // Feels more natural when rotating
 
 		glm::vec2 m_LastMousePosition = glm::vec2(0.0f, 0.0f);
 		glm::vec2 m_LastNormalizedMousePosition = glm::vec2(0.0f, 0.0f);
