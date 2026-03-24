@@ -57,12 +57,12 @@
     {
       "name": "workflowLinux",
       "configurePreset": "workflowLinux",
-      "jobs": 6
+      "jobs": 0
     },
     {
       "name": "workflowWindows",
       "configurePreset": "workflowWindows",
-      "jobs": 6
+      "jobs": 0
     }
   ]
 }
