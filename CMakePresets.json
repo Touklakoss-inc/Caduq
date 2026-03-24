@@ -1,0 +1,40 @@
+{
+  "version": 4,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 15
+  },
+  "configurePresets": [
+    {
+      "name": "default-template",
+      "hidden": false,
+      "binaryDir": "${sourceDir}/bin/release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_CXX_STANDARD": "20",
+        "TRACY_ENABLE": "OFF"
+      }
+    },
+    {
+      "name": "debug-template",
+      "binaryDir": "${sourceDir}/bin/debug",
+      "inherits": "default-template",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "TRACY_ENABLE": "OFF"
+      }
+    },
+    {
+      "name": "profile-template",
+      "binaryDir": "${sourceDir}/bin/profile",
+      "inherits": "default-template",
+      "cacheVariables": {
+        "TRACY_ENABLE": "ON",
+        "TRACY_ON_DEMAND": "ON",
+        "TRACY_NO_BROADCAST": "ON",
+        "TRACY_NO_SAMPLING": "ON",
+        "TRACY_NO_SYSTEM_TRACING": "ON"
+      }
+    }
+  ]
+}

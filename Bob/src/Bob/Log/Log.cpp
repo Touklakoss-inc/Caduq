@@ -1,4 +1,4 @@
-#include "Bob/Log/Log.h"
+#include "Log.h"
 
 namespace Bob
 {

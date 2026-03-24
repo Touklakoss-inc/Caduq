@@ -21,6 +21,7 @@ dev-app.sh
 # Data 
 **.json
 **/**.ini
+!CMakePresets.json
 
 # LS-PrePost files
 **.k

@@ -5,6 +5,7 @@
 #include "XPBD/Joint.h"
 #include "XPBD/Point.h"
 #include <imgui.h>
+#include "tracy/Tracy.hpp"
 
 #include <memory>
 namespace XPBD
@@ -31,6 +32,7 @@ namespace XPBD
 
     void PhyXManager::UpdatePhyX(float dt)
     {
+        ZoneScoped;
         if (!s_PhyXEnabled || !m_TimeEnabled)
             return;
 
