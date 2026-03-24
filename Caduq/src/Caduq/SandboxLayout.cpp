@@ -13,7 +13,7 @@ SandboxLayout::~SandboxLayout()
 
 void SandboxLayout::OnAttach()
 {
-  m_Texture = Vizir::Texture2D::Create("src/Assets/textures/texture.png");
+  m_Texture = Vizir::Texture2D::Create("src/Caduq/Assets/textures/texture.png");
 }
 
 void SandboxLayout::OnDetach()

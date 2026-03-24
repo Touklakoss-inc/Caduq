@@ -47,11 +47,11 @@ void SandboxTexture::OnAttach()
 	m_VertexArray->Unbind();
 
 	// Shader
-	auto texture = m_ShaderLibrary.Load("Texture", "src/Assets/shaders/texture.glsl");
+	auto texture = m_ShaderLibrary.Load("Texture", "src/Caduq/Assets/shaders/texture.glsl");
 
 	// Use files as shaders
-	m_GridTexture = Vizir::Texture2D::Create("src/Assets/textures/texture.png");
-	m_LogoTexture = Vizir::Texture2D::Create("src/Assets/textures/ChernoLogo.png");
+	m_GridTexture = Vizir::Texture2D::Create("src/Caduq/Assets/textures/texture.png");
+	m_LogoTexture = Vizir::Texture2D::Create("src/Caduq/Assets/textures/ChernoLogo.png");
 
 	// For sanity, set texture unit used to 0
 	std::dynamic_pointer_cast<Vizir::OpenGLShader>(texture)->Bind();
