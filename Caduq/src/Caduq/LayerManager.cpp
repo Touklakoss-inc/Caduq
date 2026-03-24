@@ -7,6 +7,7 @@
 #include "SandboxTexture.h"
 #include "SandboxLayout.h"
 #include "SandboxFramebuffer.h"
+#include "SandboxCube.h"
 
 void LayerManager::OnAttach()
 {
@@ -15,9 +16,11 @@ void LayerManager::OnAttach()
   RegisterLayer(std::make_shared<SandboxTexture>());
   RegisterLayer(std::make_shared<SandboxLayout>());
   RegisterLayer(std::make_shared<SandboxFramebuffer>());
+  RegisterLayer(std::make_shared<SandboxCube>());
 
-
-  PushLayer(m_RegisteredLayers[0]);
+  // Push layer of choice as starting layer
+  m_LayerIndex = 1;
+  PushLayer(m_RegisteredLayers[m_LayerIndex]);
 }
 
 void LayerManager::OnUpdate(Vizir::Timestep ts)
@@ -30,6 +33,8 @@ void LayerManager::OnImGuiRender()
 
   if (ImGui::CollapsingHeader("Layer Manager"))
   {
+    // This is used to display the currently selected item of the combo
+    // otherwise, display blank string
     int newLayerIndex = m_LayerIndex;
 
     // Render every layer as a choice on the combo

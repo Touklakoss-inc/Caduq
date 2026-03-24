@@ -1,25 +1,25 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 namespace Vizir
 {
 	class OrthographicCamera
 	{
 	public:
-		OrthographicCamera(float left, float right, float top, float bottom);
+		OrthographicCamera(float left, float right, float bottom, float top);
 
 		void SetProjection(float left, float right, float top, float bottom);
-
-		const glm::vec3 GetPosition() const { return m_Position; }
-		const float GetRotation() const { return m_Rotation; }
+		const glm::fquat& GetRotation() const { return m_RotationQuat; }
+		const glm::mat4 GetRotationMat4() const { return glm::mat4_cast(m_RotationQuat); }
 
 		void SetPosition(const glm::vec3& position) { m_Position = position; RecalculateViewMatrix(); }
-		void SetRotation(float rotation) { m_Rotation = rotation; RecalculateViewMatrix(); }
+		void SetRotation(const glm::fquat& rotationQuat) { m_RotationQuat = rotationQuat; RecalculateViewMatrix(); }
 
 
 		void Translate(const glm::vec3& translation) { SetPosition(m_Position + translation); }
-		void Rotate(float rotation) { SetRotation(m_Rotation + rotation); }
+		void Rotate(float angle, const glm::vec3& axis);
 
 		const glm::mat4 GetProjectionMatrix() const { return m_ProjectionMatrix; }
 		const glm::mat4 GetViewMatrix() const { return m_ViewMatrix; }
@@ -33,7 +33,10 @@ namespace Vizir
 		glm::mat4 m_ViewMatrix;
 		glm::mat4 m_ViewProjectionMatrix;
 
-		glm::vec3 m_Position = { 0.0f, 0.0f, 0.0f };
-		float m_Rotation = 0.0f;
+		float m_Near = 0.01f;
+		float m_Far = 10000.0f;
+
+		glm::vec3 m_Position = { 0.0f, 0.0f, 1.0f };
+		glm::fquat m_RotationQuat = glm::fquat(1.0f, 0.0f, 0.0f, 0.0f);
 	};
 }
