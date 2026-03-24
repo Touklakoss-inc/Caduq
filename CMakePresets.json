@@ -35,6 +35,34 @@
         "TRACY_NO_SAMPLING": "ON",
         "TRACY_NO_SYSTEM_TRACING": "ON"
       }
+    },
+    {
+      "name": "workflowLinux",
+      "generator": "Unix Makefiles",
+      "inherits": "default-template",
+      "cacheVariables": {
+       "CMAKE_CXX_FLAGS": "-fpermissive"
+      }
+    },
+    {
+      "name": "workflowWindows",
+      "generator": "Visual Studio 17 2022",
+      "inherits": "default-template",
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "/W0"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "workflowLinux",
+      "configurePreset": "workflowLinux",
+      "jobs": 6
+    },
+    {
+      "name": "workflowWindows",
+      "configurePreset": "workflowWindows",
+      "jobs": 6
     }
   ]
 }

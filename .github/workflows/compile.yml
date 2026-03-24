@@ -61,11 +61,11 @@ jobs:
       - name: Build (Linux)
         if: matrix.os == 'ubuntu-latest'
         run: |
-          cmake --build --preset release
+          cmake --build --preset workflowLinux
 
       # --- WINDOWS ---  
       - name: Build (Windows)
         if: matrix.os == 'windows-latest'
         shell: pwsh
         run: |
-          cmake --build --preset release
+          cmake --build --preset workflowWindows

@@ -1,2 +1,2 @@
 #!/bin/bash
-cmake --preset release
+cmake --preset workflowLinux

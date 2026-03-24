@@ -1,5 +1,5 @@
 @echo off
 pushd ..\
-cmake --preset release
+cmake --preset workflowWindows
 popd
 PAUSE
