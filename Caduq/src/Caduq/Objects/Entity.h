@@ -47,6 +47,8 @@ namespace Caduq
         bool m_deleting { false };
         std::shared_ptr<Frame> m_RefFrame;
 
+        Vizir::Ref<Vizir::VertexBuffer> m_VertexBuffer;
+        Vizir::Ref<Vizir::IndexBuffer> m_IndexBuffer;
         Vizir::Ref<Vizir::VertexArray> m_VertexArray;
         std::unordered_set<std::shared_ptr<Entity>, SharedPtrHash, SharedPtrComparator> m_Children;
 

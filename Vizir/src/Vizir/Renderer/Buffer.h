@@ -109,6 +109,11 @@ namespace Vizir
 		virtual void SetLayout(const BufferLayout& layout) = 0;
 		virtual const BufferLayout& GetLayout() const = 0;
 
+		virtual void SetContent(uint32_t offset, uint32_t size, void* data) = 0;
+
+		virtual uint32_t GetSize() = 0;
+		virtual uint32_t GetVertexCount() = 0;
+
 		static VertexBuffer* Create(float* vertices, uint32_t size);
 	};
 
@@ -119,6 +124,8 @@ namespace Vizir
 
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
+
+		virtual void SetContent(uint32_t offset, uint32_t size, void* data) = 0;
 
 		virtual uint32_t GetCount() const = 0;
 
