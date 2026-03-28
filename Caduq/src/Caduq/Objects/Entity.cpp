@@ -22,25 +22,49 @@ namespace Caduq
             vertices = m_RefFrame->GetTransform().cast<float>() * vertices;
 
         // Visualization buffer
-        // Vertex Buffer
-        Vizir::Ref<Vizir::VertexBuffer> pointsVertexBuffer;
-        pointsVertexBuffer.reset(Vizir::VertexBuffer::Create(vertices.data(), static_cast<uint32_t>(vertices.size()) * sizeof(float)));
 
-        Vizir::BufferLayout pointsLayout = {
+        // If the vertex buffer already exists and we are updating the same number of vertices, just change the content
+        // It works only because we don't change the vertex layout !
+        if (m_VertexBuffer != nullptr && vertices.cols() == m_VertexBuffer->GetVertexCount())
+        {
+          m_VertexBuffer->Bind();
+          m_VertexBuffer->SetContent(0, vertices.size() * sizeof(float),vertices.data());
+          m_VertexBuffer->Unbind();
+        }
+        // Otherwise recreate verte buffer
+        else
+        {
+          m_VertexBuffer.reset(Vizir::VertexBuffer::Create(vertices.data(), static_cast<uint32_t>(vertices.size()) * sizeof(float)));
+
+          Vizir::BufferLayout pointsLayout = {
             { Vizir::ShaderDataType::Float3, "v_position"},
-        };
-        pointsVertexBuffer->SetLayout(pointsLayout);
+          };
+          m_VertexBuffer->SetLayout(pointsLayout);
+        }
 
         // Index buffer
-        Vizir::Ref<Vizir::IndexBuffer> pointIndexBuffer;
-        pointIndexBuffer.reset(Vizir::IndexBuffer::Create(indices.data(), static_cast<uint32_t>(indices.size())));
+        if (m_IndexBuffer != nullptr && indices.cols() == m_IndexBuffer->GetCount())
+        {
+          m_IndexBuffer->Bind();
+          // Warning setting content for indices is done using count, not size, even for offset !!
+          m_IndexBuffer->SetContent(0, indices.size(), indices.data());
+          m_IndexBuffer->Unbind();
+        }
+        else
+        {
+          m_IndexBuffer.reset(Vizir::IndexBuffer::Create(indices.data(), static_cast<uint32_t>(indices.size())));
+        }
 
         // Vertex array
-        m_VertexArray = Vizir::VertexArray::Create();        
+        if (m_VertexArray == nullptr)
+        {
+          m_VertexArray = Vizir::VertexArray::Create();
+          m_VertexArray->SetPrimitiveType(primitiveType);
+        }
+
         m_VertexArray->Bind();
-        m_VertexArray->SetVertexBuffer(pointsVertexBuffer);
-        m_VertexArray->SetIndexBuffer(pointIndexBuffer);
-        m_VertexArray->SetPrimitiveType(primitiveType);
+        m_VertexArray->SetVertexBuffer(m_VertexBuffer);
+        m_VertexArray->SetIndexBuffer(m_IndexBuffer);
         m_VertexArray->Unbind();
     }
 
