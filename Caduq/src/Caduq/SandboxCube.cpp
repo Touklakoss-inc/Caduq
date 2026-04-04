@@ -80,7 +80,7 @@ void SandboxCube::OnAttach()
 	m_VertexArray->Unbind();
 
 	// Shader
-	m_ShaderLibrary.Load("Color", "src/Caduq/Assets/shaders/color.glsl");
+	m_ShaderLibrary.Load("Color", "Assets/shaders/color.glsl");
 }
 
 void SandboxCube::OnImGuiRender()

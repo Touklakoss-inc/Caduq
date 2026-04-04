@@ -6,6 +6,11 @@ file(GLOB_RECURSE HEADER_LIST
 file(GLOB_RECURSE CPP_LIST 
     CONFIGURE_DEPENDS "src/*.cpp")
 
+add_custom_command(TARGET Caduq POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_CURRENT_SOURCE_DIR}/Assets
+    ${CMAKE_CURRENT_BINARY_DIR}/Assets)
+
 target_sources(Caduq PRIVATE ${CPP_LIST} ${HEADER_LIST})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "" FILES ${CPP_LIST} ${HEADER_LIST})
 

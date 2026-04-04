@@ -47,11 +47,11 @@ void SandboxTexture::OnAttach()
 	m_VertexArray->Unbind();
 
 	// Shader
-	auto texture = m_ShaderLibrary.Load("Texture", "src/Caduq/Assets/shaders/texture.glsl");
+	auto texture = m_ShaderLibrary.Load("Texture", "Assets/shaders/texture.glsl");
 
 	// Use files as shaders
-	m_GridTexture = Vizir::Texture2D::Create("src/Caduq/Assets/textures/texture.png");
-	m_LogoTexture = Vizir::Texture2D::Create("src/Caduq/Assets/textures/ChernoLogo.png");
+	m_GridTexture = Vizir::Texture2D::Create("Assets/textures/texture.png");
+	m_LogoTexture = Vizir::Texture2D::Create("Assets/textures/ChernoLogo.png");
 
 	// For sanity, set texture unit used to 0
 	std::dynamic_pointer_cast<Vizir::OpenGLShader>(texture)->Bind();
@@ -102,7 +102,7 @@ void SandboxTexture::OnUpdate(Vizir::Timestep ts)
 	std::dynamic_pointer_cast<Vizir::OpenGLShader>(textureShader)->UploadUniformFloat4("u_Color", glm::vec4(m_LogoColor, 1.0));
 
 	m_LogoTexture->Bind(0);
-	Vizir::Renderer::Submit(textureShader, m_VertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+	Vizir::Renderer::Submit(textureShader, m_VertexArray, glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, 0.1)), glm::vec3(1.5f)));
 
 	Vizir::Renderer::EndScene();
 }
