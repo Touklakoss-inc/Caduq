@@ -68,6 +68,8 @@ namespace XPBD
 
         m_PtGrounded.clear();
 
+        m_PartCount = 0;
+
         std::cout << "Load entities..." << '\n';
         for (const auto& phyXPart : m_PhyXPartList)
         {
@@ -104,7 +106,6 @@ namespace XPBD
             m_PtZAngVelocity.push_back(angVel.z());
 
             m_PtInvMasses.push_back(1.0 / phyXPart->mass);
-
 
             const double I = 1.0/6.0 * phyXPart->mass*0.5*0.5;
             m_PtXInvInertia.push_back(1.0/I);

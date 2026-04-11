@@ -82,6 +82,7 @@ void SandboxXPBD::OnAttach()
     m_EntityManager.CreateEntity(std::make_shared<Caduq::Part>(Geometry::Transform::Identity(), m_EntityManager.GetMainFrame(), Caduq::Part::OptParam{.mass = 1.0, .inertiaTensor = {2.0/3.0, 2.0/3.0, 2.0/3.0}, .grounded=false}));
 
     m_EntityManager.GetPart(0).lock()->GetMainFrame()->Update(Eigen::Vector3d(-0.025, 2.2, 0.0), Eigen::Quaterniond::Identity());
+    m_EntityManager.GetPart(0).lock()->CreateEntity(std::make_shared<Caduq::StlEntity>("littlecube.stl", m_EntityManager.GetPart(0).lock()->GetMainFrame()));
 
     m_EntityManager.CreateEntity(std::make_shared<Caduq::Part>(Geometry::Transform::Identity(), m_EntityManager.GetMainFrame(), Caduq::Part::OptParam{.mass = 1.0, .inertiaTensor = {2.0/3.0, 2.0/3.0, 2.0/3.0}, .grounded=true}));
 
