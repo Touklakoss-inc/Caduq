@@ -16,6 +16,8 @@ namespace XPBD
         int pt2;
         double m_DRest;
         double m_Alpha;
+        Eigen::Vector3d pos1;
+        Eigen::Vector3d pos2;
     };
 
     class PhyXManager
@@ -95,7 +97,7 @@ namespace XPBD
 
         void UpdatePhyX(float dt);
 
-        void CreateJoint(const std::shared_ptr<PhyXPart> p1, const std::shared_ptr<PhyXPart> p2, double dRest, double alpha);
+        void CreateJoint(const std::shared_ptr<PhyXPart> p1, Eigen::Vector3d pos1, const std::shared_ptr<PhyXPart> p2, Eigen::Vector3d pos2, double dRest, double alpha);
 
         void AddPhyXPartToList(const auto& phyXPart) { m_PhyXPartList.push_back(phyXPart); };
 

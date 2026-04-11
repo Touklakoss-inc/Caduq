@@ -135,7 +135,10 @@ namespace XPBD
                     Integrate(i, dts);
             }
 
-            SolveConstraint(dt, 0, -1, { 0.025, 0.05, 0.0 }, { 0.0, 2.5, 0.0 }, 0.25, 0.001);
+            for (const auto& joint : m_Joints)
+            {
+                SolveConstraint(dt, joint.pt1, joint.pt2, joint.pos1, joint.pos2, joint.m_DRest, joint.m_Alpha);
+            }
 
             for (int i = 0; i < m_PartCount; i++)
             {
@@ -384,18 +387,23 @@ namespace XPBD
         m_PtZLinVelocity[p] *= std::max(1.0 - damping*dt, 0.0);
     }
 
-    void PhyXManager::CreateJoint(const std::shared_ptr<PhyXPart> p1, const std::shared_ptr<PhyXPart> p2, double dRest, double alpha)
+    void PhyXManager::CreateJoint(const std::shared_ptr<PhyXPart> p1, Eigen::Vector3d pos1, const std::shared_ptr<PhyXPart> p2, Eigen::Vector3d pos2, double dRest, double alpha)
     {
         auto it1 = std::find(m_PhyXPartList.begin(), m_PhyXPartList.end(), p1);
         auto it2 = std::find(m_PhyXPartList.begin(), m_PhyXPartList.end(), p2);
-        if (it1 != m_PhyXPartList.end() && it2 != m_PhyXPartList.end())
+        if (it1 != m_PhyXPartList.end())
         {
             int p1 = std::distance(m_PhyXPartList.begin(), it1);
-            int p2 = std::distance(m_PhyXPartList.begin(), it2);
-            m_Joints.push_back({p1, p2, dRest, alpha});
+            int p2;
+            if (it2 != m_PhyXPartList.end())
+                p2 = std::distance(m_PhyXPartList.begin(), it2);
+            else
+                p2 = -1;
+
+            m_Joints.push_back({p1, p2, dRest, alpha, pos1, pos2});
         }
         else
-            std::cout << "point not found\n";
+            std::cout << "part not found\n";
     }
 
     void PhyXManager::RenderImGui()
