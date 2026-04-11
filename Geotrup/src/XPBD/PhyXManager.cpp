@@ -60,11 +60,11 @@ namespace XPBD
         m_PtYAngVelocity.clear();
         m_PtZAngVelocity.clear();
 
-        m_PtMasses.clear();
+        m_PtInvMasses.clear();
 
-        m_PtXInertia.clear();
-        m_PtYInertia.clear();
-        m_PtZInertia.clear();
+        m_PtXInvInertia.clear();
+        m_PtYInvInertia.clear();
+        m_PtZInvInertia.clear();
 
         m_PtGrounded.clear();
 
@@ -103,109 +103,19 @@ namespace XPBD
             m_PtYAngVelocity.push_back(angVel.y());
             m_PtZAngVelocity.push_back(angVel.z());
 
-            m_PtMasses.push_back(phyXPart->mass);
+            m_PtInvMasses.push_back(1.0 / phyXPart->mass);
 
-            m_PtXInertia.push_back(phyXPart->inertiaTensor.x());
-            m_PtYInertia.push_back(phyXPart->inertiaTensor.y());
-            m_PtZInertia.push_back(phyXPart->inertiaTensor.z());
+
+            const double I = 1.0/6.0 * phyXPart->mass*0.5*0.5;
+            m_PtXInvInertia.push_back(1.0/I);
+            m_PtYInvInertia.push_back(1.0/I);
+            m_PtZInvInertia.push_back(1.0/I);
 
             m_PtGrounded.push_back(phyXPart->isGrounded);
+
+            m_PartCount++;
         }
         std::cout << "Done" << '\n';
-    }
-    void PhyXManager::ApplyLinearCorrection(int prt1, Eigen::Vector3d r1, int prt2, Eigen::Vector3d r2, Eigen::Vector3d dp, double alpha, double dts)
-    {
-        double C = dp.norm();
-        Eigen::Vector3d n = dp.normalized();
-
-        Eigen::Matrix3d i1{ {1.0/m_PtXInertia[prt1], 0.0, 0.0},
-                            {0.0, 1.0/m_PtYInertia[prt1], 0.0},
-                            {0.0, 0.0, 1.0/m_PtZInertia[prt1]} };
-
-        Eigen::Matrix3d i2{ {1.0/m_PtXInertia[prt2], 0.0, 0.0},
-                            {0.0, 1.0/m_PtYInertia[prt2], 0.0},
-                            {0.0, 0.0, 1.0/m_PtZInertia[prt2]} };
-
-        Eigen::Vector3d rn1 = r1.cross(n);
-        double w1 = 1.0/m_PtMasses[prt1] + rn1.transpose() * i1 * rn1;
-        if (m_PtGrounded[prt1])
-            w1 = 0.0;
-
-        Eigen::Vector3d rn2 = r2.cross(n);
-        double w2 = 1.0/m_PtMasses[prt2] + rn2.transpose() * i2 * rn2;
-        if (m_PtGrounded[prt2])
-            w2 = 0.0;
-
-        double lambda = -C;
-        if (dts != 0.0 && (w1 != 0.0 || w2 != 0.0 || alpha != 0.0))
-            lambda /= w1 + w2 + alpha/(dts*dts);
-
-        m_PtXPosition[prt1] += lambda*n.x()*w1;
-        m_PtYPosition[prt1] += lambda*n.y()*w1;
-        m_PtZPosition[prt1] += lambda*n.z()*w1;
-
-        m_PtXPosition[prt2] -= lambda*n.x()*w2;
-        m_PtYPosition[prt2] -= lambda*n.y()*w2;
-        m_PtZPosition[prt2] -= lambda*n.z()*w2;
-
-        Eigen::Quaterniond q1{ m_PtWRotation[prt1], m_PtXRotation[prt1], m_PtYRotation[prt1], m_PtZRotation[prt1] };
-        Eigen::Quaterniond temp1 = Eigen::Quaterniond{ 0.0, i1 * rn1} * q1;
-
-        q1.x() += 0.5 * lambda * temp1.x();
-        q1.y() += 0.5 * lambda * temp1.y();
-        q1.z() += 0.5 * lambda * temp1.z();
-        q1.w() += 0.5 * lambda * temp1.w();
-
-        q1.normalize();
-
-        m_PtXRotation[prt1] = q1.x();
-        m_PtYRotation[prt1] = q1.y();
-        m_PtZRotation[prt1] = q1.z();
-        m_PtWRotation[prt1] = q1.w();
-
-        Eigen::Quaterniond q2{ m_PtWRotation[prt2], m_PtXRotation[prt2], m_PtYRotation[prt2], m_PtZRotation[prt2] };
-        Eigen::Vector3d ptemp2 = i2 * rn2;
-        Eigen::Quaterniond temp2 = Eigen::Quaterniond{ 0.0, ptemp2.x(), ptemp2.y(), ptemp2.z() } * q2;
-
-        q2.x() -= 0.5 * lambda * temp2.x();
-        q2.y() -= 0.5 * lambda * temp2.y();
-        q2.z() -= 0.5 * lambda * temp2.z();
-        q2.w() -= 0.5 * lambda * temp2.w();
-
-        q2.normalize();
-
-        m_PtXRotation[prt2] = q2.x();
-        m_PtYRotation[prt2] = q2.y();
-        m_PtZRotation[prt2] = q2.z();
-        m_PtWRotation[prt2] = q2.w();
-    }
-
-    void PhyXManager::AttachJoint(int prt1, Eigen::Vector3d r1, int prt2, Eigen::Vector3d r2, double dRest, double alpha, double dts)
-    {
-        // Geometry::Transform t1 = m_PhyXPartList[prt1]->frame->GetTransform();
-        // Geometry::Transform t2 = m_PhyXPartList[prt2]->frame->GetTransform();
-
-        Eigen::Vector3d pos1{ m_PtXPosition[prt1], m_PtYPosition[prt1], m_PtZPosition[prt1] };
-        Eigen::Vector3d pos2{ m_PtXPosition[prt2], m_PtYPosition[prt2], m_PtZPosition[prt2] };
-
-        Eigen::Quaterniond rot1{ m_PtWRotation[prt1], m_PtXRotation[prt1], m_PtYRotation[prt1], m_PtZRotation[prt1] };
-        Eigen::Quaterniond rot2{ m_PtWRotation[prt2], m_PtXRotation[prt2], m_PtYRotation[prt2], m_PtZRotation[prt2] };
-
-        Eigen::Vector3d a1 = pos1 + (rot1 * r1);
-        Eigen::Vector3d a2 = pos2 + (rot2 * r2);
-
-        // Eigen::Vector3d a1 = t1 * r1;
-        // Eigen::Vector3d a2 = t2 * r2;
-
-        // Eigen::Vector3d n = {m_PtXPosition[prt2] - m_PtXPosition[prt1],
-        //                      m_PtYPosition[prt2] - m_PtYPosition[prt1],
-        //                      m_PtZPosition[prt2] - m_PtZPosition[prt1]};
-
-        Eigen::Vector3d n = a2 - a1;
-        double d = n.norm();
-        n.normalize();
-
-        ApplyLinearCorrection(prt1, r1, prt2, r2, -(d-dRest)*n, alpha, dts);
     }
 
     void PhyXManager::UpdatePhyX(float dt)
@@ -218,74 +128,18 @@ namespace XPBD
 
         for (int n = 0; n < m_GuiSubSteps; n++)
         {
-            // if (n > 3)
-            //     break;
-            for (int i = 0; i < m_PtXPosition.size(); i++)
+            for (int i = 0; i < m_PartCount; i++)
             {
                 if (!m_PtGrounded[i])
-                {
-                    m_PtXLastPos[i] = m_PtXPosition[i];
-                    m_PtYLastPos[i] = m_PtYPosition[i];
-                    m_PtZLastPos[i] = m_PtZPosition[i];
-
-                    m_PtYLinVelocity[i] += dts*g.y();
-
-                    m_PtXPosition[i] += dts*m_PtXLinVelocity[i];
-                    m_PtYPosition[i] += dts*m_PtYLinVelocity[i];
-                    m_PtZPosition[i] += dts*m_PtZLinVelocity[i];
-
-                    m_PtXLastRot[i] = m_PtXRotation[i];
-                    m_PtYLastRot[i] = m_PtYRotation[i];
-                    m_PtZLastRot[i] = m_PtZRotation[i];
-                    m_PtWLastRot[i] = m_PtWRotation[i];
-
-                    // If want to add torque: omega += h*(I^-1)*torque_ext
-
-                    Eigen::Quaterniond omega{ 0.0, m_PtXAngVelocity[i], m_PtYAngVelocity[i], m_PtZAngVelocity[i]};
-                    Eigen::Quaterniond rot{ m_PtWRotation[i], m_PtXRotation[i], m_PtYRotation[i], m_PtZRotation[i]};
-
-                    Eigen::Quaterniond dRot = omega * rot;
-                    
-                    rot.x() += 0.5 * dts * dRot.x();
-                    rot.y() += 0.5 * dts * dRot.y();
-                    rot.z() += 0.5 * dts * dRot.z();
-                    rot.w() += 0.5 * dts * dRot.w();
-
-                    rot.normalize();
-
-                    m_PtXRotation[i] = rot.x();
-                    m_PtYRotation[i] = rot.y();
-                    m_PtZRotation[i] = rot.z();
-                    m_PtWRotation[i] = rot.w();
-                }
+                    Integrate(i, dts);
             }
 
-            for (int i = 0; i < m_Joints.size(); i++)
+            SolveConstraint(dt, 0, -1, { 0.025, 0.05, 0.0 }, { 0.0, 2.5, 0.0 }, 0.25, 0.001);
+
+            for (int i = 0; i < m_PartCount; i++)
             {
-                auto& joint = m_Joints[i];
-                Eigen::Vector3d r1{ 0.0, 0.0, 0.0 };
-                Eigen::Vector3d r2{ 0.0, -1.0, 0.0 };
-                AttachJoint(joint.pt1, r1, joint.pt2, r2, joint.m_DRest, joint.m_Alpha, dts);
-            }
-
-            for (int i = 0; i < m_PtXPosition.size(); i++)
-            {
-                m_PtXLinVelocity[i] = (m_PtXPosition[i] - m_PtXLastPos[i])/dts;
-                m_PtYLinVelocity[i] = (m_PtYPosition[i] - m_PtYLastPos[i])/dts;
-                m_PtZLinVelocity[i] = (m_PtZPosition[i] - m_PtZLastPos[i])/dts;
-
-                Eigen::Quaterniond rot{ m_PtWRotation[i], m_PtXRotation[i], m_PtYRotation[i], m_PtZRotation[i]};
-                Eigen::Quaterniond rot_prev{ m_PtWLastRot[i], m_PtXLastRot[i], m_PtYLastRot[i], m_PtZLastRot[i]};
-
-                Eigen::Quaterniond drot = rot * rot_prev.inverse();
-
-                double sign = 1.0;
-                if (drot.w() < 0.0)
-                    sign = -1.0;
-
-                m_PtXAngVelocity[i] = sign * 2.0 * drot.x()/dts;
-                m_PtYAngVelocity[i] = sign * 2.0 * drot.y()/dts;
-                m_PtZAngVelocity[i] = sign * 2.0 * drot.z()/dts;
+                if (!m_PtGrounded[i])
+                    UpdateVelocities(i, dts, 5.0);
             }
         }
 
@@ -298,6 +152,235 @@ namespace XPBD
 
             phyXPart->frame->SetPositionRotation(pos, rot);
         }
+    }
+
+    void PhyXManager::Integrate(int p, double dt)
+    {
+        if (m_PtInvMasses[p] == 0.0)
+            return;
+
+        // linear motion
+        m_PtXLastPos[p] = m_PtXPosition[p];
+        m_PtYLastPos[p] = m_PtYPosition[p];
+        m_PtZLastPos[p] = m_PtZPosition[p];
+
+        m_PtXLinVelocity[p] += dt*g.x();
+        m_PtYLinVelocity[p] += dt*g.y();
+        m_PtZLinVelocity[p] += dt*g.z();
+
+        m_PtXPosition[p] += dt*m_PtXLinVelocity[p];
+        m_PtYPosition[p] += dt*m_PtYLinVelocity[p];
+        m_PtZPosition[p] += dt*m_PtZLinVelocity[p];
+
+        // angular motion
+        m_PtXLastRot[p] = m_PtXRotation[p];
+        m_PtYLastRot[p] = m_PtYRotation[p];
+        m_PtZLastRot[p] = m_PtZRotation[p];
+        m_PtWLastRot[p] = m_PtWRotation[p];
+
+        // If want to add torque: omega += h*(I^-1)*torque_ext
+
+        Eigen::Quaterniond dRot{ 0.0, 
+                                 m_PtXAngVelocity[p], 
+                                 m_PtYAngVelocity[p], 
+                                 m_PtZAngVelocity[p]};
+
+        Eigen::Quaterniond rot{ m_PtWRotation[p], 
+                                m_PtXRotation[p], 
+                                m_PtYRotation[p], 
+                                m_PtZRotation[p]};
+
+        dRot = dRot * rot;
+        rot.x() += 0.5 * dt * dRot.x();
+        rot.y() += 0.5 * dt * dRot.y();
+        rot.z() += 0.5 * dt * dRot.z();
+        rot.w() += 0.5 * dt * dRot.w();
+        rot.normalize();
+
+        m_PtXRotation[p] = rot.x();
+        m_PtYRotation[p] = rot.y();
+        m_PtZRotation[p] = rot.z();
+        m_PtWRotation[p] = rot.w();
+    }
+
+    double PhyXManager::GetInverseMass(int p, Eigen::Vector3d normal, Eigen::Vector3d pos)
+    {
+        if (m_PtInvMasses[p] == 0.0)
+            return 0.0;
+
+        Eigen::Vector3d rn = normal;
+
+        const Eigen::Vector3d pPos{ m_PtXPosition[p],
+                                    m_PtYPosition[p],
+                                    m_PtZPosition[p]};
+        const Eigen::Quaterniond invRot{ m_PtWRotation[p],
+                                        -m_PtXRotation[p],
+                                        -m_PtYRotation[p],
+                                        -m_PtZRotation[p]};
+        rn = pos - pPos;
+        rn = rn.cross(normal);
+        rn = invRot * rn;
+
+        double w = rn.x() * rn.x() * m_PtXInvInertia[p]
+                 + rn.y() * rn.y() * m_PtYInvInertia[p]
+                 + rn.z() * rn.z() * m_PtZInvInertia[p];
+
+        w += m_PtInvMasses[p];
+
+        return w;
+    }
+
+    void PhyXManager::_ApplyCorrection(int p, Eigen::Vector3d corr, Eigen::Vector3d pos)
+    {
+        if (m_PtInvMasses[p] == 0.0)
+            return;
+
+        // linear correction
+        m_PtXPosition[p] += m_PtInvMasses[p] * corr.x();
+        m_PtYPosition[p] += m_PtInvMasses[p] * corr.y();
+        m_PtZPosition[p] += m_PtInvMasses[p] * corr.z();
+
+        const Eigen::Vector3d pPos{ m_PtXPosition[p],
+                                    m_PtYPosition[p],
+                                    m_PtZPosition[p]};
+        const Eigen::Quaterniond invRot{ m_PtWRotation[p],
+                                         m_PtXRotation[p],
+                                         m_PtYRotation[p],
+                                         m_PtZRotation[p]};
+        const Eigen::Vector3d invInertia{ m_PtXInvInertia[p],
+                                          m_PtYInvInertia[p],
+                                          m_PtZInvInertia[p]};
+        Eigen::Quaterniond rot{ m_PtWRotation[p],
+                                m_PtXRotation[p],
+                                m_PtYRotation[p],
+                                m_PtZRotation[p]};
+        Eigen::Vector3d dOmega = pos - pPos;
+
+        dOmega = dOmega.cross(corr);
+        dOmega = invRot * dOmega;
+        dOmega.x() *= invInertia.x();
+        dOmega.y() *= invInertia.y();
+        dOmega.z() *= invInertia.z();
+        dOmega = rot * dOmega;
+
+        Eigen::Quaterniond dRot{ 0.0,
+                                 dOmega.x(),
+                                 dOmega.y(),
+                                 dOmega.z()};
+        dRot = dRot * rot;
+        rot.x() += 0.5 * dRot.x();
+        rot.y() += 0.5 * dRot.y();
+        rot.z() += 0.5 * dRot.z();
+        rot.w() += 0.5 * dRot.w();
+        rot.normalize();
+
+        m_PtXRotation[p] = rot.x();
+        m_PtYRotation[p] = rot.y();
+        m_PtZRotation[p] = rot.z();
+        m_PtWRotation[p] = rot.w();
+    }
+
+    double PhyXManager::ApplyCorrection(double dt, double compliance, Eigen::Vector3d corr, int p1, int p2, Eigen::Vector3d r1, Eigen::Vector3d r2)
+    {
+        if (corr.norm() == 0.0)
+            return 0.0;
+
+        const double C = corr.norm();
+        Eigen::Vector3d normal = corr.normalized();
+
+        double w = GetInverseMass(p1, normal, r1);
+        if (p2 >= 0)
+            w += GetInverseMass(p2, normal, r2); // normal should be < 0 no ?
+        
+        if (w == 0.0)
+            return 0.0;
+
+        const double alpha = compliance / (dt*dt);
+        const double lambda = -C / (w + alpha);
+
+        normal *= -lambda;
+
+        _ApplyCorrection(p1, normal, r1);
+        if (p2 >= 0)
+        {
+            normal *= -1.0;
+            _ApplyCorrection(p2, normal, r2);
+        }
+
+        return lambda / (dt*dt);
+    }
+
+    void PhyXManager::SolveConstraint(double dt, int p1, int p2, Eigen::Vector3d r1, Eigen::Vector3d r2, double dRest, double alpha)
+    {
+        const Eigen::Quaterniond q1{ m_PtWRotation[p1],
+                                     m_PtXRotation[p1],
+                                     m_PtYRotation[p1],
+                                     m_PtZRotation[p1]};
+        const Eigen::Vector3d pos1{ m_PtXPosition[p1],
+                                    m_PtYPosition[p1], 
+                                    m_PtZPosition[p1]}; 
+        const Eigen::Vector3d r1World = q1 * r1 + pos1;
+
+        Eigen::Vector3d r2World = r2;
+        if (p2 >= 0)
+        {
+            const Eigen::Quaterniond q2{ m_PtWRotation[p2],
+                                         m_PtXRotation[p2],
+                                         m_PtYRotation[p2],
+                                         m_PtZRotation[p2]};
+            const Eigen::Vector3d pos2{ m_PtXPosition[p2],
+                                        m_PtYPosition[p2], 
+                                        m_PtZPosition[p2]}; 
+            r2World = q2 * r2 + pos2;
+        }
+
+        Eigen::Vector3d corr = r2World - r1World;
+
+        const double distance = corr.norm();
+        corr = corr.normalized() * (distance - dRest);
+
+        const double force = ApplyCorrection(dt, alpha, corr, p1, p2, r1World, r2World);
+
+        const double elongation = distance - dRest;
+    }
+
+    void PhyXManager::UpdateVelocities(int p, double dt, double damping)
+    {
+        if (m_PtInvMasses[p] == 0.0)
+            return;
+
+        // linear motion
+        m_PtXLinVelocity[p] = (m_PtXPosition[p] - m_PtXLastPos[p])/dt;
+        m_PtYLinVelocity[p] = (m_PtYPosition[p] - m_PtYLastPos[p])/dt;
+        m_PtZLinVelocity[p] = (m_PtZPosition[p] - m_PtZLastPos[p])/dt;
+
+        // angular motion
+        Eigen::Quaterniond rot{ m_PtWRotation[p], 
+                                m_PtXRotation[p], 
+                                m_PtYRotation[p], 
+                                m_PtZRotation[p]};
+
+        Eigen::Quaterniond invLastRot{ m_PtWLastRot[p], 
+                                      -m_PtXLastRot[p], 
+                                      -m_PtYLastRot[p], 
+                                      -m_PtZLastRot[p]};
+
+        Eigen::Quaterniond drot = rot * invLastRot;
+        Eigen::Vector3d omega{ drot.x() * 2.0 / dt,
+                               drot.y() * 2.0 / dt,
+                               drot.z() * 2.0 / dt};
+
+        double sign = 1.0;
+        if (drot.w() < 0.0)
+            sign = -1.0;
+
+        m_PtXAngVelocity[p] = omega.x();
+        m_PtYAngVelocity[p] = omega.y();
+        m_PtZAngVelocity[p] = omega.z();
+
+        m_PtXLinVelocity[p] *= std::max(1.0 - damping*dt, 0.0);
+        m_PtYLinVelocity[p] *= std::max(1.0 - damping*dt, 0.0);
+        m_PtZLinVelocity[p] *= std::max(1.0 - damping*dt, 0.0);
     }
 
     void PhyXManager::CreateJoint(const std::shared_ptr<PhyXPart> p1, const std::shared_ptr<PhyXPart> p2, double dRest, double alpha)

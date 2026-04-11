@@ -6,6 +6,7 @@
 #include "Objects/Point.h"
 #include "Objects/Part.h"
 #include "Objects/Spline.h"
+#include "Objects/StlEntity.h"
 #include "Vizir/Platform/OpenGL/OpenGLShader.h"
 #include "tracy/Tracy.hpp"
 
@@ -78,14 +79,16 @@ void SandboxXPBD::OnAttach()
     //                                                             m_EntityManager.GetSpline(1).lock(), 
     //                                                             10));
 
-    m_EntityManager.CreateEntity(std::make_shared<Caduq::Part>(Geometry::Transform::Identity(), m_EntityManager.GetMainFrame(), Caduq::Part::OptParam{.mass = 1.0, .inertiaTensor = {2.0/3.0, 2.0/3.0, 2.0/3.0}, .grounded=true}));
     m_EntityManager.CreateEntity(std::make_shared<Caduq::Part>(Geometry::Transform::Identity(), m_EntityManager.GetMainFrame(), Caduq::Part::OptParam{.mass = 1.0, .inertiaTensor = {2.0/3.0, 2.0/3.0, 2.0/3.0}, .grounded=false}));
 
-    m_EntityManager.GetPart(1).lock()->GetMainFrame()->Update(Eigen::Vector3d(0.2, 2.0, 0.0), Eigen::Quaterniond::Identity());
+    m_EntityManager.GetPart(0).lock()->GetMainFrame()->Update(Eigen::Vector3d(-0.025, 2.2, 0.0), Eigen::Quaterniond::Identity());
 
-    m_PhyXManager->CreateJoint(m_EntityManager.GetPart(0).lock()->GetPhyXPart(),
-                               m_EntityManager.GetPart(1).lock()->GetPhyXPart(), 
-                               1.02, 0.0);
+    m_EntityManager.CreateEntity(std::make_shared<Caduq::Part>(Geometry::Transform::Identity(), m_EntityManager.GetMainFrame(), Caduq::Part::OptParam{.mass = 1.0, .inertiaTensor = {2.0/3.0, 2.0/3.0, 2.0/3.0}, .grounded=true}));
+
+    m_EntityManager.GetPart(1).lock()->GetMainFrame()->Update(Eigen::Vector3d(0.0, 2.5, 0.0), Eigen::Quaterniond::Identity());
+    // m_PhyXManager->CreateJoint(m_EntityManager.GetPart(0).lock()->GetPhyXPart(),
+    //                            m_EntityManager.GetPart(1).lock()->GetPhyXPart(), 
+    //                            1.02, 0.0);
     // m_PhyXManager->CreateJoint(std::make_shared<XPBD::JAttach>(m_EntityManager.GetPoint(1).lock()->GetPhyXPoint(), 
     //                                                            m_EntityManager.GetPoint(2).lock()->GetPhyXPoint(), 
     //                                                            std::sqrt(1.25), 0.0));
