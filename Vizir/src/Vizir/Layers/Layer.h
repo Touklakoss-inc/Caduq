@@ -11,13 +11,13 @@ namespace Vizir
 	{
 	public:
 		Layer(const std::string& name = "Layer");
-		~Layer() = default;
+		virtual ~Layer() {}
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
 		virtual void OnUpdate(Timestep ts) {}
 		virtual void OnImGuiRender() {}
-		virtual void OnEvent(Event& e) {}
+		virtual void OnEvent(Event&) {}
 
 		inline const std::string& GetName() const { return m_DebugName; }
 	private:

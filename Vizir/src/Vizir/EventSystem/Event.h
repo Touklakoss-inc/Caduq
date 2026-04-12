@@ -34,6 +34,7 @@ namespace Vizir
 	{
 	public:
 		bool handled = false;
+		virtual ~Event() {}
 
 		virtual EventType GetEventType() const = 0;
 		virtual const char* GetName() const = 0;
