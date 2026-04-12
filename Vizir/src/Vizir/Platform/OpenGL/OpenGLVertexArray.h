@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../Renderer/VertexArray.h"
+#include "Vizir/Renderer/VertexArray.h"
 
 #include <vector>
 
