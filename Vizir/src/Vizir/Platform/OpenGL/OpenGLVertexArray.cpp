@@ -23,10 +23,11 @@ namespace Vizir
 			return GL_INT;
 		case ShaderDataType::Bool:
 			return GL_BOOL;
+		case ShaderDataType::None:
+		default:
+			VZ_ASSERT(false, "Invalid ShaderDataType !");
+			return GL_NONE;
 		}
-
-		VZ_ASSERT(false, "Unknown ShaderDataType !");
-		return GL_NONE;
 	}
 
 	GLenum PrimitiveTypeToOpenGLBaseType(PrimitiveType type)
@@ -41,10 +42,10 @@ namespace Vizir
 		case PrimitiveType::TRIANGLES:				return GL_TRIANGLES;
 		case PrimitiveType::TRIANGLE_STRIP:		return GL_TRIANGLE_STRIP;
 		case PrimitiveType::TRIANGLE_FAN:			return GL_TRIANGLE_FAN;
+		default:
+			VZ_ASSERT(false, "Unknown PrimitiveType !");
+			return GL_NONE;
 		}
-
-		VZ_ASSERT(false, "Unknown PrimitiveType !");
-		return GL_NONE;
 	}
 
 	OpenGLVertexArray::OpenGLVertexArray()
