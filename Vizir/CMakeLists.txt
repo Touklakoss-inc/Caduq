@@ -16,4 +16,4 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "" FILES ${CPP_LIST} ${HEAD
 target_include_directories(Vizir PUBLIC src src/Vizir)
 target_precompile_headers(Vizir PRIVATE src/vzpch.h)
 
-target_link_libraries(Vizir PRIVATE Bob glm glfw imgui stb_image)
+target_link_libraries(Vizir PRIVATE Bob glfw imgui stb_image)
