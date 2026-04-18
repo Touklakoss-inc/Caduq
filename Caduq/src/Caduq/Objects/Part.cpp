@@ -134,9 +134,9 @@ namespace Caduq
     void Part::SetPopupParam(Eigen::Vector3d position, Eigen::Vector4d rotation)
     {
         for (int i = 0; i < 3; i++)
-            m_GuiPopupPos[i] = position[i];
+            m_GuiPopupPos[i] = static_cast<float>(position[i]);
 
         for (int i = 0; i < 4; i++)
-            m_GuiPopupRot[i] = rotation[i];
+            m_GuiPopupRot[i] = static_cast<float>(rotation[i]);
     }
 }

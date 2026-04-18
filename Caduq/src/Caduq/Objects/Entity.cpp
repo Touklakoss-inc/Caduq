@@ -28,7 +28,7 @@ namespace Caduq
         if (m_VertexBuffer != nullptr && vertices.cols() == m_VertexBuffer->GetVertexCount())
         {
           m_VertexBuffer->Bind();
-          m_VertexBuffer->SetContent(0, vertices.size() * sizeof(float),vertices.data());
+          m_VertexBuffer->SetContent(0, static_cast<uint32_t>(vertices.size()) * sizeof(float),vertices.data());
           m_VertexBuffer->Unbind();
         }
         // Otherwise recreate verte buffer
@@ -47,7 +47,7 @@ namespace Caduq
         {
           m_IndexBuffer->Bind();
           // Warning setting content for indices is done using count, not size, even for offset !!
-          m_IndexBuffer->SetContent(0, indices.size(), indices.data());
+          m_IndexBuffer->SetContent(0, static_cast<uint32_t>(indices.size()), indices.data());
           m_IndexBuffer->Unbind();
         }
         else
