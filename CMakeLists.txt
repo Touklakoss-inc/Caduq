@@ -4,6 +4,8 @@ project(Caduq VERSION 0.0.4
               DESCRIPTION "Simple CAD software"
               LANGUAGES CXX)
 
+set(CMAKE_CXX_STANDARD 20)
+
 function(add_ext_subdirectory path)
   add_subdirectory(${path})
   foreach(target IN LISTS ARGN)
@@ -33,8 +35,9 @@ add_subdirectory(Caduq)
 
 target_include_directories(Geotrup SYSTEM PRIVATE Vizir/vendor/Eigen)
 target_include_directories(Caduq SYSTEM PRIVATE Vizir/vendor/Eigen)
-target_include_directories(Vizir SYSTEM PRIVATE Vizir/vendor/glm)
-target_include_directories(Bob SYSTEM PRIVATE Vizir/vendor/spdlog/include)
+
+target_include_directories(Vizir SYSTEM PUBLIC Vizir/vendor/glm)
+target_include_directories(Bob SYSTEM PUBLIC Vizir/vendor/spdlog/include)
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(glad      PRIVATE -w)
