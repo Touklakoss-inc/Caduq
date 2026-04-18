@@ -7,6 +7,10 @@ project(Caduq VERSION 0.0.4
 set(CMAKE_CXX_STANDARD 20)
 
 if (MSVC)
+    # Disable C++20 module scanning to avoid MSVC internal scanner bugs 
+    # (Index out of bounds in module.json) since we use standard headers.
+    set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
+
     # This ensures that even if defaults are loaded, /EHsc is explicitly required
     add_compile_options(/EHsc)
 endif()
