@@ -6,6 +6,11 @@ project(Caduq VERSION 0.0.4
 
 set(CMAKE_CXX_STANDARD 20)
 
+if (MSVC)
+    # This ensures that even if defaults are loaded, /EHsc is explicitly required
+    add_compile_options(/EHsc)
+endif()
+
 function(add_ext_subdirectory path)
   add_subdirectory(${path})
   foreach(target IN LISTS ARGN)
