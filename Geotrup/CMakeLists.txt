@@ -17,5 +17,6 @@ target_sources(Geotrup PRIVATE ${CPP_LIST} ${HEADER_LIST})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "" FILES ${CPP_LIST} ${HEADER_LIST})
 
 target_include_directories(Geotrup PUBLIC src)
+target_include_directories(Geotrup SYSTEM PUBLIC ${CMAKE_SOURCE_DIR}/Vizir/vendor/Eigen)
 
 target_link_libraries(Geotrup PRIVATE imgui Tracy::TracyClient)

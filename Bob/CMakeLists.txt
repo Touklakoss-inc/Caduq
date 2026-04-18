@@ -9,3 +9,4 @@ target_sources(Bob PRIVATE ${CPP_LIST} ${HEADER_LIST})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "" FILES ${CPP_LIST} ${HEADER_LIST})
 
 target_include_directories(Bob PUBLIC src)
+target_include_directories(Bob SYSTEM PUBLIC ${CMAKE_SOURCE_DIR}/Vizir/vendor/spdlog/include)

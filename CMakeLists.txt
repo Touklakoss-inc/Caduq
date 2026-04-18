@@ -33,11 +33,6 @@ add_subdirectory(Geotrup)
 add_subdirectory(Bob)
 add_subdirectory(Caduq)
 
-target_include_directories(Geotrup SYSTEM PRIVATE Vizir/vendor/Eigen)
-target_include_directories(Caduq SYSTEM PRIVATE Vizir/vendor/Eigen)
-
-target_include_directories(Vizir SYSTEM PUBLIC Vizir/vendor/glm)
-target_include_directories(Bob SYSTEM PUBLIC Vizir/vendor/spdlog/include)
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(glad      PRIVATE -w)
