@@ -22,6 +22,8 @@ namespace Bob
 			return spdlog::level::critical;
 		case Log::Level::OFF:
 			return spdlog::level::off;
+		default:
+			throw std::runtime_error("Unknown verbosity level.");
 		}
 	}
 

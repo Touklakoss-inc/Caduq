@@ -4,6 +4,17 @@ project(Caduq VERSION 0.0.4
               DESCRIPTION "Simple CAD software"
               LANGUAGES CXX)
 
+set(CMAKE_CXX_STANDARD 20)
+
+if (MSVC)
+    # Disable C++20 module scanning to avoid MSVC internal scanner bugs 
+    # (Index out of bounds in module.json) since we use standard headers.
+    set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
+
+    # This ensures that even if defaults are loaded, /EHsc is explicitly required
+    add_compile_options(/EHsc)
+endif()
+
 function(add_ext_subdirectory path)
   add_subdirectory(${path})
   foreach(target IN LISTS ARGN)
@@ -20,7 +31,6 @@ endfunction()
 
 # Vendors
 add_ext_subdirectory(Vizir/vendor/glad glad)
-add_ext_subdirectory(Vizir/vendor/glm glm)
 add_ext_subdirectory(Vizir/vendor/GLFW glfw uninstall update_mappings)
 add_ext_subdirectory(Vizir/vendor/imgui imgui)
 add_ext_subdirectory(Vizir/vendor/stb_image stb_image)
@@ -32,10 +42,19 @@ add_subdirectory(Geotrup)
 add_subdirectory(Bob)
 add_subdirectory(Caduq)
 
-target_include_directories(Geotrup PUBLIC Vizir/vendor/Eigen)
-target_include_directories(Caduq PUBLIC Vizir/vendor/Eigen)
-target_include_directories(Bob PUBLIC Vizir/vendor/spdlog/include)
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(glad      PRIVATE -w)
+    target_compile_options(glfw      PRIVATE -w)
+    target_compile_options(imgui     PRIVATE -w)
+    target_compile_options(stb_image PRIVATE -w)
+elseif (MSVC)
+    target_compile_options(glad      PRIVATE /W0)
+    target_compile_options(glfw      PRIVATE /W0)
+    target_compile_options(imgui     PRIVATE /W0)
+    target_compile_options(stb_image PRIVATE /W0)
+endif()
 
 target_link_libraries(Caduq 
-    PRIVATE glad glm glfw imgui stb_image Tracy::TracyClient
+    PRIVATE glad glfw imgui stb_image Tracy::TracyClient
 )

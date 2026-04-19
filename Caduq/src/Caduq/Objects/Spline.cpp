@@ -154,11 +154,11 @@ namespace Caduq
     void Spline::SetPopupParam(EntityManager& entityManager, Geometry::SplinePoint startPoint, int startPointID, Geometry::SplinePoint endPoint, int endPointID)
     {
         for (int i = 0; i < 3; i++)
-            m_GuiStartTangent[i] = startPoint.tangent[i];
+            m_GuiStartTangent[i] = static_cast<float>(startPoint.tangent[i]);
         m_GuiStartTension[0] = static_cast<float>(startPoint.tension);
 
         for (int i = 0; i < 3; i++)
-            m_GuiEndTangent[i] = endPoint.tangent[i];
+            m_GuiEndTangent[i] = static_cast<float>(endPoint.tangent[i]);
         m_GuiEndTension[0] = static_cast<float>(endPoint.tension);
 
         for (int i = 0; i < entityManager.GetPointList().size(); i++)
