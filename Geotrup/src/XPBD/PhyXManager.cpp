@@ -1,13 +1,16 @@
 #include "PhyXManager.h"
 
-#include <Eigen/Core>
-#include "Eigen/Geometry"
+#include "XPBD/JointsBuildingBlocks.h"
 #include "XPBD/PhyXPart.h"
-#include <imgui.h>
 #include "tracy/Tracy.hpp"
-#include <iostream>
+#include "StructLayoutInspector.h"
 
+#include <Eigen/Core>
+#include <imgui.h>
+#include <iostream>
 #include <memory>
+
+#include <optional>
 namespace XPBD
 {
     template<typename T> 
@@ -135,9 +138,14 @@ namespace XPBD
                     Integrate(i, dts);
             }
 
-            for (const auto& joint : m_Joints)
+            for (const auto& j : m_JsAttach)
             {
-                SolveConstraint(dt, joint.pt1, joint.pt2, joint.pos1, joint.pos2, joint.m_DRest, joint.m_Alpha);
+                Attach(j, dt);
+            }
+
+            for (const auto& j : m_JsRestrictAxis)
+            {
+                RestrictToAxis(j, dt);
             }
 
             for (int i = 0; i < m_PartCount; i++)
@@ -234,7 +242,7 @@ namespace XPBD
         return w;
     }
 
-    void PhyXManager::_ApplyCorrection(int p, Eigen::Vector3d corr, Eigen::Vector3d pos)
+    void PhyXManager::_ApplyLinearCorrection(int p, Eigen::Vector3d corr, Eigen::Vector3d pos)
     {
         if (m_PtInvMasses[p] == 0.0)
             return;
@@ -284,7 +292,7 @@ namespace XPBD
         m_PtWRotation[p] = rot.w();
     }
 
-    double PhyXManager::ApplyCorrection(double dt, double compliance, Eigen::Vector3d corr, int p1, int p2, Eigen::Vector3d r1, Eigen::Vector3d r2)
+    double PhyXManager::ApplyLinearCorrection(int p1, Eigen::Vector3d r1, std::optional<int> p2, Eigen::Vector3d r2, Eigen::Vector3d corr, double compliance, double dt)
     {
         if (corr.norm() == 0.0)
             return 0.0;
@@ -293,8 +301,8 @@ namespace XPBD
         Eigen::Vector3d normal = corr.normalized();
 
         double w = GetInverseMass(p1, normal, r1);
-        if (p2 >= 0)
-            w += GetInverseMass(p2, normal, r2); // normal should be < 0 no ?
+        if (p2.has_value())
+            w += GetInverseMass(p2.value(), normal, r2); // normal should be < 0 no ?
         
         if (w == 0.0)
             return 0.0;
@@ -302,50 +310,16 @@ namespace XPBD
         const double alpha = compliance / (dt*dt);
         const double lambda = -C / (w + alpha);
 
-        normal *= -lambda;
+        normal *= lambda;
 
-        _ApplyCorrection(p1, normal, r1);
-        if (p2 >= 0)
+        _ApplyLinearCorrection(p1, normal, r1);
+        if (p2.has_value())
         {
             normal *= -1.0;
-            _ApplyCorrection(p2, normal, r2);
+            _ApplyLinearCorrection(p2.value(), normal, r2);
         }
 
         return lambda / (dt*dt);
-    }
-
-    void PhyXManager::SolveConstraint(double dt, int p1, int p2, Eigen::Vector3d r1, Eigen::Vector3d r2, double dRest, double alpha)
-    {
-        const Eigen::Quaterniond q1{ m_PtWRotation[p1],
-                                     m_PtXRotation[p1],
-                                     m_PtYRotation[p1],
-                                     m_PtZRotation[p1]};
-        const Eigen::Vector3d pos1{ m_PtXPosition[p1],
-                                    m_PtYPosition[p1], 
-                                    m_PtZPosition[p1]}; 
-        const Eigen::Vector3d r1World = q1 * r1 + pos1;
-
-        Eigen::Vector3d r2World = r2;
-        if (p2 >= 0)
-        {
-            const Eigen::Quaterniond q2{ m_PtWRotation[p2],
-                                         m_PtXRotation[p2],
-                                         m_PtYRotation[p2],
-                                         m_PtZRotation[p2]};
-            const Eigen::Vector3d pos2{ m_PtXPosition[p2],
-                                        m_PtYPosition[p2], 
-                                        m_PtZPosition[p2]}; 
-            r2World = q2 * r2 + pos2;
-        }
-
-        Eigen::Vector3d corr = r2World - r1World;
-
-        const double distance = corr.norm();
-        corr = corr.normalized() * (distance - dRest);
-
-        const double force = ApplyCorrection(dt, alpha, corr, p1, p2, r1World, r2World);
-
-        const double elongation = distance - dRest;
     }
 
     void PhyXManager::UpdateVelocities(int p, double dt, double damping)
@@ -387,20 +361,101 @@ namespace XPBD
         m_PtZLinVelocity[p] *= std::max(1.0 - damping*dt, 0.0);
     }
 
-    void PhyXManager::CreateJoint(const std::shared_ptr<PhyXPart> p1, Eigen::Vector3d pos1, const std::shared_ptr<PhyXPart> p2, Eigen::Vector3d pos2, double dRest, double alpha)
+    void PhyXManager::Attach(const JAttach& j, double dt)
+    {
+        const Eigen::Quaterniond q1{ m_PtWRotation[j.p1],
+                                     m_PtXRotation[j.p1],
+                                     m_PtYRotation[j.p1],
+                                     m_PtZRotation[j.p1]};
+        const Eigen::Vector3d pos1{ m_PtXPosition[j.p1],
+                                    m_PtYPosition[j.p1], 
+                                    m_PtZPosition[j.p1]}; 
+        const Eigen::Vector3d r1World = q1 * j.pos1 + pos1;
+
+        Eigen::Vector3d r2World = j.pos2;
+        if (j.p2.has_value())
+        {
+            const Eigen::Quaterniond q2{ m_PtWRotation[j.p2.value()],
+                                         m_PtXRotation[j.p2.value()],
+                                         m_PtYRotation[j.p2.value()],
+                                         m_PtZRotation[j.p2.value()]};
+            const Eigen::Vector3d pos2{ m_PtXPosition[j.p2.value()],
+                                        m_PtYPosition[j.p2.value()], 
+                                        m_PtZPosition[j.p2.value()]}; 
+            r2World = q2 * j.pos2 + pos2;
+        }
+
+        Eigen::Vector3d corr = r2World - r1World;
+
+        const double distance = corr.norm();
+        const double force = ApplyLinearCorrection(j.p1, r1World, j.p2, r2World, -(distance - j.dRest)*corr.normalized(), j.alpha, dt);
+        const double elongation = distance - j.dRest;
+    }
+
+    void PhyXManager::RestrictToAxis(const JRestrictAxis& j, double dt)
+    {
+        const Eigen::Quaterniond q1{ m_PtWRotation[j.p1],
+                                     m_PtXRotation[j.p1],
+                                     m_PtYRotation[j.p1],
+                                     m_PtZRotation[j.p1]};
+        const Eigen::Vector3d pos1{ m_PtXPosition[j.p1],
+                                    m_PtYPosition[j.p1], 
+                                    m_PtZPosition[j.p1]}; 
+        const Eigen::Vector3d r1World = q1 * j.pos1 + pos1;
+
+        Eigen::Vector3d r2World = j.pos2;
+        if (j.p2.has_value())
+        {
+            const Eigen::Quaterniond q2{ m_PtWRotation[j.p2.value()],
+                                         m_PtXRotation[j.p2.value()],
+                                         m_PtYRotation[j.p2.value()],
+                                         m_PtZRotation[j.p2.value()]};
+            const Eigen::Vector3d pos2{ m_PtXPosition[j.p2.value()],
+                                        m_PtYPosition[j.p2.value()], 
+                                        m_PtZPosition[j.p2.value()]}; 
+            r2World = q2 * j.pos2 + pos2;
+        }
+
+        Eigen::Vector3d corr = r2World - r1World;
+        double p = j.axis.dot(corr);
+
+        if (p < j.posMin) p = j.posMin;
+        else if (p > j.posMax) p = j.posMax;
+
+        corr = corr - p*j.axis;
+
+        const double force = ApplyLinearCorrection(j.p1, r1World, j.p2, r2World, -corr, j.alpha, dt);
+    }
+
+    void PhyXManager::CreateJoint(const std::shared_ptr<PhyXPart> p1, const std::shared_ptr<PhyXPart> p2, Joint joint)
     {
         auto it1 = std::find(m_PhyXPartList.begin(), m_PhyXPartList.end(), p1);
         auto it2 = std::find(m_PhyXPartList.begin(), m_PhyXPartList.end(), p2);
         if (it1 != m_PhyXPartList.end())
         {
             int p1 = std::distance(m_PhyXPartList.begin(), it1);
-            int p2;
+            std::optional<int> p2;
             if (it2 != m_PhyXPartList.end())
                 p2 = std::distance(m_PhyXPartList.begin(), it2);
             else
-                p2 = -1;
+                p2 = std::nullopt;
 
-            m_Joints.push_back({p1, p2, dRest, alpha, pos1, pos2});
+            std::visit([&] (auto&& j) 
+            {
+                using T = std::decay_t<decltype(j)>;
+
+                j.p1 = p1;
+                j.p2 = p2;
+
+                if constexpr (std::is_same_v<T, JAttach>) 
+                    m_JsAttach.push_back(j);
+                else if constexpr (std::is_same_v<T, JRestrictAxis>) 
+                {
+                    j.axis.normalize();
+                    m_JsRestrictAxis.push_back(j);
+                }
+
+            }, joint);
         }
         else
             std::cout << "part not found\n";
@@ -414,7 +469,7 @@ namespace XPBD
         if (s_PhyXEnabled)
         {
             ImGui::SameLine();
-            if (ImGui::Button("Import phyX points"))
+            if (ImGui::Button("Import phyX parts"))
                 ImportEntities();
 
             ImGui::Checkbox("Enable Time", &m_TimeEnabled);

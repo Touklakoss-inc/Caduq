@@ -35,12 +35,13 @@ namespace Caduq
 
     void Point::Update(double x, double y, double z)
     {
-        for (const auto& p : GetParents())
-        {
-            p->RemoveChild(shared_from_this());
-        }
-
-        ClearParents();
+        // --- why ???? ---
+        // for (const auto& p : GetParents())
+        // {
+        //     p->RemoveChild(shared_from_this());
+        // }
+        //
+        // ClearParents();
 
         m_GeoPoint->SetPosition(x, y, z);
 

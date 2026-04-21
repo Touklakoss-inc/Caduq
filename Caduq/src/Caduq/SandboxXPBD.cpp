@@ -1,6 +1,7 @@
 #include "Eigen/Core"
 #include "cqpch.h"
 #include "SandboxXPBD.h"
+#include "XPBD/JointsBuildingBlocks.h"
 
 #include "Caduq/Objects/Entity.h"
 #include "Objects/Point.h"
@@ -81,22 +82,47 @@ void SandboxXPBD::OnAttach()
 
     m_EntityManager.CreateEntity(std::make_shared<Caduq::Part>(Geometry::Transform::Identity(), m_EntityManager.GetMainFrame(), Caduq::Part::OptParam{.mass = 1.0, .inertiaTensor = {2.0/3.0, 2.0/3.0, 2.0/3.0}, .grounded=false}));
 
-    m_EntityManager.GetPart(0).lock()->GetMainFrame()->Update(Eigen::Vector3d(-0.025, 2.2, 0.0), Eigen::Quaterniond::Identity());
-    m_EntityManager.GetPart(0).lock()->CreateEntity(std::make_shared<Caduq::StlEntity>("littlecube.stl", m_EntityManager.GetPart(0).lock()->GetMainFrame()));
+    const auto pt1 = m_EntityManager.GetPart(0).lock();
+
+    pt1->GetMainFrame()->Update(Eigen::Vector3d(-0.025, 2.2, 0.0), Eigen::Quaterniond::Identity());
+    pt1->GetEntityManager().CreateEntity(std::make_shared<Caduq::StlEntity>("littlecube.stl", pt1->GetMainFrame()));
+    pt1->GetEntityManager().CreateEntity(std::make_shared<Caduq::Point>(Eigen::Vector3d(0.025, 0.05, 0.0), pt1->GetMainFrame()));
+    pt1->GetEntityManager().CreateEntity(std::make_shared<Caduq::Point>(Eigen::Vector3d(0.05, -0.05, 0.0), pt1->GetMainFrame()));
 
     m_EntityManager.CreateEntity(std::make_shared<Caduq::Part>(Geometry::Transform::Identity(), m_EntityManager.GetMainFrame(), Caduq::Part::OptParam{.mass = 1.0, .inertiaTensor = {2.0/3.0, 2.0/3.0, 2.0/3.0}, .grounded=true}));
 
     m_EntityManager.GetPart(1).lock()->GetMainFrame()->Update(Eigen::Vector3d(0.0, 2.5, 0.0), Eigen::Quaterniond::Identity());
-    m_PhyXManager->CreateJoint(m_EntityManager.GetPart(0).lock()->GetPhyXPart(), { 0.025, 0.05, 0.0 },
-                               nullptr, { 0.0, 2.5, 0.0 },
-                               0.25, 0.001);
+    m_PhyXManager->CreateJoint(m_EntityManager.GetPart(0).lock()->GetPhyXPart(),
+                               nullptr,
+                               XPBD::JAttach{ .dRest = 0.25, .alpha = 0.001, 
+                               .pos1 = m_EntityManager.GetPart(0).lock()->GetEntityManager().GetPoint(0).lock()->GetGeoPoint()->GetPosition(), 
+                               .pos2 = { 0.0, 2.5, 0.0 }});
     m_EntityManager.CreateEntity(std::make_shared<Caduq::Part>(Geometry::Transform::Identity(), m_EntityManager.GetMainFrame(), Caduq::Part::OptParam{.mass = 1.0, .inertiaTensor = {2.0/3.0, 2.0/3.0, 2.0/3.0}, .grounded=false}));
 
-    m_EntityManager.GetPart(2).lock()->GetMainFrame()->Update(Eigen::Vector3d(0.0, 2.0, 0.0), Eigen::Quaterniond::Identity());
-    m_PhyXManager->CreateJoint(m_EntityManager.GetPart(0).lock()->GetPhyXPart(), { 0.05, -0.05, 0.0 },
-                               m_EntityManager.GetPart(2).lock()->GetPhyXPart(), { 0.0, 0.05, 0.0 },
-                               0.1, 0.001);
-    m_EntityManager.GetPart(2).lock()->CreateEntity(std::make_shared<Caduq::StlEntity>("littlecube.stl", m_EntityManager.GetPart(2).lock()->GetMainFrame()));
+    const auto pt2 = m_EntityManager.GetPart(2).lock();
+    pt2->GetEntityManager().CreateEntity(std::make_shared<Caduq::Point>(Eigen::Vector3d(0.0, 0.05, 0.0), pt2->GetMainFrame()));
+    pt2->GetMainFrame()->Update(Eigen::Vector3d(0.0, 2.0, 0.0), Eigen::Quaterniond::Identity());
+    m_PhyXManager->CreateJoint(pt1->GetPhyXPart(),
+                               pt2->GetPhyXPart(),
+                               XPBD::JAttach{ .dRest = 0.1, .alpha = 0.001, 
+                               .pos1 = pt1->GetEntityManager().GetPoint(1).lock()->GetGeoPoint()->GetPosition(), 
+                               .pos2 = pt2->GetEntityManager().GetPoint(0).lock()->GetGeoPoint()->GetPosition()});
+
+    pt2->GetEntityManager().CreateEntity(std::make_shared<Caduq::StlEntity>("littlecube.stl", pt2->GetMainFrame()));
+
+    m_PhyXManager->CreateJoint(pt2->GetPhyXPart(),
+                               nullptr,
+                               XPBD::JRestrictAxis{ .axis = { 1.0, 1.0, 0.0 },
+                               .pos1 = { 0.0, 0.0, 0.0 },
+                               .pos2 = { 0.0, 2.5, 0.0 }, 
+                               .posMin = -10,
+                               .posMax =  10,
+                               .alpha = 0.001});
+
+
+    m_EntityManager.CreateEntity(std::make_shared<Caduq::Spline>(pt1->GetEntityManager().GetPoint(1).lock(), Caduq::PointTangency{{0, 0, 0}},
+                                                                 pt2->GetEntityManager().GetPoint(0).lock(), Caduq::PointTangency{{0, 0, 0}},
+                                                                 100, m_EntityManager.GetMainFrame()));              
     // m_PhyXManager->CreateJoint(std::make_shared<XPBD::JAttach>(m_EntityManager.GetPoint(1).lock()->GetPhyXPoint(), 
     //                                                            m_EntityManager.GetPoint(2).lock()->GetPhyXPoint(), 
     //                                                            std::sqrt(1.25), 0.0));

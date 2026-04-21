@@ -53,8 +53,9 @@ namespace Caduq
 
         const std::shared_ptr<Frame>& GetMainFrame() { return m_MainFrame; };
         const std::shared_ptr<XPBD::PhyXPart>& GetPhyXPart() const { return m_PhyXPart; };
-        template<typename T> 
-        void CreateEntity(const std::shared_ptr<T> &entity) { m_EntityManager.CreateEntity(entity); };
+        EntityManager& GetEntityManager() { return m_EntityManager; };
+        // template<typename T> 
+        // void CreateEntity(const std::shared_ptr<T> &entity) { m_EntityManager.CreateEntity(entity); };
     };
 }
 

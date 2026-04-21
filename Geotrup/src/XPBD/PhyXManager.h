@@ -3,22 +3,16 @@
 
 #include "Eigen/Core"
 #include "PhyXPart.h"
-#include <Eigen/Dense>
+#include "JointsBuildingBlocks.h"
 
+#include <Eigen/Dense>
 #include <memory>
-#include <sys/types.h>
+#include <optional>
+#include <variant>
 #include <vector>
+
 namespace XPBD
 {
-    struct JAttachStruct
-    {
-        int pt1;
-        int pt2;
-        double m_DRest;
-        double m_Alpha;
-        Eigen::Vector3d pos1;
-        Eigen::Vector3d pos2;
-    };
 
     class PhyXManager
     {
@@ -82,34 +76,35 @@ namespace XPBD
         std::vector<uint8_t> m_PtGrounded {};
 
         // joints
-        std::vector<JAttachStruct> m_Joints {};
+        std::vector<JAttach> m_JsAttach {};
+        std::vector<JRestrictAxis> m_JsRestrictAxis {};
 
         void ImportEntities();
 
-        void AttachJoint(int prt1, Eigen::Vector3d r1, int prt2, Eigen::Vector3d r2, double dRest, double alpha, double dts);
-
-        void ApplyLinearCorrection(int prt1, Eigen::Vector3d r1, int prt2, Eigen::Vector3d r2, Eigen::Vector3d dp, double alpha, double dts);
-
     public:
         static inline bool s_PhyXEnabled { false };
+        typedef std::variant<JAttach, JRestrictAxis> Joint;
 
         PhyXManager() = default;
 
         void UpdatePhyX(float dt);
 
-        void CreateJoint(const std::shared_ptr<PhyXPart> p1, Eigen::Vector3d pos1, const std::shared_ptr<PhyXPart> p2, Eigen::Vector3d pos2, double dRest, double alpha);
+        void CreateJoint(const std::shared_ptr<PhyXPart> p1, const std::shared_ptr<PhyXPart> p2, Joint joint);
 
-        void AddPhyXPartToList(const auto& phyXPart) { m_PhyXPartList.push_back(phyXPart); };
+        void AddPhyXPartToList(const std::shared_ptr<PhyXPart>& phyXPart) { m_PhyXPartList.push_back(phyXPart); };
 
         void RenderImGui();
 
     private:
         void Integrate(int p, double dt);
         double GetInverseMass(int p, Eigen::Vector3d normal, Eigen::Vector3d pos);
-        void _ApplyCorrection(int p, Eigen::Vector3d corr, Eigen::Vector3d pos);
-        double ApplyCorrection(double dt, double compliance, Eigen::Vector3d corr, int p1, int p2, Eigen::Vector3d r1, Eigen::Vector3d r2);
-        void SolveConstraint(double dt, int p1, int p2, Eigen::Vector3d r1, Eigen::Vector3d r2, double dRest, double alpha);
+        void _ApplyLinearCorrection(int p, Eigen::Vector3d corr, Eigen::Vector3d pos);
+        double ApplyLinearCorrection(int p1, Eigen::Vector3d r1, std::optional<int> p2, Eigen::Vector3d r2, Eigen::Vector3d corr, double compliance, double dt);
+        void SolveConstraint(double dt, int p1, std::optional<int> p2, Eigen::Vector3d r1, Eigen::Vector3d r2, double dRest, double alpha);
         void UpdateVelocities(int p, double dt, double damping);
+
+        void Attach(const JAttach& j, double dt);
+        void RestrictToAxis(const JRestrictAxis& j, double dt);
     };
 }
 
