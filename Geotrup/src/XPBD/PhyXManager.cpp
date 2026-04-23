@@ -139,14 +139,13 @@ namespace XPBD
             }
 
             for (const auto& j : m_JsAttach)
-            {
                 Attach(j, dt);
-            }
 
             for (const auto& j : m_JsRestrictAxis)
-            {
                 RestrictToAxis(j, dt);
-            }
+
+            for (const auto& j : m_JsAlignTwoAxes)
+                AlignTwoAxes(j, dt);
 
             for (int i = 0; i < m_PartCount; i++)
             {
@@ -322,6 +321,98 @@ namespace XPBD
         return lambda / (dt*dt);
     }
 
+    double PhyXManager::GetInverseMassAngular(int p, Eigen::Vector3d normal)
+    {
+        if (m_PtInvMasses[p] == 0.0)
+            return 0.0;
+
+        Eigen::Vector3d n = normal;
+
+        const Eigen::Vector3d pPos{ m_PtXPosition[p],
+                                    m_PtYPosition[p],
+                                    m_PtZPosition[p]};
+        const Eigen::Quaterniond invRot{ m_PtWRotation[p],
+                                        -m_PtXRotation[p],
+                                        -m_PtYRotation[p],
+                                        -m_PtZRotation[p]};
+        n = invRot * n;
+
+        double w = n.x() * n.x() * m_PtXInvInertia[p]
+                 + n.y() * n.y() * m_PtYInvInertia[p]
+                 + n.z() * n.z() * m_PtZInvInertia[p];
+
+        return w;
+    }
+
+    void PhyXManager::_ApplyAngularCorrection(int p, Eigen::Vector3d corr)
+    {
+        if (m_PtInvMasses[p] == 0.0)
+            return;
+        
+        const Eigen::Quaterniond invRot{ m_PtWRotation[p],
+                                         m_PtXRotation[p],
+                                         m_PtYRotation[p],
+                                         m_PtZRotation[p]};
+        const Eigen::Vector3d invInertia{ m_PtXInvInertia[p],
+                                          m_PtYInvInertia[p],
+                                          m_PtZInvInertia[p]};
+        Eigen::Quaterniond rot{ m_PtWRotation[p],
+                                m_PtXRotation[p],
+                                m_PtYRotation[p],
+                                m_PtZRotation[p]};
+
+        Eigen::Vector3d dOmega = corr;
+
+        dOmega = invRot * dOmega;
+        dOmega.x() *= invInertia.x();
+        dOmega.y() *= invInertia.y();
+        dOmega.z() *= invInertia.z();
+        dOmega = rot * dOmega;
+
+        Eigen::Quaterniond dRot{ 0.0,
+                                 dOmega.x(),
+                                 dOmega.y(),
+                                 dOmega.z()};
+        dRot = dRot * rot;
+        rot.x() += 0.5 * dRot.x();
+        rot.y() += 0.5 * dRot.y();
+        rot.z() += 0.5 * dRot.z();
+        rot.w() += 0.5 * dRot.w();
+        rot.normalize();
+
+        m_PtXRotation[p] = rot.x();
+        m_PtYRotation[p] = rot.y();
+        m_PtZRotation[p] = rot.z();
+        m_PtWRotation[p] = rot.w();
+    }
+
+    double PhyXManager::ApplyAngularCorrection(int p1, std::optional<int> p2, Eigen::Vector3d dphi, double compliance, double dt)
+    {
+        const double C = dphi.norm();
+        Eigen::Vector3d normal = dphi.normalized();
+
+        double w = GetInverseMassAngular(p1, normal);
+        if (p2.has_value())
+            w += GetInverseMassAngular(p2.value(), normal); // normal should be < 0 no ?
+        
+        if (w == 0.0)
+            return 0.0;
+
+        const double alpha = compliance / (dt*dt);
+        const double lambda = -C / (w + alpha);
+
+        normal *= lambda;
+
+        _ApplyAngularCorrection(p1, normal);
+        if (p2.has_value())
+        {
+            normal *= -1.0;
+            _ApplyAngularCorrection(p2.value(), normal);
+        }
+
+        return lambda / (dt*dt);
+    }
+
     void PhyXManager::UpdateVelocities(int p, double dt, double damping)
     {
         if (m_PtInvMasses[p] == 0.0)
@@ -427,6 +518,27 @@ namespace XPBD
         const double force = ApplyLinearCorrection(j.p1, r1World, j.p2, r2World, -corr, j.alpha, dt);
     }
 
+    void PhyXManager::AlignTwoAxes(const JAlignTwoAxes& j, double dt)
+    {
+        const Eigen::Quaterniond q1{ m_PtWRotation[j.p1],
+                                     m_PtXRotation[j.p1],
+                                     m_PtYRotation[j.p1],
+                                     m_PtZRotation[j.p1]};
+
+        const Eigen::Vector3d a1World = q1 * j.a1;
+        Eigen::Vector3d a2World = j.a2;
+        if (j.p2.has_value())
+        {
+            const Eigen::Quaterniond q2{ m_PtWRotation[j.p2.value()],
+                                         m_PtXRotation[j.p2.value()],
+                                         m_PtYRotation[j.p2.value()],
+                                         m_PtZRotation[j.p2.value()]};
+            a2World = q1 * j.a2;
+        }
+
+        const double torque = ApplyAngularCorrection(j.p1, j.p2, (-a1World).cross(a2World), j.alpha, dt);
+    }
+
     void PhyXManager::CreateJoint(const std::shared_ptr<PhyXPart> p1, const std::shared_ptr<PhyXPart> p2, Joint joint)
     {
         auto it1 = std::find(m_PhyXPartList.begin(), m_PhyXPartList.end(), p1);
@@ -453,6 +565,12 @@ namespace XPBD
                 {
                     j.axis.normalize();
                     m_JsRestrictAxis.push_back(j);
+                }
+                else if constexpr (std::is_same_v<T, JAlignTwoAxes>) 
+                {
+                    j.a1.normalize();
+                    j.a2.normalize();
+                    m_JsAlignTwoAxes.push_back(j);
                 }
 
             }, joint);

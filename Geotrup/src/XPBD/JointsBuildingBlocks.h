@@ -1,6 +1,7 @@
 #ifndef JOINTSBB_H
 #define JOINTSBB_H
 
+#include "Eigen/Core"
 #include <optional>
 #include <Eigen/Dense>
 
@@ -23,6 +24,15 @@ namespace XPBD
         Eigen::Vector3d pos2;
         double posMin;
         double posMax;
+        double alpha;
+        std::optional<int> p2;
+        int p1;
+    };
+
+    struct JAlignTwoAxes
+    {
+        Eigen::Vector3d a1;
+        Eigen::Vector3d a2;
         double alpha;
         std::optional<int> p2;
         int p1;

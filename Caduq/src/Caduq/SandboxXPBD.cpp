@@ -119,10 +119,23 @@ void SandboxXPBD::OnAttach()
                                .posMax =  10,
                                .alpha = 0.001});
 
+    m_EntityManager.CreateEntity(std::make_shared<Caduq::Part>(Geometry::Transform::Identity(), m_EntityManager.GetMainFrame(), Caduq::Part::OptParam{.mass = 1.0, .inertiaTensor = {2.0/3.0, 2.0/3.0, 2.0/3.0}, .grounded=false}));
 
-    m_EntityManager.CreateEntity(std::make_shared<Caduq::Spline>(pt1->GetEntityManager().GetPoint(1).lock(), Caduq::PointTangency{{0, 0, 0}},
-                                                                 pt2->GetEntityManager().GetPoint(0).lock(), Caduq::PointTangency{{0, 0, 0}},
-                                                                 100, m_EntityManager.GetMainFrame()));              
+    const auto pt3 = m_EntityManager.GetPart(3).lock();
+
+    pt3->GetMainFrame()->Update(Eigen::Vector3d(0.5, 2.2, 0.0), Eigen::Quaterniond::Identity());
+    pt3->GetEntityManager().CreateEntity(std::make_shared<Caduq::StlEntity>("littlecube.stl", pt3->GetMainFrame()));
+
+    m_PhyXManager->CreateJoint(pt3->GetPhyXPart(),
+                               nullptr,
+                               XPBD::JAlignTwoAxes{ 
+                               .a1 = { 1.0, 1.0, 0.0 },
+                               .a2 = { 1.0, 0.0, 0.0 },
+                               .alpha = 0.001});
+
+    // m_EntityManager.CreateEntity(std::make_shared<Caduq::Spline>(pt1->GetEntityManager().GetPoint(1).lock(), Caduq::PointTangency{{0, 0, 0}},
+    //                                                              pt2->GetEntityManager().GetPoint(0).lock(), Caduq::PointTangency{{0, 0, 0}},
+    //                                                              100, m_EntityManager.GetMainFrame()));              
     // m_PhyXManager->CreateJoint(std::make_shared<XPBD::JAttach>(m_EntityManager.GetPoint(1).lock()->GetPhyXPoint(), 
     //                                                            m_EntityManager.GetPoint(2).lock()->GetPhyXPoint(), 
     //                                                            std::sqrt(1.25), 0.0));

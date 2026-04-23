@@ -78,12 +78,13 @@ namespace XPBD
         // joints
         std::vector<JAttach> m_JsAttach {};
         std::vector<JRestrictAxis> m_JsRestrictAxis {};
+        std::vector<JAlignTwoAxes> m_JsAlignTwoAxes {};
 
         void ImportEntities();
 
     public:
         static inline bool s_PhyXEnabled { false };
-        typedef std::variant<JAttach, JRestrictAxis> Joint;
+        typedef std::variant<JAttach, JRestrictAxis, JAlignTwoAxes> Joint;
 
         PhyXManager() = default;
 
@@ -100,11 +101,15 @@ namespace XPBD
         double GetInverseMass(int p, Eigen::Vector3d normal, Eigen::Vector3d pos);
         void _ApplyLinearCorrection(int p, Eigen::Vector3d corr, Eigen::Vector3d pos);
         double ApplyLinearCorrection(int p1, Eigen::Vector3d r1, std::optional<int> p2, Eigen::Vector3d r2, Eigen::Vector3d corr, double compliance, double dt);
+        double GetInverseMassAngular(int p, Eigen::Vector3d normal);
+        void _ApplyAngularCorrection(int p, Eigen::Vector3d corr);
+        double ApplyAngularCorrection(int p1, std::optional<int> p2, Eigen::Vector3d dphi, double compliance, double dt);
         void SolveConstraint(double dt, int p1, std::optional<int> p2, Eigen::Vector3d r1, Eigen::Vector3d r2, double dRest, double alpha);
         void UpdateVelocities(int p, double dt, double damping);
 
         void Attach(const JAttach& j, double dt);
         void RestrictToAxis(const JRestrictAxis& j, double dt);
+        void AlignTwoAxes(const JAlignTwoAxes& j, double dt);
     };
 }
 
