@@ -37,5 +37,17 @@ namespace XPBD
         std::optional<int> p2;
         int p1;
     };
+
+    struct JLimitAngle
+    {
+        Eigen::Vector3d n;
+        Eigen::Vector3d a1;
+        Eigen::Vector3d a2;
+        double phiMin;
+        double phiMax;
+        double alpha;
+        std::optional<int> p2;
+        int p1;
+    };
 }
 #endif

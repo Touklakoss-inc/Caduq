@@ -100,8 +100,8 @@ void SandboxXPBD::OnAttach()
     m_EntityManager.CreateEntity(std::make_shared<Caduq::Part>(Geometry::Transform::Identity(), m_EntityManager.GetMainFrame(), Caduq::Part::OptParam{.mass = 1.0, .inertiaTensor = {2.0/3.0, 2.0/3.0, 2.0/3.0}, .grounded=false}));
 
     const auto pt2 = m_EntityManager.GetPart(2).lock();
-    pt2->GetEntityManager().CreateEntity(std::make_shared<Caduq::Point>(Eigen::Vector3d(0.0, 0.05, 0.0), pt2->GetMainFrame()));
-    pt2->GetMainFrame()->Update(Eigen::Vector3d(0.0, 2.0, 0.0), Eigen::Quaterniond::Identity());
+    pt2->GetEntityManager().CreateEntity(std::make_shared<Caduq::Point>(Eigen::Vector3d(0.05, 0.05, 0.0), pt2->GetMainFrame()));
+    pt2->GetMainFrame()->Update(Eigen::Vector3d(-0.05, 2.0, 0.0), Eigen::Quaterniond::Identity());
     m_PhyXManager->CreateJoint(pt1->GetPhyXPart(),
                                pt2->GetPhyXPart(),
                                XPBD::JAttach{ .dRest = 0.1, .alpha = 0.001, 
@@ -110,14 +110,23 @@ void SandboxXPBD::OnAttach()
 
     pt2->GetEntityManager().CreateEntity(std::make_shared<Caduq::StlEntity>("littlecube.stl", pt2->GetMainFrame()));
 
+    // m_PhyXManager->CreateJoint(pt2->GetPhyXPart(),
+    //                            nullptr,
+    //                            XPBD::JRestrictAxis{ .axis = { 1.0, 1.0, 0.0 },
+    //                            .pos1 = { 0.0, 0.0, 0.0 },
+    //                            .pos2 = { 0.0, 2.5, 0.0 }, 
+    //                            .posMin = -10,
+    //                            .posMax =  10,
+    //                            .alpha = 0.001});
     m_PhyXManager->CreateJoint(pt2->GetPhyXPart(),
                                nullptr,
-                               XPBD::JRestrictAxis{ .axis = { 1.0, 1.0, 0.0 },
-                               .pos1 = { 0.0, 0.0, 0.0 },
-                               .pos2 = { 0.0, 2.5, 0.0 }, 
-                               .posMin = -10,
-                               .posMax =  10,
-                               .alpha = 0.001});
+                               XPBD::JLimitAngle{ 
+                               .n = { 0.0, 0.0, 1.0 },
+                               .a1 = { 0.0, 1.0, 0.0 },
+                               .a2 = { 0.0, 1.0, 0.0 }, 
+                               .phiMin = -10.0,
+                               .phiMax =  10.0,
+                               .alpha = 1.0});
 
     m_EntityManager.CreateEntity(std::make_shared<Caduq::Part>(Geometry::Transform::Identity(), m_EntityManager.GetMainFrame(), Caduq::Part::OptParam{.mass = 1.0, .inertiaTensor = {2.0/3.0, 2.0/3.0, 2.0/3.0}, .grounded=false}));
 

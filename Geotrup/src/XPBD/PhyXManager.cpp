@@ -2,14 +2,14 @@
 
 #include "XPBD/JointsBuildingBlocks.h"
 #include "XPBD/PhyXPart.h"
-#include "tracy/Tracy.hpp"
-#include "StructLayoutInspector.h"
 
+#include <tracy/Tracy.hpp>
 #include <Eigen/Core>
+
 #include <imgui.h>
 #include <iostream>
 #include <memory>
-
+#include <numbers>
 #include <optional>
 namespace XPBD
 {
@@ -146,6 +146,9 @@ namespace XPBD
 
             for (const auto& j : m_JsAlignTwoAxes)
                 AlignTwoAxes(j, dt);
+
+            for (const auto& j : m_JsLimitAngle)
+                LimitAngle(j, dt);
 
             for (int i = 0; i < m_PartCount; i++)
             {
@@ -539,6 +542,49 @@ namespace XPBD
         const double torque = ApplyAngularCorrection(j.p1, j.p2, (-a1World).cross(a2World), j.alpha, dt);
     }
 
+    /// Calculate angle beetween -pi and pi
+    double Angle(Eigen::Vector3d axis, Eigen::Vector3d a, Eigen::Vector3d b)
+    {
+        const double dot = a.dot(b);
+        const double cross_norm = a.cross(b).dot(axis);
+
+        return std::atan2(cross_norm, dot); // radian
+    }
+
+    void PhyXManager::LimitAngle(const JLimitAngle& j, double dt)
+    {
+        const Eigen::Quaterniond q1{ m_PtWRotation[j.p1],
+                                     m_PtXRotation[j.p1],
+                                     m_PtYRotation[j.p1],
+                                     m_PtZRotation[j.p1]};
+
+        const Eigen::Vector3d a1World = q1 * j.a1;
+
+        Eigen::Vector3d a2World = j.a2;
+        if (j.p2.has_value())
+        {
+            const Eigen::Quaterniond q2{ m_PtWRotation[j.p2.value()],
+                                         m_PtXRotation[j.p2.value()],
+                                         m_PtYRotation[j.p2.value()],
+                                         m_PtZRotation[j.p2.value()]};
+            a2World = q2 * j.a2;
+        }
+
+        double phi = Angle(j.n.normalized(), a1World, a2World);
+        phi = phi * 180.0 / std::numbers::pi; // radian to degree
+        
+        if (phi < j.phiMin or phi > j.phiMax)
+        {
+            phi = std::clamp(phi, j.phiMin, j.phiMax);
+            phi = phi * std::numbers::pi / 180.0; // degree to radian
+ 
+            const Eigen::Quaterniond q { Eigen::AngleAxisd(phi, j.n.normalized()) };
+            const Eigen::Vector3d a2pWorld = q * a1World;
+
+            const double torque = ApplyAngularCorrection(j.p1, j.p2, (a2World).cross(a2pWorld), j.alpha, dt);
+        }
+    }
+
     void PhyXManager::CreateJoint(const std::shared_ptr<PhyXPart> p1, const std::shared_ptr<PhyXPart> p2, Joint joint)
     {
         auto it1 = std::find(m_PhyXPartList.begin(), m_PhyXPartList.end(), p1);
@@ -571,6 +617,13 @@ namespace XPBD
                     j.a1.normalize();
                     j.a2.normalize();
                     m_JsAlignTwoAxes.push_back(j);
+                }
+                else if constexpr (std::is_same_v<T, JLimitAngle>) 
+                {
+                    j.n.normalize();
+                    j.a1.normalize();
+                    j.a2.normalize();
+                    m_JsLimitAngle.push_back(j);
                 }
 
             }, joint);

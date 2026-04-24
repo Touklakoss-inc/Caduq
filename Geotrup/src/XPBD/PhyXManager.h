@@ -79,12 +79,13 @@ namespace XPBD
         std::vector<JAttach> m_JsAttach {};
         std::vector<JRestrictAxis> m_JsRestrictAxis {};
         std::vector<JAlignTwoAxes> m_JsAlignTwoAxes {};
+        std::vector<JLimitAngle> m_JsLimitAngle {};
 
         void ImportEntities();
 
     public:
         static inline bool s_PhyXEnabled { false };
-        typedef std::variant<JAttach, JRestrictAxis, JAlignTwoAxes> Joint;
+        typedef std::variant<JAttach, JRestrictAxis, JAlignTwoAxes, JLimitAngle> Joint;
 
         PhyXManager() = default;
 
@@ -110,6 +111,7 @@ namespace XPBD
         void Attach(const JAttach& j, double dt);
         void RestrictToAxis(const JRestrictAxis& j, double dt);
         void AlignTwoAxes(const JAlignTwoAxes& j, double dt);
+        void LimitAngle(const JLimitAngle& j, double dt);
     };
 }
 
