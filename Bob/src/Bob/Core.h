@@ -70,7 +70,7 @@
 #endif // End of DLL support
 
 
-#ifdef BOB_DEBUG
+#ifdef _DEBUG
 	#define BOB_ENABLE_ASSERTS
 #else
 #endif
