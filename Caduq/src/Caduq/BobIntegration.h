@@ -20,4 +20,4 @@ namespace Caduq
 #define CQ_DEBUG(...)		BOB_DEBUG(CQ_LOGGER_NAME, __VA_ARGS__)
 #define CQ_TRACE(...)		BOB_TRACE(CQ_LOGGER_NAME, __VA_ARGS__)
 
-#define CQ_ASSERT(...)	BOB_ASSERT(CQ_LOGGER_NAME, __VA_ARGS__)
+#define CQ_ASSERT(cond, ...)	BOB_ASSERT(CQ_LOGGER_NAME, cond, __VA_ARGS__)

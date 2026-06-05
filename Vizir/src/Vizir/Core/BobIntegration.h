@@ -20,4 +20,4 @@ namespace Vizir
 #define VZ_DEBUG(...)		BOB_DEBUG(VZ_LOGGER_NAME, __VA_ARGS__)
 #define VZ_TRACE(...)		BOB_TRACE(VZ_LOGGER_NAME, __VA_ARGS__)
 
-#define VZ_ASSERT(...)	BOB_ASSERT(VZ_LOGGER_NAME, __VA_ARGS__)
+#define VZ_ASSERT(cond, ...)	BOB_ASSERT(VZ_LOGGER_NAME, cond, __VA_ARGS__)

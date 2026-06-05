@@ -46,7 +46,7 @@ namespace Vizir
 		}
 		else
 		{
-			BOB_ASSERT(false, "Only 3 or 4 channels are supported, detected {}.", channels)
+			VZ_ASSERT(false, "Only 3 or 4 channels are supported, detected {}.", channels)
 		}
 
 		return Texture::TextureData{
